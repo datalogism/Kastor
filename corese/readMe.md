@@ -16,3 +16,4 @@ The software could be deployed locally via a  [JAR software](https://github.com/
 5- run the Corese server via :
 >   java -Xmx10g -jar corese-server-4.5.0.jar -init "config.properties"
 
+6- The KB endpoint is now accesible via  'http://localhost:8080/sparql'
