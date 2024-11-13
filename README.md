@@ -1,4 +1,4 @@
-# KStor - Knowledge shape extractor pipeline for text-to-graph knowledge base infusion and completion
+# KAStor - Knowledge active and shape-based extractor for text-to-graph knowledge base infusion and completion
 ![kstor](logokstor2.png)
 
 
