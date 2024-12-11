@@ -16,5 +16,5 @@ This step is applying the rules defined by the user, it use SPARQL construct que
 
 ## STEP 3-  Wikicheck 
 ```
- python 3_inferencesRules.py -r RULES_PATH -m insert
+ python 3_WikicheckNamedGraph.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
 ```
