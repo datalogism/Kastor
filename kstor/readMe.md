@@ -1,10 +1,10 @@
 # KASTOR PROCESS
 ## STEP 0- Initialize the Kastor KB: $\mathcal{K}$
-[See the CORESE dir readMe](https://github.com/datalogism/Kastor/tree/main/corese#starting-from-scratch-data-base-initialization)
+[See the CORESE dir readMe](../corese#starting-from-scratch-data-base-initialization)
 
 ## STEP 1-  Tag the entities related to the shape class: 
 
-This step associates a random uuid to each entity related to dbo:class focused by the maximal shape chosen and having an abstract, it creates $\mathcal{K}_{\mathbb{P}(s^*)}$ . The dbo:Person shape is accessible here [PersonShape.ttl](https://github.com/datalogism/Kastor/blob/main/shapes/PersonShape.ttl)
+This step associates a random uuid to each entity related to dbo:class focused by the maximal shape chosen and having an abstract, it creates $\mathcal{K}_{\mathbb{P}(s^*)}$ . The dbo:Person shape is accessible here [PersonShape.ttl](../shapes/PersonShape.ttl)
 ```
 python 1_initializeKastorFromShape.py -s SHAPE_PATH
 ```
