@@ -3,35 +3,17 @@
 """
 Created on Wed Oct  9 09:28:16 2024
 
-@author: cringwal
 """
 
 from rdflib import Graph
 import json
-import random
-import ast
-import sys
-
-from SPARQLWrapper import JSON, POST, POSTDIRECTLY, SPARQLWrapper
-from SPARQLWrapper import get_sparql_dataframe
-
-from numpy.random import choice
-from os import listdir, makedirs
-from os.path import isfile, join, isdir, exists
-import re
+from os.path import isfile, join
+from argparse import ArgumentParser
 import pandas as pd
 
-from validate_syntax import dir_out
 
-############## USEFULL FUCNTIONS
-
-sys.path.append('/user/cringwal/home/Desktop/THESE/CORESE_DATASET_build/')
 import src.triple_shapes as ts
-import src.rdf_synthax_fct as rs
-import src.abstract_reshape_fct as ar
-import src.corese_tools as ct
 import src.class_signatures as cs
-import src.NLI_TripletCritic as nli
 
 
 if __name__ == '__main__':
