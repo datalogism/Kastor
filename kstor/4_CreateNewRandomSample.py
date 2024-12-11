@@ -3,14 +3,6 @@
 """
 Created on Fri Sep 27 10:35:40 2024
 
-@author: cringwal
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Sep 27 10:35:40 2024
-
 """
 
 from rdflib import Graph
@@ -25,13 +17,15 @@ import src.NLI_TripletCritic as llm_eval
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-s", "--shape_file_path", default=None)
-    parser.add_argument("-ng", "--searchspace_namedgraph", default="http://ns.inria.fr/kstor/#dates_inferenced")
     parser.add_argument("-sz", "--size_sample", default=1200)
-    # LATTER
+    parser.add_argument("-es", "--existing_sample", default=None)
+    ## EXISTING SAMPLE MUST LOOK LIKE
+    # "http://ns.inria.fr/kstor/samples/sample_0"
+    # TO DO CHOICE OF THE DISTRIBUTION
     # "uniform" / "inverse freq sampl"
     args = parser.parse_args()
 
-    if args.shape_file_path and args.searchspace_namedgraph and args.size_sample:
+    if args.shape_file_path and args.size_sample:
         shape = Graph()
         shape.parse(args.shape_file_path)
 
@@ -51,7 +45,6 @@ if __name__ == '__main__':
 
         size_sample=int(args.size_sample)
         existing_sample=None
-        #"http://ns.inria.fr/kstor/samples/sample_0"
         ####################### REVOIR INTEGRATION NAMED GRAPH PRECEDANT
         other_samples=[]
         if(existing_sample==None):
