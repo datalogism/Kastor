@@ -1,4 +1,4 @@
-# KAStor - Fine-tuned Small Language Models for Shape-based Active Relation Extraction
+# Kastor - Fine-tuned Small Language Models for Shape-based Active Relation Extraction
   ![kstor](img/intro_kastor.png)
 
 This anonymous repository is related to the submission at the ESWC2025 research track "Kastor: Fine-tuned Small Language Models for Shape-based Active Relation Extraction" 
