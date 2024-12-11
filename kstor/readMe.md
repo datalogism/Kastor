@@ -26,10 +26,10 @@ This step is applying the rules defined by the user, it use SPARQL construct que
 ## STEP 5-  Create a Random Sample
 This script was used to create $DR^0$, $DR^1$, $DR^2$
 ```
- python 5_CreateNewRandomSample.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
+ python 5_CreateNewRandomSample.py -s SHAPE_PATH -sz 1200 
 ```
-## STEP 5-  Create a Random Sample
+## STEP 6-  Export a TurtleLight for training a SLM
 This script was used to create $DR^0$, $DR^1$, $DR^2$
 ```
- python 6_CreateNewRandomSample.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
+ python 6_createTurtleLightdatasetFromNG.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
 ```
