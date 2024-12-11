@@ -19,9 +19,17 @@ This step is applying the rules defined by the user, it use SPARQL construct que
 ```
  python 3_WikicheckNamedGraph.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
 ```
-
-## STEP 4-  Create a Random Sample
+## STEP 4 - The exemples-specific patterns : $\mathbb{P}_{\mathcal{K}}(s^*)$ 
+```
+ python 4_getExampleSpecificPatternsStats.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
+```
+## STEP 5-  Create a Random Sample
 This script was used to create $DR^0$, $DR^1$, $DR^2$
 ```
- python 4_CreateNewRandomSample.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
+ python 5_CreateNewRandomSample.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
+```
+## STEP 5-  Create a Random Sample
+This script was used to create $DR^0$, $DR^1$, $DR^2$
+```
+ python 6_CreateNewRandomSample.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
 ```
