@@ -33,7 +33,7 @@ And then run the CORESE datastore with
 ## Named Graphs
 * The default named graph is the Jena default one :  <urn:x-arq:DefaultGraph>
   
-   -> $\mathcal{K}_{\mathbb{P}(s^*)}$ graphs are tagged with a uuid (see [related SPARQL query](https://github.com/datalogism/Kastor/blob/main/corese/sparql_queries/get_sample_K_P_s_star.sparql))
+   -> $\mathcal{K}_{\mathbb{P}(s^*)}$ graphs are tagged with a uuid (see [related SPARQL query](./sparql_queries/get_sample_K_P_s_star.sparql))
 * The graphs related to the distillation process are:
     * http://ns.inria.fr/kstor/#dates_inferenced > corresponding to $\mathcal{G}^{\mathcal{R}\models}_{\mathbb{P}(s^*)}$
     * http://ns.inria.fr/kstor/#found_in_abtract > corresponding to $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$
@@ -51,4 +51,4 @@ And then run the CORESE datastore with
 
 ## Querying the KB
 
-A set of basics SPARQL queries are given in [sparql_queries](https://github.com/datalogism/Kastor/tree/main/corese/sparql_queries) dir
+A set of basics SPARQL queries are given in [sparql_queries](./sparql_queries/) dir
