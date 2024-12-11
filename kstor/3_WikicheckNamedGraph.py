@@ -17,7 +17,7 @@ import src.class_signatures as cs
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-s", "--shape_file_path", default=None)
-    parser.add_argument("-ng", "--searchspace_namedgraph", default="http://ns.inria.fr/kstor/#dates_inferenced")
+    parser.add_argument("-s", "--searchspace_namedgraph", default="http://ns.inria.fr/kstor/#dates_inferenced")
     args = parser.parse_args()
 
     if args.shape_file_path and args.searchspace_namedgraph:
@@ -26,10 +26,8 @@ if __name__ == '__main__':
 
         sparql_ep = 'http://localhost:8080/sparql'
         search_ng=args.searchspace_namedgraph
-
-        #infered_data_ng="http://ns.inria.fr/kstor/#dates_inferenced"
         found_ng="http://ns.inria.fr/kstor/#found_in_abtract"
-   
+
         # "uniform" / "inverse freq sampl"
         print(">> get usefull data")
         namespaces = shape.namespaces()
@@ -39,6 +37,17 @@ if __name__ == '__main__':
             dict_simply_real[ts.getSimplifiedProp(p)]=p
         type_prop = ts.getShapePropWithType(shape)
         type_triples = ts.getShapeType(shape)
+        clean = False
+
+        if clean:
+            query = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX ks: <http://ns.inria.fr/kstor/#> SELECT  (COUNT(DISTINCT ?s) as ?nb) FROM <" + found_ng + "> WHERE { ?s ?p ?o }"
+            res = ct.get_sparql_dataframe(sparql_ep, query)
+            print("BEFORE>", res)
+            query = "PREFIX ks: <http://ns.inria.fr/kstor/#> DROP GRAPH " + found_ng
+            res = ct.sparql_service_update(sparql_ep, query)
+            query = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX ks: <http://ns.inria.fr/kstor/#> SELECT  (COUNT(DISTINCT ?s) as ?nb) FROM <" + found_ng + "> WHERE { ?s ?p ?o }"
+            res = ct.get_sparql_dataframe(sparql_ep, query)
+            print("AFTER>", res)
 
         nb_entities=cs.get_NbEntitiesNG(search_ng,sparql_ep)
         size_sample=nb_entities
