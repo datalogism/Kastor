@@ -48,7 +48,8 @@ Please follow the instructions given in [SLM section](../slm/)
 ```
  python LA1-retrieveWbArtifacts.py 
 ```
+The resulting *ToInspectTable.csv* file is dedicated to latter annotation 
 
-
-
-# STEP 9- Annotate them
+# STEP 9- Annotate the FP/FN triples
+add in 
+verif	reason
