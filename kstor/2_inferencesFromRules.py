@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Sep 27 10:35:40 2024
-
-@author: cringwal
-"""
-
 import re
 import src.corese_tools as ct
 import xml.etree.ElementTree as ET
