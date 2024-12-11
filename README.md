@@ -1,9 +1,9 @@
 # KAStor - Fine-tuned Small Language Models for Shape-based Active Relation Extraction
-  ![kstor](intro_kastor.png)
+  ![kstor](img/intro_kastor.png)
 
 
 ## Knowledge distillation
-![kstor](knowledgedistill4.png)
+![kstor](img/knowledgedistill4.png)
 Our framework is based on [Corese](https://github.com/Wimmics/corese), a Software platform for the Semantic Web of Linked Data. 
 The software could be deployed locally via a  [JAR software](https://github.com/Wimmics/corese/releases/download/release-4.5.0/corese-server-4.5.0.jar) which is using the Jena TDB as backend.
 
@@ -19,3 +19,5 @@ And then run the CORESE datastore with
 
 
 ## Light Active SLM learning
+
+![kstor](img/activeLearning7.png)
