@@ -9,13 +9,15 @@ The software could be deployed locally via a  [JAR software](https://github.com/
 2- Download the datadump gathering all the interesting data: [https://databus.dbpedia.org/cringwald/collections/kstor](https://databus.dbpedia.org/cringwald/collections/kstor)
 
 3- Load the data via the **tdbloader** as :
-> bash tdbloader --loc TDBLOADER_DIR FILES_DIR
-
+```
+bash tdbloader --loc TDBLOADER_DIR FILES_DIR
+```
 4- configure the config.properties path in consequence
 
 5- run the Corese server via :
->   java -Xmx10g -jar corese-server-4.5.0.jar -init "config.properties"
-
+```
+java -Xmx10g -jar corese-server-4.5.0.jar -init "config.properties"
+```
 6- The KB endpoint is now accesible via  'http://localhost:8080/sparql'
 
 ## Loading the distilled KB of the experiments
@@ -27,3 +29,24 @@ tdbloader --loc /path/for/database ...input files ...
 And then run the CORESE datastore with 
 ```
  java -Xmx10g -jar corese-server-4.5.0.jar -init "config.properties"
+```
+## Named Graphs
+* The default named graph is the Jena default one :  <urn:x-arq:DefaultGraph>
+* The graphs related to the distillation process are:
+    * http://ns.inria.fr/kstor/#dates_inferenced
+    * http://ns.inria.fr/kstor/#found_in_abtract
+
+* The graphs related to the sample created during the experiments are 
+
+   * http://ns.inria.fr/kstor/samples/sample_0
+   * http://ns.inria.fr/kstor/samples/sample_1
+   * http://ns.inria.fr/kstor/samples/sample_2
+   * http://ns.inria.fr/kstor/samples/sample_3
+* The datasets corrected during the light active process are stored in
+
+    * http://ns.inria.fr/kstor/annotated_samples/sample_1
+    * http://ns.inria.fr/kstor/annotated_samples/sample_2
+
+## Querying the KB
+
+A set of basics SPARQL queries are given in [sparql_queries](https://github.com/datalogism/Kastor/tree/main/corese/sparql_queries) dir
