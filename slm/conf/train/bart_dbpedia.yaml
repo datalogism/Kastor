@@ -1,0 +1,96 @@
+# @package _global_
+
+# optimization
+train_batch_size: 4
+eval_batch_size: 8
+gradient_acc_steps: 8
+gradient_clip_value: 10.0
+max_steps: 100000
+
+# evaluation and persistence
+apply_early_stopping: True
+val_check_interval: 1.0
+val_percent_check: 1.0
+monitor_var: 'loss'
+monitor_var_mode: 'min'
+patience: 5
+model_name: 'BART-base'
+save_top_k: 3
+
+# core
+gpus: 1
+precision: 16
+amp_level: 
+
+do_train: True
+do_eval: True
+do_predict: True
+evaluation_strategy: "no"
+prediction_loss_only: False
+checkpoint_path: 
+tokenizer_path:
+
+per_device_train_batch_size: 8
+per_device_eval_batch_size: 8
+
+per_gpu_train_batch_size:
+per_gpu_eval_batch_size:
+
+gradient_accumulation_steps: 1
+eval_accumulation_steps: 
+
+learning_rate: 0.00005
+weight_decay: 0.01
+adam_beta1: 0.9
+adam_beta2: 0.999
+adam_epsilon: 0.00000001
+max_grad_norm: 1.0
+
+num_train_epochs: 10.0
+
+seed: 42
+
+fp16_opt_level: "O1"
+fp16_backend: "auto"
+local_rank: -1
+
+dataloader_drop_last: False
+eval_steps: 
+dataloader_num_workers: 2
+
+past_index: -1
+
+run_name: 
+disable_tqdm: 
+
+remove_unused_columns: True
+label_names: 
+
+load_best_model_at_end: True
+metric_for_best_model: "loss"
+greater_is_better: False
+ignore_data_skip: False
+sharded_ddp: False
+deepspeed: 
+label_smoothing_factor: 0.0
+adafactor: False
+group_by_length: False
+
+dataloader_pin_memory: True
+
+
+label_smoothing: 0.0
+sortish_sampler: False
+predict_with_generate: False
+decoder_layerdrop: 
+dropout: 0.1
+attention_dropout:
+lr_scheduler: "inverse_square_root"
+warmup_steps: 100
+classifier: False
+
+# Callbacks
+samples_interval: 100
+
+# Logger
+offline_mode: True
