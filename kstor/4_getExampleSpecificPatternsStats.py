@@ -30,7 +30,7 @@ if __name__ == '__main__':
         dir_out=args.output_dir
         found_ng=args.named_graph_sample
         #dir_root="/user/home/Desktop/"
-        found_ng="http://ns.inria.fr/kstor/#found_in_abtract"
+        #found_ng="http://ns.inria.fr/kstor/#found_in_abtract"
         default_ng="<urn:x-arq:DefaultGraph>"
         # "uniform" / "inverse freq sampl"
         print(">> get usefull data")
