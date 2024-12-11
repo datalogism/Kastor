@@ -1,9 +1,9 @@
 # CORESE KB 
 
 Our framework is based on [Corese](https://github.com/Wimmics/corese), a Software platform for the Semantic Web of Linked Data. 
-The software could be deployed locally via a  [JAR software](https://github.com/Wimmics/corese/releases/download/release-4.5.0/corese-server-4.5.0.jar) and the persistancy of the KB is allowed by the tdbloader of Jena.
+The software could be deployed locally via a  [JAR software](https://github.com/Wimmics/corese/releases/download/release-4.5.0/corese-server-4.5.0.jar) and the persistancy of the KB is allowed by the tdbloader of Jena (available in this directory).
 
-## Data base initialization
+## Starting from scratch: Data base initialization
 1- First download CORESE jar file and the tdbloader script
 
 2- Download the datadump gathering all the interesting data: [https://databus.dbpedia.org/cringwald/collections/kstor](https://databus.dbpedia.org/cringwald/collections/kstor)
@@ -17,3 +17,13 @@ The software could be deployed locally via a  [JAR software](https://github.com/
 >   java -Xmx10g -jar corese-server-4.5.0.jar -init "config.properties"
 
 6- The KB endpoint is now accesible via  'http://localhost:8080/sparql'
+
+## Loading the distilled KB of the experiments
+
+To load the KB resulting from our experiment, please first load the [Kastor datadump available on Zenodo](https://zenodo.org/records/14382674): 
+```
+tdbloader --loc /path/for/database ...input files ... 
+```
+And then run the CORESE datastore with 
+```
+ java -Xmx10g -jar corese-server-4.5.0.jar -init "config.properties"
