@@ -13,3 +13,8 @@ This step is applying the rules defined by the user, it use SPARQL construct que
 ```
  python 2_inferencesRules.py -r RULES_PATH -m insert
 ```
+
+## STEP 3-  Wikicheck 
+```
+ python 3_inferencesRules.py -r RULES_PATH -m insert
+```
