@@ -1,18 +1,21 @@
 # @package _global_
 num_workers: 1
-syntax_name: "DS_turtleS_0datatype_1inLine_1facto_BART_$SAMPLE_NAME$_train_$MODEL_NAME$"  # $SAMPLE_NAME$ and $MODEL_NAME$ must be adapted
-project: "$WDB_ProjectName$"  # $WDB_ProjectName$ to adapt
+syntax_name: "DS_turtleS_0datatype_1inLine_1facto_BART_$SAMPLE_NAME$_train_$MODEL_NAME$"
+project: "$WDB_ProjectName$"
 dataset_name: '../../datasets/bart_dbpedia.py'
 text_column: 'context'
 target_column: 'triplets'
+tkn_path: '$TokenizePath$'
+ckpt_path: '$ModelCheckpointPath$'
 train_file: '$SAMPLES_DIR$/$SAMPLES_name$/DS_turtleS_0datatype_1inLine_1facto_train.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
 validation_file: '$SAMPLES_DIR$/$SAMPLES_name$/DS_turtleS_0datatype_1inLine_1facto_val.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
-test_file: '$SAMPLES_DIR$/$SAMPLES_name$/DS_turtleS_0datatype_1inLine_1facto_test.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
+test_file: '$SAMPLES_DIR$/$SAMPLES_name$/DS_turtleS_0datatype_1inLine_1facto_test.json'  # HERE THE SAMPLE COULD BE A CORRECTED ONE
 shape_file: '../../PersonShape.ttl'
 vocab_file: '../../syntaxes_vocab.json'
 grammar_file: '../../turtle_light_facto.ebnf'
+test_save_dir: '../../Test_DS/'  # MUST BE UPDATED 
 overwrite_cache: True
-preprocessing_num_workers:  
+preprocessing_num_workers:
 model_used: "BART"
 model_size: "base"
 add_vocab: True
@@ -23,10 +26,10 @@ max_source_length: 1024
 max_target_length: 1024
 val_max_target_length: 1024
 pad_to_max_length:  False
-max_train_samples: 1000  # MUST BE UPDATED DEPENDING SAMPLE SIZE
-max_val_samples: 100   # MUST BE UPDATED DEPENDING SAMPLE SIZE
-max_test_samples: 100   # MUST BE UPDATED DEPENDING SAMPLE SIZE
-nb_folds: 10   # MUST BE UPDATED DEPENDING FOLD NUMVER
+max_train_samples: 100  # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_val_samples: 100  # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_test_samples: 599  # MUST BE UPDATED DEPENDING SAMPLE SIZE
+nb_folds: 10
 num_beams: 
 eval_beams: 3
 ignore_pad_token_for_loss: True
