@@ -17,7 +17,7 @@ import src.class_signatures as cs
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-s", "--shape_file_path", default=None)
-    parser.add_argument("-s", "--searchspace_namedgraph", default="http://ns.inria.fr/kstor/#dates_inferenced")
+    parser.add_argument("-ng", "--searchspace_namedgraph", default="http://ns.inria.fr/kstor/#dates_inferenced")
     args = parser.parse_args()
 
     if args.shape_file_path and args.searchspace_namedgraph:
