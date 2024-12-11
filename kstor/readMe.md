@@ -19,3 +19,8 @@ This step is applying the rules defined by the user, it use SPARQL construct que
 ```
  python 3_WikicheckNamedGraph.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
 ```
+
+## STEP 4-  Create a Random Sample
+```
+ python 4_CreateNewRandomSample.py -s SHAPE_PATH -sz 600
+```
