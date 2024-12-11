@@ -1,0 +1,1 @@
+PREFIX ks: <http://ns.inria.fr/kstor/#>  Select  (MIN(?xnli) as ?xnli_min)  (AVG(?xnli) as ?xnli_avg) (MAX(?xnli) as ?xnli_max) FROM <http://ns.inria.fr/kstor/samples/sample_3> { ?s ?p ?n. ?n ks:xnli ?xnli. }

@@ -1,0 +1,2 @@
+PREFIX dbo: <http://dbpedia.org/ontology/> SELECT  (COUNT(?s) as ?nb) FROM <http://ns.inria.fr/kstor/#found_in_abtract> WHERE {  ?s ?p ?o }
+

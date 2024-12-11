@@ -1,0 +1,1 @@
+PREFIX dbo: <http://dbpedia.org/ontology/>  PREFIX dcat: <http://www.w3.org/ns/dcat#>  SELECT (COUNT(DISTINCT ?s) as ?nb) from <urn:x-arq:DefaultGraph>  where {  ?s a dbo:Person.  ?s dcat:resource_identifier  ?uid.  } LIMIT 10

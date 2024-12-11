@@ -1,0 +1,1 @@
+PREFIX dbo: <http://dbpedia.org/ontology/> SELECT  (COUNT(DISTINCT ?s) as ?nb) FROM <http://ns.inria.fr/kstor/#dates_inferenced> WHERE {  ?s ?p ?o }
