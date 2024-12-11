@@ -18,10 +18,10 @@ The process will callback and send the metrics, as well as, samples of the data 
 
 ## STEP2 - Test a model
 
-* First config the data files [DS_turtleS_0datatype_1inLine_1facto_bart_train_init](../conf/data/DS_turtleS_0datatype_1inLine_1facto_bart_test_init.yaml): 
+* First config the data files [DS_turtleS_0datatype_1inLine_1facto_bart_test_init](../conf/data/DS_turtleS_0datatype_1inLine_1facto_bart_test_init.yaml): 
 this one must point to your datasets / to your WanDB config / your SHACL shape/training set size and split config
 It must also point to the checkpoint of your models as well as to the tokenizer you finetuned during the last step
-* Train your model via slurm via [../job_bart_train_init.sh](job_bart_test_init.sh)
+* Train your model via slurm via [../job_bart_test_init.sh](job_bart_test_init.sh)
 * The metrics and performance results computed will be recorded into the defined *test_save_dir* 
 
 The process will callback and send the metrics computed during the test on a given WanDB plateform: 
