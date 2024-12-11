@@ -21,6 +21,7 @@ This step is applying the rules defined by the user, it use SPARQL construct que
 ```
 
 ## STEP 4-  Create a Random Sample
+This script was used to create $DR^0$, $DR^1$, $DR^2$
 ```
- python 4_CreateNewRandomSample.py -s SHAPE_PATH -sz 600
+ python 4_CreateNewRandomSample.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
 ```
