@@ -51,10 +51,11 @@ Please follow the instructions given in [SLM section](../slm/)
 The resulting */OUTPUT_DIR/ToInspectTable.csv* file is dedicated to the latter annotation.
 
 
-### STEP LA2- Annotate the FP/FN triples
+### STEP LA2- Annotate the FP/FN triples And Push the annotations to the KB
 
 The */OUTPUT_DIR/ToInspectTable.csv* file contains two specifics columns dedicated to the annotation:
 * The column "verif" is dedicated to classify as *TRUE* or *FALSE* classification. 
 * The column "reason" allows the annotation given the typology of errors proposed in the paper
-
-### STEP LA2- Annotate the FP/FN triples
+```
+ python LA2-PushAnnotationsToKB.py   -s SHAPE_PATH -annot annotated_file -samp named_graph_sample 
+```
