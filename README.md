@@ -1,5 +1,5 @@
-# KAStor - Knowledge active and shape-based extractor for text-to-graph knowledge base infusion and completion
-![kstor](logokstor2.png)
+# KAStor - Fine-tuned Small Language Models for Shape-based Active Relation Extraction
+![kstor](intro_kastor.png)
 
 
 I developed ScilEx scripts in the context of a systematic review conducted during my Phd, and introduced in :  
