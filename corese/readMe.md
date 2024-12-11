@@ -32,20 +32,22 @@ And then run the CORESE datastore with
 ```
 ## Named Graphs
 * The default named graph is the Jena default one :  <urn:x-arq:DefaultGraph>
+  
+   -> $\mathcal{K}_{\mathbb{P}(s^*)}$ graphs are tagged with a uuid (see [related SPARQL query](https://github.com/datalogism/Kastor/blob/main/corese/sparql_queries/get_sample_K_P_s_star.sparql))
 * The graphs related to the distillation process are:
-    * http://ns.inria.fr/kstor/#dates_inferenced
-    * http://ns.inria.fr/kstor/#found_in_abtract
+    * http://ns.inria.fr/kstor/#dates_inferenced > corresponding to $\mathcal{G}^{\mathcal{R}\models}_{\mathbb{P}(s^*)}$
+    * http://ns.inria.fr/kstor/#found_in_abtract > corresponding to $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$
 
 * The graphs related to the sample created during the experiments are 
 
-   * http://ns.inria.fr/kstor/samples/sample_0
-   * http://ns.inria.fr/kstor/samples/sample_1
-   * http://ns.inria.fr/kstor/samples/sample_2
-   * http://ns.inria.fr/kstor/samples/sample_3
+   * http://ns.inria.fr/kstor/samples/sample_0 > corresponding to $RD^0$
+   * http://ns.inria.fr/kstor/samples/sample_1 > corresponding to $RD^1$
+   * http://ns.inria.fr/kstor/samples/sample_2 > corresponding to $RD^2$
+   * http://ns.inria.fr/kstor/samples/sample_3 > corresponding to $RD^-$
 * The datasets corrected during the light active process are stored in
 
-    * http://ns.inria.fr/kstor/annotated_samples/sample_1
-    * http://ns.inria.fr/kstor/annotated_samples/sample_2
+    * http://ns.inria.fr/kstor/annotated_samples/sample_1 > corresponding to $RD^1+$
+    * http://ns.inria.fr/kstor/annotated_samples/sample_2 > corresponding to $RD^2+$
 
 ## Querying the KB
 
