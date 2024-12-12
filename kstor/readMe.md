@@ -12,6 +12,8 @@ This step associates a random uuid to each entity related to dbo:class focused b
 ```
 python KD1_initializeKastorFromShape.py -s SHAPE_PATH
 ```
+We can then get a sample of  $\mathcal{K}_{\mathbb{P}(s^*)}$ [with a SPARQL query](../corese/sparql_queries/get_sample_K_P_s_star.sparql)
+
 ### KD-STEP 2-  Run inferences rules (optional):
 This step is applying the rules defined by the user and create $\mathcal{G}^{\mathcal{R}\models}_{\mathbb{P}(s^*)}$, it uses SPARQL construct queries gathered into a rul file as described [here](https://files.inria.fr/corese/doc/rule.html)
 ```
@@ -19,11 +21,16 @@ This step is applying the rules defined by the user and create $\mathcal{G}^{\ma
 ```
 We applied in our case the following rules: 
 $$dbo:deathDate \models dbo:deathYear$$ and  $$dbo:birthDate  \models dbo:birthYear$$ available in [./rules/Person_rules.rul](./rules/Person_rules.rul) file
+
+We can then count the number of triples infered [ with a SPARQL query](../corese/sparql_queries/get_inferences_nb.sparql)
+
 ### KD-STEP 3-  Wikicheck: 
 This script check if the values of the datatype properties objects could be found in the Wikipedia abstracts, it creates $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$
 ```
  python KD3_WikicheckNamedGraph.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
 ```
+We can then count the number of entities in $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$ [ with a SPARQL query](../corese/sparql_queries/get_found_in_abstract_nb.sparql)
+
 ### KD-STEP 4 - The exemples-specific patterns 
 This script is used to analyse the example-specific patterns set $\mathbb{P}_{\mathcal{K}}(s^*)$ 
 ```
@@ -34,6 +41,7 @@ This script was used to create $DR^0$, $DR^1$, $DR^2$
 ```
  python KD5_CreateNewRandomSample.py -s SHAPE_PATH -sz 1200 
 ```
+A sample can then be described with a [SPARQL query](../corese/sparql_queries/get_sample_nli_stats.sparql)
 ## KD-STEP 6-  Export a TurtleLight dataset for training a SLM
 Export a previously create sample in TurtleLight datasets splitted in train/test/eval  
 ```
