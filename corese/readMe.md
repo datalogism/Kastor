@@ -6,7 +6,7 @@ The software could be deployed locally via a  [JAR software](https://github.com/
 ## Starting from scratch: Data base initialization
 1- First download CORESE jar file and the tdbloader script
 
-2- Download the datadump gathering all the interesting data: [https://databus.dbpedia.org/](https://databus.dbpedia.org/cringwald/collections/kstor)
+2- Download the datadump gathering all the interesting data: [https://databus.dbpedia.org/](https://databus.dbpedia.org/)
 
 3- Load the data via the **tdbloader** as :
 ```
