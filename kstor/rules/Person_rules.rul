@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<rdf:RDF 
+    xmlns:rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns     = "http://ns.inria.fr/corese/rule/">
+
+<rule>
+<body>  
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT { GRAPH ks:dates_inferenced { 
+                        ?s  dbo:birthYear ?year
+                        }
+                }
+
+                WHERE{
+                    
+                        select DISTINCT ?s ?year
+                        WHERE { 
+                            ?s a dbo:Person.
+                            ?s dbo:birthDate ?bd.
+bind(year(?bd) as ?year).
+filter not exists{?s dbo:birthYear ?by.}
+                               } 
+                         GROUP BY ?s ORDER BY ?s 
+                  
+                    
+                }
+]]>
+</body>
+</rule>
+<rule>
+<body>  
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT { 
+    GRAPH ks:dates_inferenced { 
+        ?s  dbo:deathYear ?year
+}
+                }
+
+                WHERE{
+                    
+                        select DISTINCT ?s ?year
+                        WHERE { 
+                            ?s a dbo:Person.
+                            ?s dbo:deathDate ?bd.
+bind(year(?bd) as ?year).
+filter not exists{?s dbo:deathYear ?by.}
+                               } 
+                         GROUP BY ?s ORDER BY ?s 
+                  
+                    
+                }
+]]>
+</body>
+</rule>
+
+
+</rdf:RDF>
