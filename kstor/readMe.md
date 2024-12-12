@@ -17,6 +17,8 @@ This step is applying the rules defined by the user and create $\mathcal{G}^{\ma
 ```
  python KD2_inferencesRules.py -r RULES_PATH -m insert
 ```
+We applied in our case the following rules: 
+$$dbo:deathDate \models dbo:deathYear$$ and  $$dbo:birthDate  \models dbo:birthYear$$ available in [./rules/Person_rules.rul](./rules/Person_rules.rul) file
 ### KD-STEP 3-  Wikicheck: 
 This script check if the values of the datatype properties objects could be found in the Wikipedia abstracts, it creates $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$
 ```
