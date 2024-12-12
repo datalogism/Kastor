@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Nov 30 10:37:45 2023
-
-@author: cringwal
 """
 import re 
 import json
