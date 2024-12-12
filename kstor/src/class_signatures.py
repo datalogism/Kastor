@@ -3,7 +3,6 @@
 """
 Created on Wed Oct  2 17:49:15 2024
 
-@author: cringwal
 """
 
 from SPARQLWrapper import JSON, POST, POSTDIRECTLY, SPARQLWrapper
