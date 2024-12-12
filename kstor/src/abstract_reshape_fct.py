@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Dec 12 16:04:47 2023
-
-@author: cringwal
 """
 
 from transformers import BartForConditionalGeneration, AutoTokenizer, T5Tokenizer
