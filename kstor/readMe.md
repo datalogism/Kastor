@@ -36,7 +36,8 @@ This script is used to analyse the example-specific patterns set $\mathbb{P}_{\m
 ```
  python KD4_getExampleSpecificPatternsStats.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
 ```
-Result will be saved in a csv file 
+Result will be saved in [a csv file](./outputs/results_data/RDF_motif_foundNG_for_graph.csv); note that the given script could be also used on a sample level (see results on [DR0](./outputs/results_data/RDF_motif_sample_0.csv),DR2,DR-..) 
+
 ### KD-STEP 5-  Create a Random Sample
 This script was used to create $DR^0$, $DR^1$, $DR^2$
 ```
