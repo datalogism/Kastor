@@ -40,6 +40,8 @@ Export a previously create sample in TurtleLight datasets splitted in train/test
  python KD6_createTurtleLightdatasetFromNG.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
 ```
 
+examples of samples produced is given in [DS_turtleS_0datatype_1inLine_1facto_train_sample.json](../samples/DS_turtleS_0datatype_1inLine_1facto_train_sample.json)
+
 ## Light Active SLM learning
 
 ![kstor](../img/activeLearning7.png)
