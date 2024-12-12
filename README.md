@@ -7,3 +7,9 @@ The produced KB is available on [Zenodo](https://zenodo.org/records/14382674) an
 
 ## Full pipeline
   ![kstor](img/full_pipeline.png)
+
+0- **Initialise a KB** > see [corese instructions](./kstor/corese/)
+DESIGN A SHAPE AND LOAD a DBpediaxWikipedia dual base 
+1- Knowledge Distillation  > see [corese instructions](./kstor/corese/)
+Filter/consolidate the KB to get  
+Light Active SLM Learning
