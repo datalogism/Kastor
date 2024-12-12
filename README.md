@@ -10,6 +10,7 @@ The produced KB is available on [Zenodo](https://zenodo.org/records/14382674) an
 
 0- **Initialise a KB** > see [corese instructions](./kstor/corese/)
 DESIGN A SHAPE AND LOAD a DBpediaxWikipedia dual base 
+
 1- Knowledge Distillation  > see [corese instructions](./kstor/corese/)
 Filter/consolidate the KB to get  
-Light Active SLM Learning
+2- Light Active SLM Learning
