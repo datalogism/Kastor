@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Mar 27 10:51:04 2023
-
-@author: cringwal
 """
 
 import itertools
