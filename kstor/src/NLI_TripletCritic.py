@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Oct  3 13:58:18 2024
-
-@author: cringwal
 """
 import transformers 
 
