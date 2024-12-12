@@ -36,12 +36,14 @@ This script is used to analyse the example-specific patterns set $\mathbb{P}_{\m
 ```
  python KD4_getExampleSpecificPatternsStats.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
 ```
+Result will be saved in a csv file 
 ### KD-STEP 5-  Create a Random Sample
 This script was used to create $DR^0$, $DR^1$, $DR^2$
 ```
  python KD5_CreateNewRandomSample.py -s SHAPE_PATH -sz 1200 
 ```
 A sample can then be described with a [SPARQL query](../corese/sparql_queries/get_sample_nli_stats.sparql)
+
 ## KD-STEP 6-  Export a TurtleLight dataset for training a SLM
 Export a previously create sample in TurtleLight datasets splitted in train/test/eval  
 ```
