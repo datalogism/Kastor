@@ -6,11 +6,14 @@ It gathers all the material to reproduce the experiments, which could be easily 
 The produced KB is available on [Zenodo](https://zenodo.org/records/14382674) and could be easily queried or used to produce new samples.
 
 ## Full pipeline
-  ![kstor](img/full_pipeline.png)
+![kstor](img/full_pipeline.png)
 
-0- **Initialise a KB** > see [corese instructions](./kstor/corese/)
+0- Initialise a KB> see [corese instructions](./kstor/corese/)
 DESIGN A SHAPE AND LOAD a DBpediaxWikipedia dual base 
 
-1- Knowledge Distillation  > see [corese instructions](./kstor/corese/)
-Filter/consolidate the KB to get  
-2- Light Active SLM Learning
+> The two steps are explained in detail in the Kstor [code directory](./kstor/kstor/), they are:
+
+1- Knowledge Distillation: Filter/consolidate the KB to get samples from a characterized example-specific pattern distribution  
+2- Light Active SLM Learning: learn models and iterate over it to build ground-truth and gold text-to-rdf extractors
+
+
