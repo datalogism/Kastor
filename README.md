@@ -17,3 +17,7 @@ DESIGN A SHAPE AND LOAD a DBpediaxWikipedia dual base
 2- Light Active SLM Learning: learn models and iterate over it to build ground-truth and gold text-to-rdf extractors
 
 
+## Test the produced models 
+
+The produced models are available here, including the tokenizer as well as the last checkpoint obtained from the finetuning for M(DR-),  M'(DR0), M'(DR1+): https://zenodo.org/records/14498940
+You can easily test the resulting extractor via [this notebook](../Test_models.ipynb)
