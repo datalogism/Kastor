@@ -55,7 +55,7 @@ examples of samples produced is given in [DS_turtleS_0datatype_1inLine_1facto_tr
 
 ## Light Active SLM learning
 
-![kstor](../img/activeLearning7.png)
+![kstor](../img/ActiveLearningFinal.png)
 ### STEP LA0- Train a model
 Please follow the instructions given in [SLM section](../slm/)
 
