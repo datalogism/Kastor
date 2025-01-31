@@ -10,7 +10,7 @@ The produced KB is available on [Zenodo](https://zenodo.org/records/14382674) an
 
 0- Initialise a KB> see [corese instructions](./corese/)
 DESIGN A SHAPE AND LOAD a DBpediaxWikipedia dual base 
-> The two steps are explained in detail in the Kstor [code directory](./kstor/kstor/), they are:
+> The two steps are explained in detail in the Kstor [code directory](./kstor/), they are:
 
 1- Knowledge Distillation: Filter/consolidate the KB to get samples from a characterized example-specific pattern distribution  
 2- Light Active SLM Learning: learn models and iterate over it to build ground-truth and gold text-to-rdf extractors
