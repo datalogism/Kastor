@@ -1,7 +1,7 @@
 # KASTOR PROCESS
 
 STEP 0- Initialize the Kastor KB: $\mathcal{K}$
-[See the CORESE dir readMe](../corese#starting-from-scratch-data-base-initialization)
+[See the CORESE dir readMe](../corese/readMe.md#starting-from-scratch-data-base-initialization)
 
 
 ## Knowledge distillation
@@ -43,7 +43,7 @@ This script was used to create $DR^0$, $DR^1$, $DR^2$
 ```
  python KD5_CreateNewRandomSample.py -s SHAPE_PATH -sz 1200 
 ```
-A sample can then be described with a [SPARQL query](../corese/sparql_queries/get_sample_nli_stats.sparql)
+A sample can then be described with a [SPARQL query](./corese/sparql_queries/get_sample_nli_stats.sparql)
 
 ## KD-STEP 6-  Export a TurtleLight dataset for training a SLM
 Export a previously create sample in TurtleLight datasets splitted in train/test/eval  
@@ -51,7 +51,8 @@ Export a previously create sample in TurtleLight datasets splitted in train/test
  python KD6_createTurtleLightdatasetFromNG.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
 ```
 
-examples of samples produced is given in [DS_turtleS_0datatype_1inLine_1facto_train_sample.json](../samples/DS_turtleS_0datatype_1inLine_1facto_train_sample.json)
+examples of samples produced is given in [DS_turtleS_0datatype_1inLine_1facto_train_sample.json](./samples/DS_turtleS_0datatype_1inLine_1facto_train_sample.json)
+
 
 ## Light Active SLM learning
 
