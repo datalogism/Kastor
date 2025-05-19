@@ -1,0 +1,39 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/CompanyShape> a sh:NodeShape ;
+    sh:property [ sh:path <http://dbpedia.org/ontology/leaderParty> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/foundingDate> ],
+        [ sh:path <http://dbpedia.org/ontology/isPartOf> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/revenue> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/netIncome> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/numberOfLocations> ],
+        [ sh:path <http://dbpedia.org/ontology/industry> ],
+        [ sh:class <http://dbpedia.org/ontology/City> ;
+            sh:path <http://dbpedia.org/ontology/foundationPlace> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/operatingIncome> ],
+        [ sh:class <http://dbpedia.org/ontology/Company> ;
+            sh:path <http://dbpedia.org/ontology/parentCompany> ],
+        [ sh:path <http://dbpedia.org/ontology/service> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/numberOfEmployees> ],
+        [ sh:class <http://dbpedia.org/ontology/Company> ;
+            sh:path <http://dbpedia.org/ontology/subsidiary> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/location> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/regionServed> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/keyPerson> ],
+        [ sh:path <http://dbpedia.org/ontology/type> ],
+        [ sh:path <http://dbpedia.org/ontology/elevationAboveTheSeaLevel> ],
+        [ sh:path <http://dbpedia.org/ontology/product> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Company> .
+

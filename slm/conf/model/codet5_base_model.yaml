@@ -1,0 +1,11 @@
+# @package _global_
+
+model_name_or_path: 'Salesforce/codet5-base'
+config_name: 'Salesforce/codet5-base'
+tokenizer_name: 'Salesforce/codet5-base'
+cache_dir: 
+use_fast_tokenizer: True
+
+model_revision: 'main'
+use_auth_token: False
+finetune: False

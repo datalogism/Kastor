@@ -1,0 +1,25 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/FoodShape> a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/carbohydrate> ],
+        [ sh:path <http://dbpedia.org/ontology/order> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/region> ],
+        [ sh:path <http://dbpedia.org/ontology/isPartOf> ],
+        [ sh:path <http://dbpedia.org/ontology/mainIngredient> ],
+        [ sh:path <http://dbpedia.org/ontology/genus> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/servingTemperature> ],
+        [ sh:path <http://dbpedia.org/ontology/ingredient> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/protein> ],
+        [ sh:path <http://dbpedia.org/ontology/dishVariation> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/fat> ],
+        [ sh:path <http://dbpedia.org/ontology/division> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Food> .
+

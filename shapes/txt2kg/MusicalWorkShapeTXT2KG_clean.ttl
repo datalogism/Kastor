@@ -1,0 +1,34 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/MusicalWorkShape> a sh:NodeShape ;
+    sh:property [ sh:class <http://dbpedia.org/ontology/Language> ;
+            sh:path <http://dbpedia.org/ontology/language> ],
+        [ sh:class <http://dbpedia.org/ontology/Album> ;
+            sh:path <http://dbpedia.org/ontology/album> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/formerBandMember> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/writer> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/recordedIn> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/releaseDate> ],
+        [ sh:class <http://dbpedia.org/ontology/RecordLabel> ;
+            sh:path <http://dbpedia.org/ontology/recordLabel> ],
+        [ sh:path <http://dbpedia.org/ontology/precededBy> ],
+        [ sh:path <http://dbpedia.org/ontology/format> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/producer> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/runtime> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/artist> ],
+        [ sh:path <http://dbpedia.org/ontology/type> ],
+        [ sh:path <http://dbpedia.org/ontology/timeZone> ],
+        [ sh:class <http://dbpedia.org/ontology/Genre> ;
+            sh:path <http://dbpedia.org/ontology/genre> ],
+        [ sh:path <http://dbpedia.org/ontology/associatedBand/associatedMusicalArtist> ],
+        [ sh:path <http://dbpedia.org/ontology/followedBy> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/MusicalWork> .
+

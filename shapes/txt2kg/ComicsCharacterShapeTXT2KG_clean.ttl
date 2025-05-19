@@ -1,0 +1,17 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+<http://shaclshapes.org/ComicsCharacterShape> a sh:NodeShape ;
+    sh:property [ sh:path <http://dbpedia.org/ontology/firstAired> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/child> ],
+        [ sh:path <http://dbpedia.org/ontology/broadcastedBy> ],
+        [ sh:path <http://dbpedia.org/ontology/series> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/voice> ],
+        [ sh:path <http://dbpedia.org/ontology/lastAired> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/creator> ],
+        [ sh:path <http://dbpedia.org/ontology/fullName> ],
+        [ sh:path <http://dbpedia.org/ontology/firstAppearanceInFilm> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/ComicsCharacter> .
+

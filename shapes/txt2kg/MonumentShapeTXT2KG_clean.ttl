@@ -1,0 +1,19 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+<http://shaclshapes.org/MonumentShape> a sh:NodeShape ;
+    sh:property [ sh:path <http://dbpedia.org/ontology/category> ],
+        [ sh:path <http://dbpedia.org/ontology/dedicatedTo> ],
+        [ sh:path <http://dbpedia.org/ontology/material> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsSouthwest> ],
+        [ sh:path <http://dbpedia.org/ontology/inaugurationDate> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/location> ],
+        [ sh:path <http://dbpedia.org/ontology/nativeName> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsNorth> ],
+        [ sh:path <http://dbpedia.org/ontology/religion> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/designer> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsWest> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsSoutheast> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Monument> .
+

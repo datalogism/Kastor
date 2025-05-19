@@ -1,0 +1,92 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/ScientistShape> a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/areaTotal> ],
+        [ sh:path <http://dbpedia.org/ontology/influencedBy> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/birthPlace> ],
+        [ sh:datatype xsd:float ;
+            sh:path <http://dbpedia.org/ontology/percentageOfAreaWater> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/doctoralAdvisor> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/region> ],
+        [ sh:class <http://dbpedia.org/ontology/Language> ;
+            sh:path <http://dbpedia.org/ontology/language> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/deathDate> ],
+        [ sh:path <http://dbpedia.org/ontology/timeZone> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/spouse> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/viceChancellor> ],
+        [ sh:class <http://dbpedia.org/ontology/Organisation> ;
+            sh:path <http://dbpedia.org/ontology/affiliation> ],
+        [ sh:class <http://dbpedia.org/ontology/GovernmentType> ;
+            sh:path <http://dbpedia.org/ontology/governmentType> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/deathPlace> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/populationMetroDensity> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/foundingYear> ],
+        [ sh:class <http://dbpedia.org/ontology/EducationalInstitution> ;
+            sh:path <http://dbpedia.org/ontology/almaMater> ],
+        [ sh:class <http://dbpedia.org/ontology/Language> ;
+            sh:path <http://dbpedia.org/ontology/officialLanguage> ],
+        [ sh:class <http://dbpedia.org/ontology/City> ;
+            sh:path <http://dbpedia.org/ontology/capital> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/utcOffset> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/birthDate> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/gridReference> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/leader> ],
+        [ sh:class <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/award> ],
+        [ sh:path <http://dbpedia.org/ontology/religion> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/birthName> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/areaMetro> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/areaCode> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/residence> ],
+        [ sh:path <http://dbpedia.org/ontology/isPartOf> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/chancellor> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ],
+        [ sh:path <http://dbpedia.org/ontology/professionalField> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/leaderTitle> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/dissolutionYear> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/nationality> ],
+        [ sh:path <http://dbpedia.org/ontology/type> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/populationTotal> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/foundingDate> ],
+        [ sh:path <http://dbpedia.org/ontology/citizenship> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/demonym> ],
+        [ sh:path <http://dbpedia.org/ontology/knownFor> ],
+        [ sh:class <http://dbpedia.org/ontology/Currency> ;
+            sh:path <http://dbpedia.org/ontology/currency> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/postalCode> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/longName> ],
+        [ sh:path <http://dbpedia.org/ontology/areaOfWater> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/motto> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Scientist> .
+

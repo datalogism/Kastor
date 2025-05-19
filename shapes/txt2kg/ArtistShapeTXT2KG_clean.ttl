@@ -1,0 +1,38 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/ArtistShape> a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/activeYearsStartYear> ],
+        [ sh:path <http://dbpedia.org/ontology/isPartOf> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/birthDate> ],
+        [ sh:class <http://dbpedia.org/ontology/Instrument> ;
+            sh:path <http://dbpedia.org/ontology/instrument> ],
+        [ sh:path <http://dbpedia.org/ontology/professionalField> ],
+        [ sh:path <http://dbpedia.org/ontology/associatedBand/associatedMusicalArtist> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/deathPlace> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/background> ],
+        [ sh:class <http://dbpedia.org/ontology/RecordLabel> ;
+            sh:path <http://dbpedia.org/ontology/recordLabel> ],
+        [ sh:path <http://dbpedia.org/ontology/elevationAboveTheSeaLevel> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/birthPlace> ],
+        [ sh:class <http://dbpedia.org/ontology/EducationalInstitution> ;
+            sh:path <http://dbpedia.org/ontology/training> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/nationality> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/deathDate> ],
+        [ sh:class <http://dbpedia.org/ontology/PersonFunction> ;
+            sh:path <http://dbpedia.org/ontology/occupation> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/birthYear> ],
+        [ sh:class <http://dbpedia.org/ontology/Genre> ;
+            sh:path <http://dbpedia.org/ontology/genre> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Artist> .
+

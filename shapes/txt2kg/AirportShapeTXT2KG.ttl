@@ -1,0 +1,70 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/AirportShape> a sh:NodeShape ;
+    sh:property [ sh:path <http://dbpedia.org/ontology/elevationAboveTheSeaLevel> ],
+        [ sh:path <http://dbpedia.org/ontology/order> ],
+        [ sh:path <http://dbpedia.org/ontology/leaderParty> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/leader> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ],
+        [ sh:path <http://dbpedia.org/ontology/isPartOf> ],
+        [ sh:class <http://dbpedia.org/ontology/City> ;
+            sh:path <http://dbpedia.org/ontology/capital> ],
+        [ sh:path <http://dbpedia.org/ontology/1stRunwaySurfaceType> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/demonym> ],
+        [ sh:class <http://dbpedia.org/ontology/Language> ;
+            sh:path <http://dbpedia.org/ontology/officialLanguage> ],
+        [ sh:path <http://dbpedia.org/ontology/2ndRunwaySurfaceType> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/regionServed> ],
+        [ sh:class <http://dbpedia.org/ontology/MilitaryConflict> ;
+            sh:path <http://dbpedia.org/ontology/battle> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/areaCode> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/headquarter> ],
+        [ sh:class <http://dbpedia.org/ontology/MeanOfTransportation> ;
+            sh:path <http://dbpedia.org/ontology/aircraftFighter> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/foundedBy> ],
+        [ sh:class <http://dbpedia.org/ontology/MeanOfTransportation> ;
+            sh:path <http://dbpedia.org/ontology/aircraftHelicopter> ],
+        [ sh:path <http://dbpedia.org/ontology/division> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/largestCity> ],
+        [ sh:class <http://dbpedia.org/ontology/Language> ;
+            sh:path <http://dbpedia.org/ontology/language> ],
+        [ sh:class <http://dbpedia.org/ontology/Airport> ;
+            sh:path <http://dbpedia.org/ontology/hubAirport> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/postalCode> ],
+        [ sh:path <http://dbpedia.org/ontology/cityServed> ],
+        [ sh:path <http://dbpedia.org/ontology/runwayName> ],
+        [ sh:path <http://dbpedia.org/ontology/3rdRunwaySurfaceType> ],
+        [ sh:class <http://dbpedia.org/ontology/City> ;
+            sh:path <http://dbpedia.org/ontology/city> ],
+        [ sh:path <http://dbpedia.org/ontology/transportAircraft> ],
+        [ sh:path <http://dbpedia.org/ontology/class> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/runwayLength> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/leaderTitle> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/location> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/owner> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/foundingYear> ],
+        [ sh:path <http://dbpedia.org/ontology/runwaySurfaceType> ],
+        [ sh:path <http://dbpedia.org/ontology/elevationAboveTheSeaLevelInMetres> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/icaoLocationIdentifier> ],
+        [ sh:path <http://dbpedia.org/ontology/operatingOrganisation> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/ceremonialCounty> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Airport> .
+

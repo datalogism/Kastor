@@ -1,0 +1,88 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/MeanOfTransportationShape> a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/cylinderCount> ],
+        [ sh:class <http://dbpedia.org/ontology/Company> ;
+            sh:path <http://dbpedia.org/ontology/designCompany> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/rocketStages> ],
+        [ sh:class <http://dbpedia.org/ontology/Organisation> ;
+            sh:path <http://dbpedia.org/ontology/manufacturer> ],
+        [ sh:path <http://dbpedia.org/ontology/function> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/status> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/christeningDate> ],
+        [ sh:path <http://dbpedia.org/ontology/bodyStyle> ],
+        [ sh:path <http://dbpedia.org/ontology/powerType> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/shipDisplacement> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/maidenFlight> ],
+        [ sh:path <http://dbpedia.org/ontology/modelYears> ],
+        [ sh:path <http://dbpedia.org/ontology/assembly> ],
+        [ sh:class <http://dbpedia.org/ontology/AutomobileEngine> ;
+            sh:path <http://dbpedia.org/ontology/engine> ],
+        [ sh:path <http://dbpedia.org/ontology/builder> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/finalFlight> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/countryOrigin> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/productionEndYear> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/wheelbase> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/productionStartYear> ],
+        [ sh:class <http://dbpedia.org/ontology/MeanOfTransportation> ;
+            sh:path <http://dbpedia.org/ontology/relatedMeanOfTransportation> ],
+        [ sh:path <http://dbpedia.org/ontology/shipOrdered> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/shipDraft> ],
+        [ sh:path <http://dbpedia.org/ontology/site> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/transmission> ],
+        [ sh:path <http://dbpedia.org/ontology/successor> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/failedLaunches> ],
+        [ sh:path <http://dbpedia.org/ontology/operator> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/owner> ],
+        [ sh:path <http://dbpedia.org/ontology/shipClass> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/totalLaunches> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/shipLaunch> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/diameter> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/completionDate> ],
+        [ sh:path <http://dbpedia.org/ontology/buildDate> ],
+        [ sh:path <http://dbpedia.org/ontology/totalProduction> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/maidenVoyage> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/activeYearsStartDate> ],
+        [ sh:path <http://dbpedia.org/ontology/class> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/alternativeName> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/topSpeed> ],
+        [ sh:class <http://dbpedia.org/ontology/Building> ;
+            sh:path <http://dbpedia.org/ontology/launchSite> ],
+        [ sh:path <http://dbpedia.org/ontology/product> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/shipBeam> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/length> ],
+        [ sh:path <http://dbpedia.org/ontology/division> ],
+        [ sh:path <http://dbpedia.org/ontology/isPartOf> ],
+        [ sh:class <http://dbpedia.org/ontology/Rocket> ;
+            sh:path <http://dbpedia.org/ontology/comparable> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/MeanOfTransportation> .
+
