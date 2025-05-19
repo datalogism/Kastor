@@ -1,0 +1,28 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/WrittenWorkShape> a sh:NodeShape ;
+    sh:property [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/coverArtist> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/illustrator> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/isbn> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/translator> ],
+        [ sh:path <http://dbpedia.org/ontology/mediaType> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/oclc> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Work> ;
+            sh:path <http://dbpedia.org/ontology/subsequentWork> ],
+        [ sh:path <http://dbpedia.org/ontology/literaryGenre> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/publisher> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Work> ;
+            sh:path <http://dbpedia.org/ontology/previousWork> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/author> ],
+        [ sh:class xsd:positiveInteger ;
+            sh:path <http://dbpedia.org/ontology/numberOfPages> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/WrittenWork> .
+

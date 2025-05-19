@@ -50,6 +50,7 @@ def test(conf: omegaconf.DictConfig) -> None:
     shacl_g = Graph()
     shacl_g.parse(conf.shape_file)
 
+    print("LOAD TOKENIZER >>>>>>>>>>>>",conf.tkn_path)
     print(">>>>>>>>>>>>>>>> LOAD GRAMMAR")
     print(conf.shape_file)
     with open(conf.grammar_file, "r") as file:
@@ -63,9 +64,10 @@ def test(conf: omegaconf.DictConfig) -> None:
     model_name=conf.config_name.split("/")[-1]
     project=conf.project
     group=conf.syntax_name+"_"+model_name
+    print(group)
     print(">>>>>>>>>>>>>>>> LOAD VOCAB FILE")
-
-
+    print("CONF")
+    print(conf.keys())
     config = AutoConfig.from_pretrained(
         conf.config_name if conf.config_name else conf.model_name_or_path,
         decoder_start_token_id = 0,
@@ -78,10 +80,12 @@ def test(conf: omegaconf.DictConfig) -> None:
     )
     
     print("LOAD TOKENIZER >>>>>>>>>>>>",conf.tkn_path)
+    print("hey")
     tokenizer_kwargs = {
         "use_fast": conf.use_fast_tokenizer,
         #"add_tokens": all_vocab
     }
+    print("ho")
     if("codet5" in conf.model_name_or_path):
         print("CODE T5 TOKENIZER")
         tokenizer = RobertaTokenizer.from_pretrained(
@@ -134,8 +138,11 @@ def test(conf: omegaconf.DictConfig) -> None:
     with open(conf.test_save_dir+group+"_test.json", "w") as outfile:
             json.dump({"test":"test"}, outfile)
 
-    if conf.nb_folds==1:
-        ckpt=clean_and_load_CKPT(conf.model_name_or_path,conf.ckpt_path)
+    if conf.nb_folds==0:
+        wandblogger = WandbLogger(project=project, name=group + "_0", group=group)
+
+        cpt_name = "last.ckpt"
+        ckpt=clean_and_load_CKPT(conf.model_name_or_path,conf.ckpt_path+cpt_name)
 
         model.resize_token_embeddings(len(tokenizer))
         model.load_state_dict( ckpt)
@@ -170,9 +177,9 @@ def test(conf: omegaconf.DictConfig) -> None:
 
         print("BEFORE TRAINER")
         trainer = pl.Trainer(
-           # accelerator="cpu",#### ADDed
-            #accelerator="cpu",
-           # gpus=conf.gpus,
+            # accelerator="cpu",#### ADDed
+            # accelerator="cpu",
+            # gpus=conf.gpus,
             devices=conf.gpus,
             accumulate_grad_batches=conf.gradient_acc_steps,
             gradient_clip_val=conf.gradient_clip_value,
@@ -181,9 +188,9 @@ def test(conf: omegaconf.DictConfig) -> None:
             max_steps=conf.max_steps,
             # max_steps=total_steps,
             precision=conf.precision,
-            #amp_level=conf.amp_level,
+            # amp_level=conf.amp_level,
             logger=wandblogger,
-            #ckpt_path=conf.checkpoint_path,
+            # ckpt_path=conf.checkpoint_path,
             limit_val_batches=conf.val_percent_check
         )
         print("==================================================")
@@ -245,9 +252,9 @@ def test(conf: omegaconf.DictConfig) -> None:
             
 
             tracker = OfflineEmissionsTracker(country_iso_code="FRA")
-            
 
-            pl_module = BasePLModule(conf, config, tokenizer, model, shacl_g,grammar_recognizer)
+            pl_module = BasePLModule(conf, config, tokenizer, model, shacl_g, grammar_recognizer, obj_ext=True)
+            #pl_module = BasePLModule(conf, config, tokenizer, model, shacl_g,grammar_recognizer)
             callbacks_store = [GenerateToInspectCallback(conf.samples_interval), GenerateNotParsedCallback(conf.samples_interval), GenerateNotValidCallback(conf.samples_interval), GenerateWrongSubjCallback(conf.samples_interval)]
 
             print("CALL BACK")   
@@ -272,15 +279,15 @@ def test(conf: omegaconf.DictConfig) -> None:
             )
             print("==================================================")
             print('START TEST PROCESS')
-            tracker.start()
+           # tracker.start()
             results = trainer.test(model=pl_module, datamodule=pl_data_module, verbose=False)
-            tracker.stop()
+            #tracker.stop()
             #wandb.finish()
 
             all_data_exp["fold"+str(i)]["test_data_last_step"]=results
             all_data_exp["fold"+str(i)]["carbon_data"]={}
-            all_data_exp["fold"+str(i)]["carbon_data"]["test_emissions"] = tracker.final_emissions_data.emissions
-            all_data_exp["fold"+str(i)]["carbon_data"]["test_energy_consumed"] = tracker.final_emissions_data.energy_consumed
+            #all_data_exp["fold"+str(i)]["carbon_data"]["test_emissions"] = tracker.final_emissions_data.emissions
+            #all_data_exp["fold"+str(i)]["carbon_data"]["test_energy_consumed"] = tracker.final_emissions_data.energy_consumed
 
             
             wandb.finish()

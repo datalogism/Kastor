@@ -1,16 +1,10 @@
 from typing import Any
 import nltk
-#nltk.download('punkt') 
-import json
 import lightning.pytorch as pl
 import torch
-import re
 import numpy as np
-import pandas as pd
 from rdflib import Graph
-from typing import Optional
 from score import  re_score_withShape
-from torchmetrics import Perplexity
 from transformers import AutoConfig, AutoModelForSeq2SeqLM, AutoTokenizer
 from transformers.optimization import (
     Adafactor,
@@ -25,9 +19,9 @@ from transformers.optimization import (
 from scheduler import get_inverse_square_root_schedule_with_warmup
 from datasets import load_dataset, load_metric
 
+from score import re_score_withShapeWithObj, re_score_withShapeWithObjText2KG
 from utils import BartTripletHead, shift_tokens_left, extract_triplets_typed, extract_triplets, extract_str_triplets
 
-import lmppl
 from lightning.pytorch.accelerators import CUDAAccelerator, MPSAccelerator
 from typing import (
     IO,
@@ -55,10 +49,6 @@ from lightning.pytorch.utilities.migration.utils import _pl_migrate_checkpoint
 
 from lightning.pytorch.core.saving import  _load_state
 
-from math import exp
-from typing import List
-
-from tqdm import tqdm
 
 
 PAD_TOKEN_LABEL_ID = torch.nn.CrossEntropyLoss().ignore_index
@@ -214,12 +204,14 @@ def getSyntaxConf(dataset_name):
 
 class BasePLModule(pl.LightningModule):
 
-    def __init__(self, conf, config: AutoConfig, tokenizer: AutoTokenizer, model: AutoModelForSeq2SeqLM, shapes: Optional[Graph] = None,grammar=None, *args, **kwargs) -> None:
+    def __init__(self, conf, config: AutoConfig, tokenizer: AutoTokenizer, model: AutoModelForSeq2SeqLM, shapes: Optional[Graph] = None,grammar=None,obj_ext=False,test_type=None, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.save_hyperparameters(conf)
         self.tokenizer = tokenizer
         self.shapes = shapes
         self.grammar = grammar
+        self.obj_ext = obj_ext
+        self.test_type=test_type
 
         self.to_inspect = []
         self.wrongsubj = []
@@ -539,6 +531,7 @@ class BasePLModule(pl.LightningModule):
             self.log(key, metrics[key])
 
         outputs = {}
+        print("ICI001")
         outputs['predictions'], outputs['labels'] = self.generate_triples(batch, labels)
 
         #ADDED
@@ -546,7 +539,9 @@ class BasePLModule(pl.LightningModule):
         outputs['labels'] = cleanDecoded(outputs['labels'])
 
         self.validation_step_outputs.append(outputs)
-        #self.validation_step_inputs=self.validation_step_inputs+list(batch["input_ids"].detach().cpu())
+
+        print("ICI002")
+        self.validation_step_inputs=self.validation_step_inputs+list(batch["input_ids"].detach().cpu())
         #print("LEN val outputs>",len(self.validation_step_outputs))
         return outputs
 
@@ -645,7 +640,7 @@ class BasePLModule(pl.LightningModule):
         return outputs
 
     def on_validation_epoch_end(self) -> Any:
-        print(">>>>>>>>>>>>validation_epoch_end")
+        print("BEGIN>>>>>>>>>>>>validation_epoch_end")
         #print(self.validation_step_outputs)
 
         output = self.validation_step_outputs
@@ -663,16 +658,21 @@ class BasePLModule(pl.LightningModule):
         gold_list=[item for pred in output for item in pred['labels']]
 
         #if(self.shapes):
-        scores, part_parsed, part_subj_ok, part_valid_s, part_valid_r,callbacks  = re_score_withShape(pred_list, gold_list, syntax, syntax_conf, self.shapes, self.grammar,None)
-        # else:
-        #     scores = re_score4(pred_list, gold_list ,syntax)
-       # print(inputs)
-        #val_Perplexity_gold=np.mean(self.get_perplexity(input_texts=inputs, output_texts=gold_list))
-         #val_Perplexity_pred=np.mean(self.get_perplexity(input_texts=inputs, output_texts=pred_list))
+        if(self.obj_ext):
 
-        # self.log('val_Perplexity_gold', float(val_Perplexity_gold))
-        # self.log('val_Perplexity_pred', float(val_Perplexity_pred))
+            scores, part_parsed, part_subj_ok, part_valid_s, part_valid_r, callbacks = re_score_withShapeWithObj(pred_list,
+                                                                                                          gold_list,
+                                                                                                          syntax,
+                                                                                                          syntax_conf,
+                                                                                                          self.shapes,
+                                                                                                          self.grammar,
+                                                                                                          None)
 
+        else:
+            scores, part_parsed, part_subj_ok, part_valid_s, part_valid_r,callbacks  = re_score_withShape(pred_list, gold_list, syntax, syntax_conf, self.shapes, self.grammar,None)
+
+        print("END>>>>>>>>>>>>validation_epoch_end")
+       # for k in scores.keys():
         self.log('val_F1_micro', float(scores["ALL"]["f1"]))
         self.log('val_F1_macro', float(scores["ALL"]["Macro_f1"]))
         self.log('val_prec_macro', scores["ALL"]["Macro_p"])
@@ -680,9 +680,9 @@ class BasePLModule(pl.LightningModule):
         self.log('val_dist_edit', scores["ALL"]["AVG_EditDist"])
 
 
-        self.log('test_accuracy', scores["ALL"]["Accuracy"])
-        self.log('test_fp_rate', scores["ALL"]["FpRate"])
-        self.log('test_fn_rate', scores["ALL"]["FnRate"])
+        self.log('val_accuracy', scores["ALL"]["Accuracy"])
+        self.log('val_fp_rate', scores["ALL"]["FpRate"])
+        self.log('val_fn_rate', scores["ALL"]["FnRate"])
 
         if scores["ALL"]["BLEU"]:
             self.log('val_BLEU', float(scores["ALL"]["BLEU"]))
@@ -697,8 +697,7 @@ class BasePLModule(pl.LightningModule):
         self.validation_step_inputs=[]
 
     def on_test_epoch_end(self) -> Any:
-
-        print("PL : on_test_epoch_end")
+        print("BEGIN>>>>>>>>>>>>on_test_epoch_end")
         #test_epoch_end(self, output: dict)
 
         output = self.testing_step_outputs
@@ -708,9 +707,12 @@ class BasePLModule(pl.LightningModule):
         #print(self.testing_step_inputs)
         decoded_inputs = [self.tokenizer.decode(item, skip_special_tokens=True, spaces_between_special_tokens = True) for pred in output for item in pred["inputs"]]
         decoded_dict={ }
+        decoded_list=[]
         for input_ in decoded_inputs:
             splitted=input_.split(" : ")
-            decoded_dict[splitted[0]]=input_[len(splitted[0])+3:len(input_)]
+            decoded_dict[splitted[0].strip()]=input_[len(splitted[0])+3:len(input_)].strip()
+            decoded_list.append(input_[len(splitted[0])+3:len(input_)].strip())
+
         #print(decoded_dict)
         dataset_name=self.hparams.train_file
         syntax, syntax_conf= getSyntaxConf(dataset_name)
@@ -719,29 +721,53 @@ class BasePLModule(pl.LightningModule):
         gold_list=[item for pred in output for item in pred['labels']]
         
         # if(self.shapes):
+        if (self.obj_ext):
+            if(self.test_type=="Text2KGBench"):
+                scores, part_parsed, part_subj_ok, part_valid_s, part_valid_r, callbacks = re_score_withShapeWithObjText2KG(
+                    pred_list,
+                    gold_list,
+                    syntax,
+                    syntax_conf,
+                    self.shapes,
+                    self.grammar,
+                    decoded_list)
+            else:
+                scores, part_parsed, part_subj_ok, part_valid_s, part_valid_r, callbacks = re_score_withShapeWithObj(pred_list,
+                                                                                                              gold_list,
+                                                                                                              syntax,
+                                                                                                              syntax_conf,
+                                                                                                              self.shapes,
+                                                                                                              self.grammar,
+                                                                                                              decoded_dict)
 
-        scores, part_parsed, part_subj_ok, part_valid_s, part_valid_r, callbacks = re_score_withShape(pred_list, gold_list, syntax, syntax_conf, self.shapes,self.grammar,decoded_dict)
+        else:
+            scores, part_parsed, part_subj_ok, part_valid_s, part_valid_r, callbacks = re_score_withShape(pred_list, gold_list, syntax, syntax_conf, self.shapes,self.grammar,decoded_dict)
         self.to_inspect.append(callbacks["to_inspect"])
         self.wrongsubj.append(callbacks["is_examples"])
         self.notparsed.append(callbacks["notparsed_examples"])
         self.notvalid.append(callbacks["notvalid_examples"])
 
-        self.log('test_F1_micro', float(scores["ALL"]["f1"]))
-        self.log('test_F1_macro', scores["ALL"]["Macro_f1"])
-        self.log('test_prec_macro', scores["ALL"]["Macro_p"])
-        self.log('test_recall_macro', scores["ALL"]["Macro_r"])
-        self.log('test_prec_micro', scores["ALL"]["p"])
-        self.log('test_recall_micro', scores["ALL"]["r"])
-        self.log('test_dist_edit', scores["ALL"]["AVG_EditDist"])
+        for k in scores.keys():
+            if(k=="ALL"):
+                self.log('test_F1_macro_'+k, scores[k]["Macro_f1"])
+                self.log('test_prec_macro_'+k, scores[k]["Macro_p"])
+                self.log('test_recall_macro_'+k, scores[k]["Macro_r"])
+                self.log('test_dist_edit_'+k, scores[k]["AVG_EditDist"])
+                if (scores[k]["BLEU"]):
+                    self.log('test_BLEU_' + k, float(scores[k]["BLEU"]))
+                self.log('test_accuracy_'+k, scores[k]["Accuracy"])
 
-        self.log('test_accuracy', scores["ALL"]["Accuracy"])
-        self.log('test_fp_rate', scores["ALL"]["FpRate"])
-        self.log('test_fn_rate', scores["ALL"]["FnRate"])
+            self.log('test_F1_micro_'+k, float(scores[k]["f1"]))
+            self.log('test_prec_micro_'+k, scores[k]["p"])
+            self.log('test_recall_micro_'+k, scores[k]["r"])
+            if (scores[k]["bleu"]):
+                self.log('test_bleu_'+k, scores[k]["bleu"])
+            #self.log('test_fp_rate_'+k, scores[k]["FpRate"])
+            #self.log('test_fn_rate_'+k, scores[k]["FnRate"])
         # self.log('test_mean_nbRel_Gt', float(scores["ALL"]["Mean_Nb_rel_GT"]))
         # self.log('test_mean_nbRel_Pred', float(scores["ALL"]["Mean_Nb_rel_Pred"]))
 
-        if(scores["ALL"]["BLEU"]):
-            self.log('test_BLEU', float(scores["ALL"]["BLEU"]))
+
 
         if(self.shapes):
             self.log('test_part_parsed', part_parsed)
@@ -749,6 +775,7 @@ class BasePLModule(pl.LightningModule):
             self.log('test_part_valid_s', part_valid_s)
             self.log('test_part_valid_r', part_valid_r)
 
+        print("END>>>>>>>>>>>>on_test_epoch_end")
         # for rel_type in scores.keys():
         #     if(rel_type!="ALL"):
         #         self.log("testpred_"+rel_type+"_nb_gt", scores[rel_type]["nb_gt"]),
@@ -758,7 +785,8 @@ class BasePLModule(pl.LightningModule):
         #         self.log("testpred_"+rel_type+"_fn",scores[rel_type]["fn"])
         #         self.log("testpred_"+rel_type+"_f1",scores[rel_type]["f1"])
 
-        #self.testing_step_inputs.clear()
+        #self.test_step_outputs.clear()
+        #self.test_step_inputs = []
 
     def configure_optimizers(self):
         """

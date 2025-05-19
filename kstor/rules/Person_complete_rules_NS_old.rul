@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns     = "http://ns.inria.fr/corese/rule/">
+
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT { GRAPH $INFERENCE_NS$ {
+                        ?s  dbo:birthYear ?year
+                        }
+                }
+
+                WHERE{
+
+                        select ?s ?year
+                        WHERE {
+                            ?s a dbo:Person.
+                            ?s dbo:birthDate ?bd.
+bind(year(?bd) as ?year).
+filter not exists{GRAPH  <urn:x-arq:DefaultGraph>  {?s dbo:birthYear ?by.}}
+                               }
+                         GROUP BY ?s ORDER BY ?s
+
+
+                }
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT {
+    GRAPH $INFERENCE_NS$ {
+        ?s  dbo:deathYear ?year
+}
+                }
+
+                WHERE{
+
+                        select ?s ?year
+                        WHERE {
+                            ?s a dbo:Person.
+                            ?s dbo:deathDate ?bd.
+bind(year(?bd) as ?year).
+filter not exists{GRAPH  <urn:x-arq:DefaultGraph>  {?s dbo:deathYear ?by.}}
+                               }
+                         GROUP BY ?s ORDER BY ?s
+
+
+                }
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT {
+    GRAPH $INFERENCE_NS$ {
+        ?s  dbo:birthPlace ?bpcountry
+}
+                }
+
+                WHERE{
+
+                        select ?s ?bpcountry
+                        FROM  <urn:x-arq:DefaultGraph>
+                        WHERE {
+                            ?s a dbo:Person.
+                            ?s dbo:birthPlace ?place.
+                            ?place a dbo:Place.
+                            ?place dbo:country ?bpcountry.
+                            filter not exists{GRAPH  <urn:x-arq:DefaultGraph>  {?s dbo:birthPlace ?bpcountry.}}
+                        }
+
+
+                }
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT {
+    GRAPH $INFERENCE_NS$ {
+        ?s  dbo:deathPlace ?bpcountry
+}
+                }
+
+                WHERE{
+
+                        select ?s ?bpcountry
+                        FROM  <urn:x-arq:DefaultGraph>
+                        WHERE {
+                            ?s a dbo:Person.
+                            ?s dbo:deathPlace ?place.
+                            ?place a dbo:Place.
+                            ?place dbo:country ?bpcountry.
+                            filter not exists{GRAPH  <urn:x-arq:DefaultGraph>  {?s dbo:deathPlace ?bpcountry.}}
+                        }
+                }
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT {
+    GRAPH $INFERENCE_NS$ {
+        ?s  dbo:nationality ?bpcountry
+}
+                }
+
+                WHERE{
+
+                        select ?s ?bpcountry
+                        FROM  <urn:x-arq:DefaultGraph>
+                        WHERE {
+                            ?s a dbo:Person.
+                            ?s dbo:nationality ?place.
+                            ?place a dbo:Place.
+                            ?place dbo:country ?bpcountry.
+                            filter not exists{GRAPH  <urn:x-arq:DefaultGraph>  {?s dbo:nationality ?bpcountry.}}
+                        }
+
+
+                }
+]]>
+</body>
+</rule>
+</rdf:RDF>

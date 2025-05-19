@@ -72,7 +72,11 @@ class BasePLDataModule(pl.LightningDataModule):
         print("----------------->")
         print(conf.train_file)
         self.datasets = load_dataset(conf.dataset_name, data_files={'train': conf.train_file, 'dev': conf.validation_file, 'test': conf.test_file})
-        
+
+        self.class_label = None
+        if ( "class" in self.datasets["train"].column_names):
+            self.class_label = self.datasets["train"]["class"]
+
         set_caching_enabled(False)
         print("AFTER")
 
@@ -112,6 +116,8 @@ class BasePLDataModule(pl.LightningDataModule):
         if self.conf.max_train_samples is not None:
             self.train_dataset = self.train_dataset.select(range(self.conf.max_train_samples))
 
+        if("class_label" in self.train_dataset[0].keys()):
+            self.class_label = [ row["class_label"] for row in self.train_dataset]
         print(">>>>>>>>>TRAIN")
         self.train_dataset = self.train_dataset.map(
             self.preprocess_function,
@@ -209,6 +215,7 @@ class BasePLDataModule(pl.LightningDataModule):
         # print("keys > ",str(list(examples.keys())))
         # print("ID ex >",examples["id"])
         # print("ID type >",type(examples["id"][0]))
+
         inputs = examples[self.text_column]
         targets = examples[self.summary_column]
         inputs = [self.prefix + inp for inp in inputs]
@@ -228,6 +235,7 @@ class BasePLDataModule(pl.LightningDataModule):
         # model_inputs["decoder_attention_mask"] = labels["attention_mask"]
         # model_inputs["labels"] = shift_tokens_left(labels["input_ids"], self.tokenizer.pad_token_id)
         model_inputs["labels"] = labels["input_ids"]
-        
+        #model_inputs["class_label"] = examples["class"]
+
         #model_inputs=model_inputs.reset_index(drop=True)
         return model_inputs

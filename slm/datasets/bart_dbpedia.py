@@ -22,11 +22,21 @@ import pandas as pd
 
 import datasets
 
-import re 
+import re
 import json
 import logging
 import math
 from collections import defaultdict
+import urllib.parse
+
+
+def uncodeurl(URL):
+    if ("%" in URL):
+        print("HEY")
+        return urllib.parse.unquote(URL)
+    else:
+        return URL
+
 
 _DESCRIPTION = """
 DBpedia first test 
@@ -71,13 +81,14 @@ class DBpediaTest(datasets.GeneratorBasedBuilder):
                     "label": datasets.Value("string"),
                     "context": datasets.Value("string"),
                     "triplets": datasets.Value("string"),
+                    "class": datasets.Value("string")
                 }
             ),
             # No default supervised_keys (as we have to pass both question
             # and context as input).
             supervised_keys=None,
             # homepage="",
-#             citation=_CITATION,
+            #             citation=_CITATION,
         )
 
     def _split_generators(self, dl_manager):
@@ -86,9 +97,9 @@ class DBpediaTest(datasets.GeneratorBasedBuilder):
             print("train :")
             print(self.config.data_files)
             downloaded_files = {
-                "train": self.config.data_files["train"][0], # self.config.data_dir + "en_train.jsonl",
-                "dev": self.config.data_files["dev"][0], #self.config.data_dir + "en_val.jsonl",
-                "test": self.config.data_files["test"][0], #self.config.data_dir + "en_test.jsonl",
+                "train": self.config.data_files["train"][0],  # self.config.data_dir + "en_train.jsonl",
+                "dev": self.config.data_files["dev"][0],  # self.config.data_dir + "en_val.jsonl",
+                "test": self.config.data_files["test"][0],  # self.config.data_dir + "en_test.jsonl",
             }
         else:
             print("DOWNLOAD AND EXTRACT")
@@ -103,33 +114,38 @@ class DBpediaTest(datasets.GeneratorBasedBuilder):
     def _generate_examples(self, filepath):
         """This function returns the examples in the raw (text) form."""
         logging.info("generating examples from = %s", filepath)
-        
+
         with open(filepath) as json_file:
             f = json.load(json_file)
             print("============================")
-            
 
             for id_, row in enumerate(f):
-                triples=str(row["triples"])
-                if(triples[0:3]!="<s>"):
-                    triples="<s>"+triples+"</s>"
+                if("class" in row.keys()):
+                    class_found=row["class"]
                 else:
-                    triples=row["triples"]
-                
-                if("ent" in row.keys()):
-                    entity=row["ent"]
-                elif("entity" in row.keys()):
-                    entity=row["entity"]
+                    class_found=0
 
-                if(row["abstract"][0:3]=="<s>"):
-                    asbtract=row["abstract"][3:len(row["abstract"])]
+                triples = str(row["triples"])
+                if (triples[0:3] != "<s>"):
+                    triples = "<s>" + triples + "</s>"
                 else:
-                    asbtract=row["abstract"]  
+                    triples = row["triples"]
 
-                asbtract=entity+" : "+row["abstract"]
+                if ("ent" in row.keys()):
+                    entity = row["ent"]
+                elif ("entity" in row.keys()):
+                    entity = row["entity"]
+                entity = uncodeurl(entity)
+                if (row["abstract"][0:3] == "<s>"):
+                    abstract = row["abstract"][3:len(row["abstract"])]
+                else:
+                    abstract = row["abstract"]
+                abstract = uncodeurl(abstract)
+                abstract = entity + " : " + abstract
                 yield str(id_), {
                     "label": entity,
-                    "context": asbtract,
+                    "context": abstract,
                     "id": str(id_),
-                    "triplets": triples
+                    "triplets": triples,
+                    "class": str(class_found)
                 }

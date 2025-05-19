@@ -1,0 +1,38 @@
+# @package _global_
+num_workers: 4
+syntax_name: "DS_turtleS_0datatype_1inLine_1facto_Company_kg"  # $SAMPLE_NAME$ and $MODEL_NAME$ must be adapted
+project: "ALL_shapes_filtered_test"  # $WDB_ProjectName$ to adapt
+dataset_name: '/home/cringwal/EXP_Obj/datasets/bart_dbpedia.py'
+text_column: 'context'
+target_column: 'triplets'
+train_file: '/home/cringwal/DATA_XP/Company_filtered/DS_turtleS_0datatype_1inLine_1facto_train.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
+validation_file: '/home/cringwal/DATA_XP/Company_filtered/DS_turtleS_0datatype_1inLine_1facto_val.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
+test_file: "/home/cringwal/DATA_XP/TestBench_kg/DS_turtleS_0datatype_1inLine_1facto_Company_test.json" # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
+shape_file: '/home/cringwal/DATA_XP/CompanyShapeTXT2KG_clean.ttl'
+vocab_file: '/home/cringwal/DATA_XP/syntaxes_vocab.json'
+grammar_file: '/home/cringwal/DATA_XP/turtle_light_facto.ebnf'
+tkn_path: '/home/cringwal/EXP_Obj/outputs/Company_f/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_Company_bart-base_tokenizer'
+ckpt_path: '/home/cringwal/EXP_Obj/outputs/Company_f/experiments/DS_turtleS_0datatype_1inLine_1facto_Company_bart-base/'
+test_save_dir: '/home/cringwal/EXP_Obj/Test_DS/'  # MUST BE UPDATED
+test_type: "Text2KGBench"
+overwrite_cache: True
+preprocessing_num_workers:  
+model_used: "BART"
+model_size: "base"
+add_vocab: True
+inline_mode: True
+datatype: False
+facto: True
+max_source_length: 1024
+max_target_length: 1024
+val_max_target_length: 1024
+pad_to_max_length:  False
+max_train_samples: 1000  # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_val_samples: 100   # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_test_samples: 43   # MUST BE UPDATED DEPENDING SAMPLE SIZE
+nb_folds: 10   # MUST BE UPDATED DEPENDING FOLD NUMVER
+num_beams: 
+eval_beams: 3
+ignore_pad_token_for_loss: True
+source_prefix:
+relations_file:

@@ -1,0 +1,13 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+<http://shaclshapes.org/ScientistShape> a sh:NodeShape ;
+    sh:property [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/notableStudent> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/academicAdvisor> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/doctoralStudent> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/doctoralAdvisor> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Scientist> .
+

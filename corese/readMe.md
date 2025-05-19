@@ -4,7 +4,7 @@ Our framework is based on [Corese](https://github.com/Wimmics/corese), a Softwar
 The software could be deployed locally via a  [JAR software](https://github.com/Wimmics/corese/releases/download/release-4.5.0/corese-server-4.5.0.jar) and the persistancy of the KB is allowed by the tdbloader of Jena (available in this directory).
 
 ## Starting from scratch: Data base initialization
-1- First download CORESE jar file and the tdbloader script
+1- First download CORESE jar file and the tdbloader script > NEED TO BE UPDATE IT DOESN'T WORK > we need to download the JENA software package
 
 2- Download the datadump gathering all the interesting data: [https://databus.dbpedia.org/](https://databus.dbpedia.org/)
 
