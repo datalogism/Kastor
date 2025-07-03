@@ -6,18 +6,34 @@
 
 If you use the code or cite our work, please reference this one as follows :
 ```
-@inproceedings{ringwald:hal-05078493,
-  TITLE = {{Kastor: Fine-tuned Small Language Models for Shape-based Active Relation Extraction}},
-  AUTHOR = {Ringwald, Celian and Gandon, Fabien and Faron, Catherine and Michel, Franck and Akl, Hanna Abi},
-  URL = {https://hal.science/hal-05078493},
-  BOOKTITLE = {{Extended Semantic Web Conference 2025}},
-  ADDRESS = {Portoroz, France},
-  YEAR = {2025},
-  MONTH = Jun,
-  KEYWORDS = {Relation Extraction Small Language Models Structured output ; Relation Extraction ; Small Language Models ; Structured output},
-  PDF = {https://hal.science/hal-05078493v1/file/Kastor__Fine_tuned_Small_Language_Models_for_Shape_based_Active_Relation_Extraction_AuthorVersion.pdf},
-  HAL_ID = {hal-05078493},
-  HAL_VERSION = {v1},
+@inproceedings{DBLP:conf/esws/RingwaldGFMA25,
+  author       = {C{\'{e}}lian Ringwald and
+                  Fabien Gandon and
+                  Catherine Faron and
+                  Franck Michel and
+                  Hanna Abi Akl},
+  editor       = {Edward Curry and
+                  Maribel Acosta and
+                  Mar{\'{\i}}a Poveda{-}Villal{\'{o}}n and
+                  Marieke van Erp and
+                  Adegboyega K. Ojo and
+                  Katja Hose and
+                  Cogan Shimizu and
+                  Pasquale Lisena},
+  title        = {Kastor: Fine-Tuned Small Language Models for Shape-Based Active Relation
+                  Extraction},
+  booktitle    = {The Semantic Web - 22nd European Semantic Web Conference, {ESWC} 2025,
+                  Portoroz, Slovenia, June 1-5, 2025, Proceedings, Part {I}},
+  series       = {Lecture Notes in Computer Science},
+  volume       = {15718},
+  pages        = {94--115},
+  publisher    = {Springer},
+  year         = {2025},
+  url          = {https://doi.org/10.1007/978-3-031-94575-5\_6},
+  doi          = {10.1007/978-3-031-94575-5\_6},
+  timestamp    = {Tue, 10 Jun 2025 17:38:39 +0200},
+  biburl       = {https://dblp.org/rec/conf/esws/RingwaldGFMA25.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 ```
 
