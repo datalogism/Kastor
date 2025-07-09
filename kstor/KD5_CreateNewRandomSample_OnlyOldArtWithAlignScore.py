@@ -42,7 +42,7 @@ def get_RandomSample_NG_EntAbsMDOld(sparql_ep, abstract_ng, wikichecked_ng,class
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-s", "--shape_file_path", default=None)
-    parser.add_argument("-sz", "--size_sample", default=4800)
+    parser.add_argument("-sz", "--size_sample", default=12000)
     parser.add_argument("-es", "--existing_sample", default=None)
     ## EXISTING SAMPLE MUST LOOK LIKE
     # "http://ns.inria.fr/kstor/samples/sample_0"
@@ -86,7 +86,8 @@ if __name__ == '__main__':
         ## TO DO
         #http://ns.inria.fr/kstor/samplesv3/PersonShape_op_and_dp/abtract_md/only_old_sample_0x2
         #http://ns.inria.fr/kstor/samplesv2/PersonShape_op_and_dp/abtract_md/only_old_sample_0x2
-        existing_sample="http://ns.inria.fr/kstor/samples/PersonShape_op_and_dp/abtract_md/only_old_sample_1x4"
+        #old_sample="http://ns.inria.fr/kstor/samples/PersonShape_op_and_dp/abtract_md/only_old_sample_1x10"
+        existing_sample="http://ns.inria.fr/kstor/samples/PersonShape_op_and_dp/abtract_md/only_old_sample_1x10"
         ####################### REVOIR INTEGRATION NAMED GRAPH PRECEDANT
         other_samples=[]
         if(existing_sample==None):
@@ -94,7 +95,7 @@ if __name__ == '__main__':
             query='SELECT DISTINCT ?g  {  GRAPH ?g {}}'
             results=ct.get_sparql_dataframe(sparql_ep, query)
             existing_ng=list(results['g'])
-            sample_ng="http://ns.inria.fr/kstor/samplesv3/" + shape_name + "/abtract_md"
+            sample_ng="http://ns.inria.fr/kstor/samples/" + shape_name + "/abtract_md"
            # new = "http://ns.inria.fr/kstor/samples/" + shape_name + "/abtract_md/sample_"
 
             for ng_ in existing_ng:
@@ -103,9 +104,9 @@ if __name__ == '__main__':
 
             idx=len(other_samples)
 
-            while("http://ns.inria.fr/kstor/samplesv3/" + shape_name + "/abtract_md/only_old_sample_"+str(idx) in other_samples):
+            while("http://ns.inria.fr/kstor/samples/" + shape_name + "/abtract_md/only_old_sample_"+str(idx) in other_samples):
                 idx+=1
-            sample_ng="http://ns.inria.fr/kstor/samplesv3/" + shape_name + "/abtract_md/only_old_sample_"+str(idx)
+            sample_ng="http://ns.inria.fr/kstor/samples/" + shape_name + "/abtract_md/only_old_sample_"+str(idx)
         else:
             sample_ng=existing_sample
         print("================================ CURRENT SAMPLE :",sample_ng)
@@ -1221,7 +1222,7 @@ if __name__ == '__main__':
                 abs_data = cs.get_abstract(uri, sparql_ep)
                 abstract = str(abs_data["abstract"][0]).strip()
                 if(uri not in done_list
-                        and SAMPLE_len<size_sample
+                        and SAMPLE_len!=size_sample
                         and len(abstract)>10
                         and len(abstractMD)>10):
                     print(row["s"], "> NOT IN DONE")

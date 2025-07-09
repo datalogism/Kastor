@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 #### JOB INFO
-#SBATCH --job-name=WCE_test1
-#SBATCH --output=WCE_test1.txt
+#SBATCH --job-name=x4DS_turtle_BART_base_OPandDTP_clean_old10
+#SBATCH --output=DS_turtle_BART_base_OPandDTP_clean_oldx10.txt
 ###### CONF
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
@@ -10,7 +10,7 @@
 #SBATCH --account=rdf
 ####### CONTACT
 #SBATCH --mail-user=celian.ringwald@inria.fr
-#SBATCH --mail-type=BEGIN,END,FAILol
+#SBATCH --mail-type=BEGIN,END,FAIL
 ######### GPU
 #SBATCH --gres=gpu:1
 #SBATCH --partition=gpu
@@ -21,4 +21,4 @@ conda activate env_shapes
 
 export TOKENIZERS_PARALLELISM=True
 export WANDB_API_KEY=5f4208dc97c7b3542281b94b64eb42833243cc71
-python ./src/test_DS.py  model=bart_base_model data=DS_turtleS_0datatype_1inLine_1facto_bart_test_obj_and_dt_prop_abs_clean_old_ON_new train=bart_dbpedia
+python ./src/train_withShape_withObj.py model=bart_base_model data=DS_turtleS_0datatype_1inLine_1facto_bart_train_obj_and_dt_prop_abs_clean_oldx10 train=bart_dbpedia

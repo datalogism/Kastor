@@ -25,6 +25,7 @@ def uncodeurl(URL):
         return urllib.parse.unquote(URL)
     else:
         return URL
+import uuid
 
 
 if __name__ == '__main__':
@@ -67,8 +68,8 @@ if __name__ == '__main__':
         shape_name = args.shape_file_path.split("/")[-1].replace(".ttl", "")
 
         found_ng = "http://ns.inria.fr/kstor/wikichecked/" + shape_name + "/abtract_md"
-
-        sample_ng=args.named_graph_sample
+        sample_ng = args.named_graph_sample
+        #sample_ng=args.named_graph_sample
             #"http://ns.inria.fr/kstor/samples/sample_3"
 
         # "uniform" / "inverse freq sampl"
@@ -90,54 +91,124 @@ if __name__ == '__main__':
         SAMPLE=[]
         existing_uri= []
         #['United_States', 'Arem-arem', 'Bacon_Explosion', 'BLT', 'Indonesia', 'Tomato', 'Amatriciana_sauce', 'Italy', 'Bacon_sandwich', 'Dessert', 'Arrabbiata_sauce', 'Baked_Alaska', 'Bionico', 'Mexico', 'Celery']
-        list_uri=cs.get_SampleEntUris(sample_ng,sparql_ep)
-        print("xxxxxxxxxxxxxxxx",len(list_uri))
-        for uri in list_uri:
-            print(">>>>>",uri)
 
-            uri_clean=rs.cleanEntURL(uri)
-            if(uri_clean.replace("http://dbpedia.org/resource/","") in existing_uri):
-                print(">>>>>>>>>>>>>>>>>>>> FOUND")
-            elif(uri_clean not in existing_uri):
-                #abs_data=cs.get_abstract(uri, sparql_ep)
-                if(args.abstract_type=="MD"):
-                    abs_data=cs.get_abstractMD(uri,abstract_ng, sparql_ep)
-                else:
-                    abs_data=cs.get_abstract(uri, sparql_ep)
-                abstract=str(abs_data["abstract"][0])
+        ng_synth="http://ns.inria.fr/kstor/samples/PersonShape_op_and_dp/abtract_md/only_old_sample_1x10/synthetic/KR_low_level"
+        #ref_prop='http://dbpedia.org/ontology/alias'
+        uri_prop_list=cs.get_SampleALLUriSynth(ng_synth,sparql_ep)
+        print(len(uri_prop_list))
+        print(uri_prop_list)
+        ng_wkcheck="http://ns.inria.fr/kstor/#found_in_abtract"
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NEW')
+        uniq_id_list={}
+        for index, row in uri_prop_list.iterrows():
+            uri=row["u0"]
+            uri_orig=row["u1"]
+            abstract=row["abs"]
+            uniq_id=uri+"$"+uri_orig+"$"+abstract
+            if(uri_orig not in uniq_id_list.keys()):
+                uniq_id_list[uri_orig]=1
+            else:
+                uniq_id_list[uri_orig] += 1
 
-                #fng_data=cs.get_FoundNgData(uri,found_ng, sparql_ep)
+            if (uri not in uniq_id_list.keys()):
+                uniq_id_list[uri] = 1
+            else:
+                uniq_id_list[uri] += 1
 
-                fng_data=cs.get_SampleData(uri,sample_ng, sparql_ep)
-                ent_dict2=[]
+            if(uniq_id_list[uri] <10 or uniq_id_list[uri_orig] < 10):
+                short_id=str(uuid.uuid4())[:8]
+                uri_clean = rs.cleanEntURL(uri)+"_"+short_id
+
+
+
+                # fng_data=cs.get_FoundNgData(uri,found_ng, sparql_ep)
+
+                fng_data = cs.get_SampleDataWC(uri, found_ng, sparql_ep)
+                ent_dict2 = []
                 for index, row2 in fng_data.iterrows():
 
-                    real_prop=row2["p"]
+                    real_prop = row2["p"]
                     if real_prop in type_prop.keys():
-                        val=str(row2["o"])
-                        val=rs.cleanTxt(val)
+                        val = str(row2["o"])
+                        val = rs.cleanTxt(val)
                         if ("dbo:" in type_prop[real_prop]):
                             val = rs.cleanEntURL(val)
                         else:
-                                if('"' in val or "'" in val):
-                                    val = val.translate(str.maketrans({"'":  r"\'",
-                                              '"': r'\"'}))
+                            if ('"' in val or "'" in val):
+                                val = val.translate(str.maketrans({"'": r"\'",
+                                                                   '"': r'\"'}))
 
-                                if ("Year" in real_prop and "-" in str(val)):
-                                    val = str(val).split("-")[0][0:4]
-                        if("Year" in real_prop and "-" in str(val)):
-                            val=str(val).split("-")[0][0:4]
+                            if ("Year" in real_prop and "-" in str(val)):
+                                val = str(val).split("-")[0][0:4]
+                        if ("Year" in real_prop and "-" in str(val)):
+                            val = str(val).split("-")[0][0:4]
 
-                        temp_new={"type":type_prop[real_prop],"prop":real_prop,"value":[val]}
+                        temp_new = {"type": type_prop[real_prop], "prop": real_prop, "value": [val]}
                         ent_dict2.append(temp_new)
 
                 print(uri_clean)
-                triples=ts.triplesWithShape(uri_clean,ent_dict2,shape)
-                ent3=uri_clean.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")
-                if(sample_size<12000):
-                    sample_size+=1
-                    SAMPLE.append({"triples":triples.serialize(format="turtle"),"abstract":abstract,"ent":ent3})
-        SAMPLE=SAMPLE[0:12000]
+
+                triples = ts.triplesWithShape(uri_clean, ent_dict2, shape)
+                ent3 = uri_clean.replace("http://dbpedia.org/resource/", "").replace("https://dbpedia.org/resource/",
+                                                                                     "")
+                #if (sample_size < 1000):
+                sample_size += 1
+                SAMPLE.append({"triples": triples.serialize(format="turtle"), "abstract": abstract, "ent": ent3})
+            else:
+                print("DONNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNE")
+
+        list_uri = cs.get_SampleEntUris(sample_ng, sparql_ep)
+        print("xxxxxxxxxxxxxxxx", len(list_uri))
+        for uri in list_uri:
+            print(">>>>>", uri)
+
+            short_id=str(uuid.uuid4())[:8]
+            uri_clean = rs.cleanEntURL(uri)+"_"+short_id
+            if (uri_clean in existing_uri):
+                print(">>>>>>>>>>>>>>>>>>>> FOUND")
+            elif (uri_clean not in existing_uri):
+                existing_uri.append(uri_clean)
+                # abs_data=cs.get_abstract(uri, sparql_ep)
+                if (args.abstract_type == "MD"):
+                    abs_data = cs.get_abstractMD(uri, abstract_ng, sparql_ep)
+                else:
+                    abs_data = cs.get_abstract(uri, sparql_ep)
+                abstract = str(abs_data["abstract"][0])
+
+                # fng_data=cs.get_FoundNgData(uri,found_ng, sparql_ep)
+
+                fng_data = cs.get_SampleData(uri, sample_ng, sparql_ep)
+                ent_dict2 = []
+                for index, row2 in fng_data.iterrows():
+
+                    real_prop = row2["p"]
+                    if real_prop in type_prop.keys():
+                        val = str(row2["o"])
+                        val = rs.cleanTxt(val)
+                        if ("dbo:" in type_prop[real_prop]):
+                            val = rs.cleanEntURL(val)
+                        else:
+                            if ('"' in val or "'" in val):
+                                val = val.translate(str.maketrans({"'": r"\'",
+                                                                   '"': r'\"'}))
+
+                            if ("Year" in real_prop and "-" in str(val)):
+                                val = str(val).split("-")[0][0:4]
+                        if ("Year" in real_prop and "-" in str(val)):
+                            val = str(val).split("-")[0][0:4]
+
+                        temp_new = {"type": type_prop[real_prop], "prop": real_prop, "value": [val]}
+                        ent_dict2.append(temp_new)
+
+                print(uri_clean)
+                triples = ts.triplesWithShape(uri_clean, ent_dict2, shape)
+                ent3 = uri_clean.replace("http://dbpedia.org/resource/", "").replace("https://dbpedia.org/resource/",
+                                                                                     "")
+                # if(sample_size<12000):
+                sample_size += 1
+                SAMPLE.append({"triples": triples.serialize(format="turtle"), "abstract": abstract, "ent": ent3})
+
+        #SAMPLE=SAMPLE[0:12000]
         SAMPLE_rd = SAMPLE.copy()
         random.shuffle(SAMPLE_rd)
         dataset_turtleLight = []

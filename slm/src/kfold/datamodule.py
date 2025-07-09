@@ -5,7 +5,7 @@ import torch
 from lightning.pytorch import LightningDataModule
 from sklearn.model_selection import KFold, StratifiedKFold
 from torch.utils.data import DataLoader, Subset
-
+import sys
 
 class DataloaderToDataModule(LightningDataModule):
     """Converts a set of dataloaders into a lightning datamodule.
@@ -63,7 +63,7 @@ class KFoldDataModule(LightningDataModule):
         train_dataloader: Optional[DataLoader] = None,
         val_dataloaders: Optional[Union[DataLoader, Sequence[DataLoader]]] = None,
         datamodule: Optional[LightningDataModule] = None,
-        strata_class: Optional[List] = None
+       # strata_class: Optional[List] = None
     ):
         super().__init__()
         # Input validation
@@ -88,7 +88,6 @@ class KFoldDataModule(LightningDataModule):
         if not isinstance(stratified, bool):
             raise ValueError("Stratified must be a boolean value")
         self.stratified = stratified
-        self.strata_class = strata_class
         self.fold_index = 0
         self.splits = None
         self.dataloader_settings = None
@@ -102,16 +101,9 @@ class KFoldDataModule(LightningDataModule):
             labels = None
             self.train_dataset = self.datamodule.train_dataloader().dataset
             if self.stratified:
-                print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
-                print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
-                print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
-                print(self.strata_class)
-                print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
-                print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
-                print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
 
-                labels = self.strata_class
-                #labels = self.get_labels(self.datamodule.train_dataloader())
+                labels =self.train_dataset['idx']
+
                 if labels is None:
                     raise ValueError(
                         "Tried to extract labels for stratified K folds but failed."
@@ -160,7 +152,9 @@ class KFoldDataModule(LightningDataModule):
        # print(dataloader.dataset.features.class_label.tolist())
         #if hasattr(dataloader.dataset.features, "class_label"):
          #   return dataloader.dataset.features.class_label.tolist()
-        if hasattr(dataloader.dataset, "labels"):
+        if hasattr(dataloader.dataset, "idx"):
+            return dataloader.dataset.idx.tolist()
+        elif hasattr(dataloader.dataset, "labels"):
             return dataloader.dataset.labels.tolist()
 
         # Else iterate and try to extract

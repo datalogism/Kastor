@@ -9,7 +9,7 @@ Created on Wed Apr 16 23:19:49 2025
 print("ICI")
 from rdflib import Graph
 import os
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+#os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 print("LA")
 from transformers import pipeline
 import json
@@ -103,9 +103,9 @@ def extract_triplets(text):
         triplets.append({'head': subject.strip(), 'type': relation.strip(), 'tail': object_.strip()})
     return triplets
 
-print("ICI")
+print("START")
 
-datafiles = [ "/user/cringwal/home/Desktop/RES_XP_last/NEW_CONFIG/FILTERED/MD/op_and_dt_old/DS_turtle_test.json"]
+datafiles = [ "/user/cringwal/home/Desktop/RES_XP_last/NEW_CONFIG/CORRECTED/PLAIN/op_and_dt_old/DS_turtleS_0datatype_1inLine_1facto_test.json"]
 shape = Graph()
 shape_file = "/user/cringwal/home/PycharmProjects/Kastor/shapes/PersonShape_op_and_dp.ttl"
 
@@ -155,7 +155,7 @@ for dataf in datafiles:
                 for triple in extracted_triplets:
 
                     subj = uncodeurl(triple["head"].replace(" ", "_"))
-                    obj = uncodeurl(triple["tail"].replace(" ", "_"))
+                    obj = uncodeurl(triple["tail"])
                     if (triple["type"] in prop_map.keys()):
 
                         pred = prop_map[triple["type"]]
@@ -175,7 +175,8 @@ for dataf in datafiles:
                             if (len(dates) > 0):
                                 pred2 = pred.replace("Date", "Year")
                                 pred_triples_temp.append([subj, pred, dates[0]])
-
+                        else:
+                            obj = uncodeurl(triple["tail"].replace(" ", "_"))
                         obj_found[obj] = (subj, pred)
                     for triple in extracted_triplets:
                         subj = uncodeurl(triple["head"].replace(" ", "_"))
@@ -204,13 +205,13 @@ for dataf in datafiles:
         type_abs="new"
         if("old" in dataf):
             type_abs="old"
-        with open("/user/cringwal/home/Desktop/RESULTS_DATA/REBEL_results/MD_scores_" + type_abs + "_test.json",'w', encoding='utf-8') as f:
+        with open("/user/cringwal/home/Desktop/RESULTS_DATA/REBEL_results/NEW_Plain_scores_" + type_abs + "_test.json",'w', encoding='utf-8') as f:
             json.dump(scores, f)
         e = pd.DataFrame.from_dict(callbacks["to_inspect"])
-        e.to_csv("/user/cringwal/home/Desktop/RESULTS_DATA/REBEL_results/MD_inspect_" + type_abs + "_test.csv", encoding='utf-8',
+        e.to_csv("/user/cringwal/home/Desktop/RESULTS_DATA/REBEL_results/NEW_Plain_inspect_" + type_abs + "_test.csv", encoding='utf-8',
                  index=True)
         e = pd.DataFrame.from_dict(callbacks["notvalid_examples"])
-        e.to_csv("/user/cringwal/home/Desktop/RESULTS_DATA/REBEL_results/MD_not_valid_" + type_abs + "_test.csv",
+        e.to_csv("/user/cringwal/home/Desktop/RESULTS_DATA/REBEL_results/NEW_MD_not_valid_" + type_abs + "_test.csv",
                  encoding='utf-8',
                  index=True)
 

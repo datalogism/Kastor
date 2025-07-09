@@ -81,7 +81,7 @@ class DBpediaTest(datasets.GeneratorBasedBuilder):
                     "label": datasets.Value("string"),
                     "context": datasets.Value("string"),
                     "triplets": datasets.Value("string"),
-                    "class": datasets.Value("string")
+                    "class_label": datasets.Value("string")
                 }
             ),
             # No default supervised_keys (as we have to pass both question
@@ -147,5 +147,5 @@ class DBpediaTest(datasets.GeneratorBasedBuilder):
                     "context": abstract,
                     "id": str(id_),
                     "triplets": triples,
-                    "class": str(class_found)
+                    "class_label": str(class_found)
                 }

@@ -108,7 +108,65 @@ def get_PropertiesRealised(prop,found_ng,sparql_ep):
     nb = int(qres["results"]["bindings"][0]["nb"]["value"])
     return nb
 
+def get_PropertyRandomSample_NG(target_class, type_prop_focus, all_type_prop, ng, sparql_ep,size_sample):
+    set_all = set(all_type_prop)
+    set_current = set(type_prop_focus)
+    set_diff = set_all.difference(set_current)
 
+    sparql = SPARQLWrapper(sparql_ep)
+    idx = 0
+    set_1_txt = ""
+    set_2_txt = ""
+    for prop in set_current:
+        set_1_txt += "?s <" + prop + "> ?o" + str(idx) + ". "
+        idx += 1
+   # if (len(list(set_current)) != len(set_all)):
+    #    for prop in set_diff:
+     #       set_2_txt += "OPTIONAL {?s <" + prop + "> ?o" + str(idx) + ". }. "
+      #      idx += 1
+
+
+    query1 = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dcat: <http://www.w3.org/ns/dcat#> SELECT DISTINCT ?s FROM <" + ng + "> WHERE { " + set_1_txt + " " + set_2_txt + " } ORDER BY RAND() LIMIT "+str(size_sample)
+    sparql.method = 'POST'
+    sparql.setQuery(query1)
+    sparql.setReturnFormat(JSON)
+    qres = sparql.query().convert()
+    # print(qres)
+    subjects = [row["s"]["value"] for row in qres["results"]["bindings"]]
+    return subjects
+
+def get_ClassSignatureRandomSample_NG(target_class, type_prop_focus, all_type_prop, ng, sparql_ep,size_sample):
+    set_all = set(all_type_prop)
+    set_current = set(type_prop_focus)
+    set_diff = set_all.difference(set_current)
+
+    sparql = SPARQLWrapper(sparql_ep)
+    idx = 0
+    set_1_txt = ""
+    set_2_txt = ""
+    for prop in set_current:
+        set_1_txt += "?s <" + prop + "> ?o" + str(idx) + ". "
+        idx += 1
+    if (len(list(set_current)) != len(set_all)):
+        for prop in set_diff:
+            set_2_txt += "filter not exists {?s <" + prop + "> ?o" + str(idx) + ". }. "
+            idx += 1
+
+    if (len(list(set_current)) != len(set_all)):
+
+        for prop in set_diff:
+            set_2_txt += "filter not exists {?s <" + prop + "> ?o" + str(idx) + ". }. "
+            idx += 1
+
+    query1 = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dcat: <http://www.w3.org/ns/dcat#> SELECT DISTINCT ?s FROM <" + ng + "> WHERE { " + set_1_txt + " " + set_2_txt + " } ORDER BY RAND() LIMIT "+str(size_sample)
+    print(query1)
+    sparql.method = 'POST'
+    sparql.setQuery(query1)
+    sparql.setReturnFormat(JSON)
+    qres = sparql.query().convert()
+    # print(qres)
+    subjects = [row["s"]["value"] for row in qres["results"]["bindings"]]
+    return subjects
 def get_ClassSignatureNb_NG(target_class, type_prop_focus, all_type_prop, ng, sparql_ep):
    
     set_all=set(all_type_prop)
@@ -283,6 +341,31 @@ def get_SampleEntUris(ng_sample,sparql_ep):
     print(results)
     return list(results["s"])
 
+def get_SampleEntUrisProp(ng_sample,prop,sparql_ep):
+
+    query="Select DISTINCT ?s FROM <"+ng_sample+"> {  ?s <"+prop+"> ?o. } "
+
+    print(ng_sample)
+    results=get_sparql_dataframe(sparql_ep, query)
+    print(results)
+    return list(results["s"])
+
+def get_SampleALLUriSynth(ng_sample,sparql_ep):
+
+    query="PREFIX prov: <http://www.w3.org/ns/prov#>  Select DISTINCT ?u0 ?u1 ?abs FROM <"+ng_sample+"> {  ?u0 prov:wasDerivedFrom  ?u1. ?u0 <http://www.w3.org/2000/01/rdf-schema#comment> ?abs.  } "
+
+    results=get_sparql_dataframe(sparql_ep, query)
+
+    return results
+
+def get_SampleENtUriSynth(ng_sample,sparql_ep):
+
+    query="PREFIX prov: <http://www.w3.org/ns/prov#>  Select DISTINCT ?u0 ?u1 FROM <"+ng_sample+"> {  ?u0 prov:wasDerivedFrom  ?u1 } "
+
+    results=get_sparql_dataframe(sparql_ep, query)
+
+    return results
+
 def get_SampleData(ent_uri,ng_sample,sparql_ep):
 
     query="Select ?s ?p ?o  FROM <"+ng_sample+"> {  <"+ent_uri+"> ?p ?n. ?n rdf:value ?o. } "
@@ -291,7 +374,13 @@ def get_SampleData(ent_uri,ng_sample,sparql_ep):
 
     return results
 
+def get_SampleDataWC(ent_uri,ng_sample,sparql_ep):
 
+    query="Select ?s ?p ?o  FROM <"+ng_sample+"> {  <"+ent_uri+"> ?p  ?o. } "
+
+    results=get_sparql_dataframe(sparql_ep, query)
+
+    return results
 
 def get_SampleEntScores(ng_sample, ent_uri, p,type_prop, val,sparql_ep):
     if "dbo:" in type_prop:
@@ -334,6 +423,20 @@ def get_abstractMD(ent_uri, wiki_md_ng,sparql_ep):
     url = unquote(ent_uri)
 
     query = "SELECT   ?abstract FROM  <"+wiki_md_ng+">  WHERE {  <" + url + "> <http://www.w3.org/2000/01/rdf-schema#comment> ?abstract. } "
+    # query="SELECT   ?p ?o FROM  <urn:x-arq:DefaultGraph>  WHERE {  <"+ent_uri+"> ?p ?o } "
+
+    results = get_sparql_dataframe(sparql_ep, query)
+    return results
+
+def get_abstract_ngSynth(ent_uri, uri_orig,ng, sparql_ep):
+    # target_class=type_triples
+    # prop_all=prop_focus
+
+    #  sample=  cs.get_sampleNG_to_update(infered_data_ng,sparql_ep,limit, offset)
+
+    url = unquote(ent_uri)
+    query ="PREFIX prov: <http://www.w3.org/ns/prov#>  Select  ?abstract  FROM <"+ng+"> {  <" + ent_uri + "> prov:wasDerivedFrom  <" + uri_orig + "> . <" + ent_uri + "> <http://www.w3.org/2000/01/rdf-schema#comment> ?abstract. } "
+
     # query="SELECT   ?p ?o FROM  <urn:x-arq:DefaultGraph>  WHERE {  <"+ent_uri+"> ?p ?o } "
 
     results = get_sparql_dataframe(sparql_ep, query)

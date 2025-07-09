@@ -40,7 +40,7 @@ if __name__ == '__main__':
     if args.shape_file_path and args.output_dir and args.named_graph_sample and args.abstract_type:
         shape = Graph()
 
-        sample_S=4800
+        sample_S=12000
         shape.parse(args.shape_file_path)
         dir_out=args.output_dir
         sparql_ep = 'http://localhost:8080/sparql'
@@ -157,13 +157,15 @@ if __name__ == '__main__':
                 if(sample_size<sample_S):
                     sample_size+=1
                     SAMPLE.append({"triples":triples.serialize(format="turtle"),"abstract":abstract,"ent":ent3,"pattern":str(patt_set),"class":0})
-
-        equiv_distrib=sample_S/len(prop_stats.keys())
-        list_under_repres=[ k for k in prop_stats.keys() if (prop_stats[k]/sample_size)<0.5]
-        #list_under_repres = [k for k in prop_stats.keys()]
         print("HEYYY")
         print(prop_stats)
         print("-----------")
+        print(sample_size)
+        equiv_distrib=sample_size/len(prop_stats.keys())
+        avg=sum([ prop_stats[k] for k in prop_stats.keys() ])/len(list(prop_stats.keys()))
+        list_under_repres=[ k for k in prop_stats.keys() if prop_stats[k]<avg]
+        #list_under_repres = [k for k in prop_stats.keys()]
+
         print(list_under_repres)
         class_count={"NONE":0}
         class_idx={"NONE":0}
@@ -246,7 +248,13 @@ if __name__ == '__main__':
         ########### HERE VAL=TEST BECAUSE WE NEED A TEST FILE BUT AS WE USE CROSS VALIDATION THIS SET IS
         ### PICKEN FROM TRAIN SET
         # TO DO : DEFINE IN ANOTHER PLACE SAMPLE SIZE
-
+        class_count_2={}
+        for k in class_idx.keys():
+            class_count_2[class_idx[k]]=class_count[k]
+        with open(dir_out + "class_idx.json", 'w', encoding='utf-8') as f1:
+            json.dump(class_idx, f1)
+        with open(dir_out + "class_count.json", 'w', encoding='utf-8') as f1:
+            json.dump(class_count_2, f1)
         with open(dir_out + "DS_turtle_train.json", 'w', encoding='utf-8') as f1:
             json.dump(dataset_turtle_train, f1)
         with open(dir_out + "DS_turtle_val.json", 'w', encoding='utf-8') as fl:

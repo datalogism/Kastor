@@ -16,7 +16,7 @@ import pandas as pd
 import src.triple_shapes as ts
 import src.class_signatures as cs
 import src.corese_tools as ct
-
+import sys
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -51,15 +51,22 @@ if __name__ == '__main__':
         query = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX ks: <http://ns.inria.fr/kstor/#> SELECT  (COUNT(DISTINCT ?s) as ?nb) FROM <" + found_ng + "> WHERE { ?s ?p ?o }"
         res = ct.get_sparql_dataframe(sparql_ep, query)
         print("BEFORE>", res)
+        prop_stats={}
         for prop in prop_focus:
             nb=cs.get_PropertiesRealised(prop,found_ng,sparql_ep)
             if(int(nb)>0):
                 prop_focus2.append(prop)
+                prop_stats[prop]=nb/res["nb"][0]
             print(">>>>NB: ",prop," - ",nb)
         print("PROP FOCUS>",prop_focus2)
+        stats_file = join(dir_out, shape_name + "PropStats_foundNG.json")
+        exist_stats = isfile(stats_file)
+
+        with open(stats_file, 'w', encoding='utf-8') as f:
+            json.dump(prop_stats, f)
 
         class_sign_all=cs.get_All_ClassSignatures(shape,prop_focus2)
-        stats_file=join(dir_out,shape_name+"ClassSignatureStats_foundNG.json")
+        stats_file=join(dir_out,shape_name+"ClassSignatureStats_foundx10.json")
         exist_stats=isfile(stats_file)
         exist_stats=False
         class_sign_freq={}
@@ -101,8 +108,10 @@ if __name__ == '__main__':
                 n+=1
             colnames_=["pattern"]+list_prop+["nb_real"]
             df=pd.DataFrame(class_sign_freq_dt, columns=colnames_)
-            df.to_csv(dir_out+'RDF_stats_sample_'+shape_name+'_sampleKG.csv', encoding='utf-8', index=True)
 
+            df.to_csv(dir_out+'RDF_stats_sample_'+shape_name+'_sample1x10.csv', encoding='utf-8', index=True)
+
+            print(dir_out+'RDF_stats_sample_')
 
             class_real=[k for k in class_sign_freq.keys() if class_sign_freq[k]["nb_real"]>0]
 

@@ -25,8 +25,8 @@ max_target_length: 1024
 val_max_target_length: 1024
 pad_to_max_length:  False
 max_train_samples: 4000  # MUST BE UPDATED DEPENDING SAMPLE SIZE
-max_val_samples: 400   # MUST BE UPDATED DEPENDING SAMPLE SIZE
-max_test_samples: 400   # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_val_samples: 800   # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_test_samples: 800   # MUST BE UPDATED DEPENDING SAMPLE SIZE
 nb_folds: 5   # MUST BE UPDATED DEPENDING FOLD NUMVER
 num_beams: 
 eval_beams: 3

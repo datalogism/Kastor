@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 #### JOB INFO
-#SBATCH --job-name=DS_turtle_BART_base_OPandDTP_clean_old
-#SBATCH --output=DS_turtle_BART_base_OPandDTP_clean_old.txt
+#SBATCH --job-name=TESTE
+#SBATCH --output=TESTE.txt
 ###### CONF
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
@@ -21,4 +21,4 @@ conda activate env_shapes
 
 export TOKENIZERS_PARALLELISM=True
 export WANDB_API_KEY=5f4208dc97c7b3542281b94b64eb42833243cc71
-python ./src/train_withShape_withObj.py model=bart_base_model data=DS_turtleS_0datatype_1inLine_1facto_bart_train_obj_and_dt_prop_abs_clean_old train=bart_dbpedia
+python ./src/train_withShape_withObj.py model=bart_base_model data=DS_turtleS_0datatype_1inLine_1facto_bart_train_obj_and_dt_prop_abs_clean_old_focalLoss train=bart_dbpedia

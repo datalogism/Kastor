@@ -15,6 +15,7 @@ import random
 import urllib
 import urllib.parse
 
+
 def getShapeType(shacl_g):
     get_types = """
         SELECT DISTINCT ?target_class
@@ -162,6 +163,82 @@ def find_in_abstractWithObj(abstract,prop,value,type_prop):
         if(res):
             return True
     return False
+
+def find_in_abstractAndPropTag(abstract,prop,value,type_prop):
+
+
+    if ("date" in type_prop):
+        matches = datefinder.find_dates(abstract,source=True)
+
+        for match, source in matches:
+            dat_f=match.strftime('%Y-%m-%d')
+            if(value==dat_f):
+                abstract=abstract.replace(source,"$"+prop+"$")
+
+    elif("string" in type_prop):
+        if(prop=="label"):
+            ok=False
+            parts=value.split(" ")
+            for part in parts:
+                abstract=abstract.replace(parts,"$"+prop+"$")
+
+        elif(value.lower() in abstract.lower()):
+            abstract=abstract.replace(value,"$"+prop+"$")
+
+    elif("dbo:" in type_prop):
+        val2=value.replace("_","\_")
+        val2=val2.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")
+        prefix="\:"
+        rgx=r'\[(.*?)\]\('+prefix+val2+'\)'
+
+        result=re.finditer(rgx,abstract)
+        list_context=[]
+        for match_obj in result:
+            print("################")
+            # print each re.Match object
+            # extract each matching number
+            list_context.append(match_obj.group(0))
+        for context in list_context:
+            abstract=abstract.replace(context,"$"+prop+"$")
+    return abstract
+
+def find_in_abstractAndMASK(abstract,prop,value,type_prop):
+
+    prop="MASK"
+    if ("date" in type_prop):
+        matches = datefinder.find_dates(abstract,source=True)
+
+        for match, source in matches:
+            dat_f=match.strftime('%Y-%m-%d')
+            if(value==dat_f):
+                abstract=abstract.replace(source,"$"+prop+"$")
+
+    elif("string" in type_prop):
+        if(prop=="label"):
+            ok=False
+            parts=value.split(" ")
+            for part in parts:
+                abstract=abstract.replace(parts,"$"+prop+"$")
+
+        elif(value.lower() in abstract.lower()):
+            abstract=abstract.replace(value,"$"+prop+"$")
+
+    elif("dbo:" in type_prop):
+        val2=value.replace("_","\_")
+        val2=val2.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")
+        prefix="\:"
+        rgx=r'\[(.*?)\]\('+prefix+val2+'\)'
+
+        result=re.finditer(rgx,abstract)
+        list_context=[]
+        for match_obj in result:
+            print("################")
+            # print each re.Match object
+            # extract each matching number
+            list_context.append(match_obj.group(0))
+        for context in list_context:
+            abstract=abstract.replace(context,"$"+prop+"$")
+    return abstract
 #def clean_abstract(abstract):
 #https://en.wikipedia.org/wiki/Category:Wikipedia_naming_conventions
 def label_contains_special(label):

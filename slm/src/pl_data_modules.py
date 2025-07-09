@@ -15,7 +15,7 @@ from transformers import (
     default_data_collator,
     set_seed,
 )
-
+import sys
 class BasePLDataModule(pl.LightningDataModule):
     """
     FROM LIGHTNING DOCUMENTATION
@@ -69,19 +69,20 @@ class BasePLDataModule(pl.LightningDataModule):
         #if conf.relations_file:
         #    self.datasets = load_dataset(conf.dataset_name, data_files={'train': conf.train_file, 'dev': conf.validation_file, 'test': conf.test_file, 'relations': conf.relations_file})
         #else:
-        print("----------------->")
-        print(conf.train_file)
+
         self.datasets = load_dataset(conf.dataset_name, data_files={'train': conf.train_file, 'dev': conf.validation_file, 'test': conf.test_file})
 
-        self.class_label = None
-        if ( "class" in self.datasets["train"].column_names):
-            self.class_label = self.datasets["train"]["class"]
+       # self.class_label = None
+        #if ( "class_label" in self.datasets["train"].column_names):
+         #   print("CLASS FOUND")
+          #  self.class_label = self.datasets["train"]["class_label"]
 
         set_caching_enabled(False)
         print("AFTER")
 
         self.prefix = conf.source_prefix if conf.source_prefix is not None else ""
         self.column_names = self.datasets["train"].column_names
+       # self.column_names.remove("class_label")
         # self.source_lang, self.target_lang, self.text_column, self.summary_column = None, None, None, None
         self.text_column = conf.text_column
         self.summary_column = conf.target_column
@@ -110,14 +111,17 @@ class BasePLDataModule(pl.LightningDataModule):
     def prepare_data(self, *args, **kwargs):
         print("prepare_data")
         self.train_dataset = self.datasets["train"]
-
+        print("-----------------------")
+        print(self.train_dataset[11])
         if "train" not in self.datasets:
             raise ValueError("--do_train requires a train dataset")
         if self.conf.max_train_samples is not None:
             self.train_dataset = self.train_dataset.select(range(self.conf.max_train_samples))
 
-        if("class_label" in self.train_dataset[0].keys()):
-            self.class_label = [ row["class_label"] for row in self.train_dataset]
+
+     #   if("class_label" in self.train_dataset[0].keys()):
+      #      self.class_label = [ row["class_label"] for row in self.train_dataset]
+
         print(">>>>>>>>>TRAIN")
         self.train_dataset = self.train_dataset.map(
             self.preprocess_function,
@@ -126,7 +130,10 @@ class BasePLDataModule(pl.LightningDataModule):
             remove_columns=self.column_names,
             load_from_cache_file=not self.conf.overwrite_cache,
             cache_file_name=self.conf.train_file.replace('.jsonl', '-') + self.conf.dataset_name.split('/')[-1].replace('.py', '.cache'),
+            with_indices = True
         )
+
+
 
         if self.conf.do_eval:
             print(">>>>>>>>>EVAL")
@@ -136,6 +143,7 @@ class BasePLDataModule(pl.LightningDataModule):
             self.eval_dataset = self.datasets["validation"]
             if self.conf.max_val_samples is not None:
                 self.eval_dataset = self.eval_dataset.select(range(self.conf.max_val_samples))
+
             self.eval_dataset = self.eval_dataset.map(
                 self.preprocess_function,
                 batched=True,
@@ -143,6 +151,7 @@ class BasePLDataModule(pl.LightningDataModule):
                 remove_columns=self.column_names,
                 load_from_cache_file=not self.conf.overwrite_cache,
                 cache_file_name=self.conf.validation_file.replace('.jsonl', '-') + self.conf.dataset_name.split('/')[-1].replace('.py', '.cache'),
+                with_indices=True
             )
 
         if self.conf.do_predict:
@@ -160,6 +169,7 @@ class BasePLDataModule(pl.LightningDataModule):
                 remove_columns=self.column_names,
                 load_from_cache_file=not self.conf.overwrite_cache,
                 cache_file_name=self.conf.test_file.replace('.jsonl', '-') + self.conf.dataset_name.split('/')[-1].replace('.py', '.cache'),
+                with_indices=True
             )
 
     def train_dataloader(self, *args, **kwargs) -> DataLoader:
@@ -181,7 +191,7 @@ class BasePLDataModule(pl.LightningDataModule):
     def val_dataloader(self, *args, **kwargs) -> Union[DataLoader, List[DataLoader]]:
         print("val_dataloader")
 
-      #  train_sampler = SubsetRandomSampler(list(range(conf.max_val_samples)))
+
         return DataLoader(
             self.eval_dataset,
             batch_size=self.conf.eval_batch_size,
@@ -205,16 +215,9 @@ class BasePLDataModule(pl.LightningDataModule):
             pin_memory=self.conf.dataloader_pin_memory,
         )
 
-    # def transfer_batch_to_device(self, batch: Any, device: torch.device) -> Any:
-    #     raise NotImplementedError
 
-    def preprocess_function(self, examples):
 
-        # print("preprocess_function")
-        # print("NB > ",len(examples))
-        # print("keys > ",str(list(examples.keys())))
-        # print("ID ex >",examples["id"])
-        # print("ID type >",type(examples["id"][0]))
+    def preprocess_function(self, examples, indices):
 
         inputs = examples[self.text_column]
         targets = examples[self.summary_column]
@@ -231,11 +234,10 @@ class BasePLDataModule(pl.LightningDataModule):
             labels["input_ids"] = [
                 [(l if l != self.tokenizer.pad_token_id else -100) for l in label] for label in labels["input_ids"]
             ]
-        # model_inputs["decoder_input_ids"] = labels["input_ids"]
-        # model_inputs["decoder_attention_mask"] = labels["attention_mask"]
-        # model_inputs["labels"] = shift_tokens_left(labels["input_ids"], self.tokenizer.pad_token_id)
-        model_inputs["labels"] = labels["input_ids"]
-        #model_inputs["class_label"] = examples["class"]
 
-        #model_inputs=model_inputs.reset_index(drop=True)
+        model_inputs["labels"] = labels["input_ids"]
+
+        model_inputs["labels"] = labels["input_ids"]
+        model_inputs["idx"] = [int(x) for x in examples["class_label"]]
+
         return model_inputs

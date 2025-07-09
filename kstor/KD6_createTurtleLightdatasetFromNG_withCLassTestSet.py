@@ -17,7 +17,7 @@ import sys
 import src.triple_shapes as ts
 import src.rdf_synthax_fct as rs
 import src.class_signatures as cs
-        
+from sklearn.model_selection import StratifiedShuffleSplit
 import urllib.parse
 def uncodeurl(URL):
     if("%" in URL):
@@ -39,6 +39,8 @@ if __name__ == '__main__':
     print(">>>>>>>>>>>>>>>>>>>>>>>>>> START HERE")
     if args.shape_file_path and args.output_dir and args.named_graph_sample and args.abstract_type:
         shape = Graph()
+
+        sample_S=12000
         shape.parse(args.shape_file_path)
         dir_out=args.output_dir
         sparql_ep = 'http://localhost:8080/sparql'
@@ -88,6 +90,8 @@ if __name__ == '__main__':
         abstract_ng = "http://ns.inria.fr/kstor/wiki_md/" + type_triples_name
 
         SAMPLE=[]
+        prop_stats={}
+        patt_set_stat={}
         existing_uri= []
         #['United_States', 'Arem-arem', 'Bacon_Explosion', 'BLT', 'Indonesia', 'Tomato', 'Amatriciana_sauce', 'Italy', 'Bacon_sandwich', 'Dessert', 'Arrabbiata_sauce', 'Baked_Alaska', 'Bionico', 'Mexico', 'Celery']
         list_uri=cs.get_SampleEntUris(sample_ng,sparql_ep)
@@ -133,48 +137,122 @@ if __name__ == '__main__':
 
                 print(uri_clean)
                 triples=ts.triplesWithShape(uri_clean,ent_dict2,shape)
+                patt_set=[]
+                for row in ent_dict2:
+                    if(row["prop"] not in patt_set):
+                        patt_set.append(row["prop"])
+                    if(row["prop"] not in prop_stats.keys()):
+                        prop_stats[row["prop"]]=0
+                    else:
+                        prop_stats[row["prop"]]+=1
+                patt_set.sort()
+                if(str(patt_set) not in patt_set_stat.keys()):
+                    patt_set_stat[str(patt_set)]=0
+                else:
+                    patt_set_stat[str(patt_set)]+=1
+
+
+
                 ent3=uri_clean.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")
-                if(sample_size<12000):
+                if(sample_size<sample_S):
                     sample_size+=1
-                    SAMPLE.append({"triples":triples.serialize(format="turtle"),"abstract":abstract,"ent":ent3})
-        SAMPLE=SAMPLE[0:12000]
+                    SAMPLE.append({"triples":triples.serialize(format="turtle"),"abstract":abstract,"ent":ent3,"pattern":str(patt_set),"class":0})
+
+        equiv_distrib=sample_S/len(prop_stats.keys())
+        list_under_repres=[ k for k in prop_stats.keys() if (prop_stats[k]/sample_size)<0.5]
+        #list_under_repres = [k for k in prop_stats.keys()]
+        print("HEYYY")
+        print(prop_stats)
+        print("-----------")
+        print(list_under_repres)
+        class_count={"NONE":0}
+        class_idx={"NONE":0}
+        for row in SAMPLE:
+            Found=[]
+            for idx in range(len(list_under_repres)):
+                under_rep=list_under_repres[idx]
+                if under_rep in row["pattern"]:
+                    Found.append(under_rep)
+            if(len(Found)==1):
+                    if(Found[0] not in class_count.keys()):
+                        class_count[Found[0]]=1
+                        idx=len(class_idx.keys())+1
+                        class_idx[Found[0]]=idx
+                    else:
+                        idx = class_idx[Found[0]]
+                        class_count[Found[0]]+=1
+                    row["class"]=idx
+            elif(len(Found)>1):
+                added=False
+                for f in Found:
+                    if(f not in class_count.keys()):
+                        class_count[f] = 1
+                        idx=len(class_idx.keys())+1
+                        class_idx[f]=idx
+                        row["class"]=idx
+                        added=True
+                    break
+                if added==False:
+                    sortedDictclass = sorted(class_count)
+                    for valprop in sortedDictclass:
+                        if valprop in Found:
+                            if (valprop not in class_count.keys()):
+                                class_count[valprop] = 1
+                                idx = len(class_idx.keys()) + 1
+                                class_idx[valprop] = idx
+                                added = True
+                            else:
+                                idx = class_idx[valprop]
+                                class_count[valprop] += 1
+                            row["class"] = idx
+                            break
+            else:
+                class_count["NONE"]+=1
+
+        print("###############")
+        print(class_count)
+        print(class_idx)
+        SAMPLE=SAMPLE[0:sample_S]
         SAMPLE_rd = SAMPLE.copy()
-        random.shuffle(SAMPLE_rd)
         dataset_turtleLight = []
         for row in SAMPLE_rd:
             triples = row["triples"]
-            print(triples)
+            #print(triples)
             new = row.copy()
             triples_list1 = rs.simplifyTutle(triples, False, True, True)
 
-            if(len(triples_list1)<0):
-                print(triples_list1)
+           # if(len(triples_list1)<0):
+            #    print(triples_list1)
             new["triples"] = uncodeurl(triples_list1)
-            print(new["triples"] )
+           # print(new["triples"] )
 
             dataset_turtleLight.append(new)
-        print(len(dataset_turtleLight))
+       # print(len(dataset_turtleLight))
+        test_size=(sample_S-(sample_S/1.2))/sample_S
+        sss = StratifiedShuffleSplit(n_splits=1, test_size=test_size, random_state=0)
+        y=[row["class"] for row in SAMPLE_rd]
+        dataset_turtleLight_eval=[]
+        dataset_turtleLight_train=[]
+        dataset_turtle_eval=[]
+        dataset_turtle_train=[]
+        for i, (train_index, test_index) in enumerate(sss.split(SAMPLE_rd, y)):
+            for idx in train_index:
+                dataset_turtleLight_train.append(dataset_turtleLight[idx])
+                dataset_turtle_train.append(SAMPLE_rd[idx])
+
+            for idx in test_index:
+                dataset_turtleLight_eval.append(dataset_turtleLight[idx])
+                dataset_turtle_eval.append(SAMPLE_rd[idx])
         ########### HERE VAL=TEST BECAUSE WE NEED A TEST FILE BUT AS WE USE CROSS VALIDATION THIS SET IS
         ### PICKEN FROM TRAIN SET
         # TO DO : DEFINE IN ANOTHER PLACE SAMPLE SIZE
-        with open(dir_out + "DS_turtle_train.json", 'w', encoding='utf-8') as fl:
-            json.dump(SAMPLE_rd[0:10000], fl)
-        with open(dir_out + "DS_turtle_train_sample.json", 'w', encoding='utf-8') as f1:
-            json.dump(SAMPLE_rd[0:20], f1)
-        with open( dir_out+ "DS_turtle_all_test.json", 'w', encoding='utf-8') as fl:
-            json.dump(SAMPLE_rd, fl)
-        with open( dir_out+ "DS_turtle_test.json", 'w', encoding='utf-8') as fl:
-            json.dump(SAMPLE_rd[10000:11000], fl)
-        with open(dir_out + "DS_turtle_val.json", 'w', encoding='utf-8') as fl:
-            json.dump(SAMPLE_rd[11000:12000], fl)
 
-        with open(dir_out + "DS_turtleS_0datatype_1inLine_1facto_all_test.json", 'w', encoding='utf-8') as fl:
-            json.dump(dataset_turtleLight, fl)
+        with open(dir_out + "DS_turtle_train.json", 'w', encoding='utf-8') as f1:
+            json.dump(dataset_turtle_train, f1)
+        with open(dir_out + "DS_turtle_val.json", 'w', encoding='utf-8') as fl:
+            json.dump(dataset_turtle_eval, fl)
+
         with open(dir_out + "DS_turtleS_0datatype_1inLine_1facto_train.json", 'w', encoding='utf-8') as fl:
-            json.dump(dataset_turtleLight[0:10000], fl)
-        with open(dir_out + "DS_turtleS_0datatype_1inLine_1facto_train_sample.json", 'w', encoding='utf-8') as f1:
-            json.dump(dataset_turtleLight[0:20], f1)
-        with open( dir_out+ "DS_turtleS_0datatype_1inLine_1facto_test.json", 'w', encoding='utf-8') as fl:
-            json.dump(dataset_turtleLight[10000:11000], fl)
+            json.dump(dataset_turtleLight_train, fl)
         with open(dir_out + "DS_turtleS_0datatype_1inLine_1facto_val.json", 'w', encoding='utf-8') as fl:
-            json.dump(dataset_turtleLight[11000:12000], fl)
+            json.dump(dataset_turtleLight_eval, fl)
