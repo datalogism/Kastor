@@ -41,47 +41,6 @@ Kastor/
 5. **Testing & Inference** — Use the trained model to extract RDF triples from new text.
 
 ---
-
-## 🧩 Full Pipeline
-
-### Step 1: Knowledge Base init.
-
-```bash
-cd corese
-sh load_kb.sh  # or run the corresponding loader script manually
-```
-
-### Step 1: Define SHACL Shape
-
-* Create a new `.shacl` file in `shapes/`
-* Follow examples to specify classes, properties, and constraints
-
-### Step 3: Distill Examples
-
-```bash
-cd ../kstor
-python distill.py \
-  --shape_path ../shapes/your_shape.shacl \
-  --output ../data/your_dataset.json
-```
-
-### Step 4: Train a Language Model
-
-```bash
-cd ../slm
-python train.py \
-  --data ../data/your_dataset.json \
-  --output ../models/your_model
-```
-
-### Step 5: Evaluate or Use Model
-
-```bash
-jupyter notebook ../notebooks/Run_Extractor.ipynb
-```
-
----
-
 ## 🛠 Requirements
 
 * Python >= 3.8
