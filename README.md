@@ -118,7 +118,7 @@ Open a GitHub issue or contact the maintainers via [https://github.com/datalogis
 
 ## 📝 Related publications
 
-### Kastor: Fine-Tuned Small Language Models for Shape-Based Active Relation Extraction
+### 1- Kastor: Fine-Tuned Small Language Models for Shape-Based Active Relation Extraction [PUBLISHED]
 :tada: Accepted at the Research Track of [ESWC 2025](https://2025.eswc-conferences.org/)
 
 If you use the code or cite our work, please reference this one as follows :
@@ -157,6 +157,17 @@ If you use the code or cite our work, please reference this one as follows :
 
 * [Produced Knowledge Base](https://zenodo.org/records/14382674) 
 * [Models](https://zenodo.org/records/14498940) 
-* [WanDB Project](https://zenodo.org/records/14382674) 
+* [WanDB Project](https://wandb.ai/inria_test/KSTOR_xp) 
 
-You can easily test the resulting extractor via [this notebook](./Test_models.ipynb)
+The resulting extractor could be tested using [this notebook](./Test_models.ipynb)
+
+
+### 2- Overcoming the Generalization Limits of SLM Finetuning for Shape-Based Extraction of Datatype and Object Properties [UNDER-REVIEW]
+
+* [Datasets produced](https://zenodo.org/records/15917325) 
+* [WanDB Project - Part 1](https://wandb.ai/celian-ringwald/GenLimits_Part1) 
+* [WanDB Project - Part 2 - trained models](https://wandb.ai/celian-ringwald/GenLimitsPart2_train) 
+* [WanDB Project - Part 2 - cross-evaluation](https://wandb.ai/celian-ringwald/GenLimitsPart2_crossEval) 
+* [WanDB Project - Part 3 - trained models](https://wandb.ai/celian-ringwald/GenLimitsPart3_train) 
+* [WanDB Project - Part 3 - cross-evaluation](https://wandb.ai/celian-ringwald/GenLimitsPart3_crossEval) 
+
