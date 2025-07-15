@@ -1,0 +1,49 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/MonumentShape> a sh:NodeShape ;
+    sh:property [ sh:path <http://dbpedia.org/ontology/category> ],
+        [ sh:path <http://dbpedia.org/ontology/nativeName> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/established> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/district> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsWest> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/state> ],
+        [ sh:class <http://dbpedia.org/ontology/Currency> ;
+            sh:path <http://dbpedia.org/ontology/currency> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsSoutheast> ],
+        [ sh:class <http://dbpedia.org/ontology/EthnicGroup> ;
+            sh:path <http://dbpedia.org/ontology/ethnicGroup> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/leader> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ],
+        [ sh:path <http://dbpedia.org/ontology/dedicatedTo> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/largestCity> ],
+        [ sh:path <http://dbpedia.org/ontology/material> ],
+        [ sh:class <http://dbpedia.org/ontology/Organisation> ;
+            sh:path <http://dbpedia.org/ontology/owningOrganisation> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsSouthwest> ],
+        [ sh:path <http://dbpedia.org/ontology/inaugurationDate> ],
+        [ sh:class <http://dbpedia.org/ontology/Language> ;
+            sh:path <http://dbpedia.org/ontology/language> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/location> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsNorth> ],
+        [ sh:class <http://dbpedia.org/ontology/City> ;
+            sh:path <http://dbpedia.org/ontology/capital> ],
+        [ sh:path <http://dbpedia.org/ontology/religion> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/nearestCity> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/designer> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/municipality> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/leaderTitle> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Monument> .
+

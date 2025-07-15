@@ -1,0 +1,23 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+<http://shaclshapes.org/SportsTeamShape> a sh:NodeShape ;
+    sh:property [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/owner> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/location> ],
+        [ sh:path <http://dbpedia.org/ontology/champions> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/ground> ],
+        [ sh:class <http://dbpedia.org/ontology/SportsLeague> ;
+            sh:path <http://dbpedia.org/ontology/league> ],
+        [ sh:class <http://dbpedia.org/ontology/City> ;
+            sh:path <http://dbpedia.org/ontology/city> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/manager> ],
+        [ sh:path <http://dbpedia.org/ontology/fullName> ],
+        [ sh:path <http://dbpedia.org/ontology/isPartOf> ],
+        [ sh:path <http://dbpedia.org/ontology/operator> ],
+        [ sh:path <http://dbpedia.org/ontology/nickname> ],
+        [ sh:path <http://dbpedia.org/ontology/season> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/SportsTeam> .
+

@@ -1,0 +1,4 @@
+defaults:
+  - train: dbpedia_train
+  - model: bart_xml
+  - data: bart_base_model

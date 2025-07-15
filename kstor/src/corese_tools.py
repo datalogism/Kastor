@@ -38,14 +38,13 @@ def sparql_service_to_int(service, query):
     processed_results = json.load(result.response)
     cols = processed_results['head']['vars']
 
-    out = []
+    out = None
     for row in processed_results['results']['bindings']:
         item = []
         for c in cols:
-            item.append(row.get(c, {}).get('value'))
-        out.append(item)
+            out=int(row.get(c, {}).get('value'))
 
-    return pd.DataFrame(out, columns=cols)
+    return out
 
 def sparql_service_to_dataframe(service, query):
     """

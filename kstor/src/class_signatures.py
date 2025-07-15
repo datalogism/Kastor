@@ -12,17 +12,17 @@ import sys
 from urllib.parse import unquote
 
 
-sys.path.append('/user/cringwal/home/Desktop/THESE/CORESE_DATASET_build/')
-import corese_tools as ct
-import triple_shapes as ts
-import rdf_synthax_fct as rs
+#sys.path.append('/user/cringwal/home/Desktop/THESE/CORESE_DATASET_build/')
+import src.corese_tools as ct
+import src.triple_shapes as ts
+import src.rdf_synthax_fct as rs
 
     
 def get_NbEntitiesNGToDo(ng,found_ng,sparql_ep):
     ########## QUERIES STATS
     sparql = SPARQLWrapper(sparql_ep) 
     
-    sparql.setQuery(" SELECT (COUNT(DISTINCT ?s) as ?nb) FROM <"+ng+"> where {  ?s ?p ?o.    FILTER NOT EXISTS { GRAPH  <"+found_ng+"> { ?s ?p ?o }  }  }")
+    sparql.setQuery("SELECT (COUNT(DISTINCT ?s) as ?nb) FROM <"+ng+"> where {  ?s ?p ?o.    FILTER NOT EXISTS { GRAPH  <"+found_ng+"> { ?s ?p ?o }  }  }")
     sparql.setReturnFormat(JSON)
     qres = sparql.query().convert()
     
@@ -58,7 +58,7 @@ def get_NbEntitiesNG(ng,sparql_ep):
     ########## QUERIES STATS
     sparql = SPARQLWrapper(sparql_ep) 
     
-    sparql.setQuery("PREFIX dbo: <http://dbpedia.org/ontology/>  PREFIX dcat: <http://www.w3.org/ns/dcat#>  SELECT (COUNT(DISTINCT ?s) as ?nb) from "+ng+"  where {  ?s ?p ?o.  }")
+    sparql.setQuery("PREFIX dbo: <http://dbpedia.org/ontology/>  PREFIX dcat: <http://www.w3.org/ns/dcat#>  SELECT (COUNT(DISTINCT ?s) as ?nb) from <"+ng+">  where {  ?s ?p ?o.  }")
     sparql.setReturnFormat(JSON)
     qres = sparql.query().convert()
     
@@ -97,7 +97,76 @@ def get_ClassSignatureNb_K(target_class, type_prop_focus, all_type_prop, sparql_
     nb=int(qres["results"]["bindings"][0]["nb"]["value"])
     return nb
 
+def get_PropertiesRealised(prop,found_ng,sparql_ep):
+    query1 = "PREFIX dbo: <http://dbpedia.org/ontology/>  select (COUNT(DISTINCT ?s) as ?nb) from <" + found_ng + "> where {  ?s <"+prop+"> ?o } "
+    print(query1)
 
+    sparql = SPARQLWrapper(sparql_ep)
+    sparql.setQuery(query1)
+    sparql.setReturnFormat(JSON)
+    qres = sparql.query().convert()
+    nb = int(qres["results"]["bindings"][0]["nb"]["value"])
+    return nb
+
+def get_PropertyRandomSample_NG(target_class, type_prop_focus, all_type_prop, ng, sparql_ep,size_sample):
+    set_all = set(all_type_prop)
+    set_current = set(type_prop_focus)
+    set_diff = set_all.difference(set_current)
+
+    sparql = SPARQLWrapper(sparql_ep)
+    idx = 0
+    set_1_txt = ""
+    set_2_txt = ""
+    for prop in set_current:
+        set_1_txt += "?s <" + prop + "> ?o" + str(idx) + ". "
+        idx += 1
+   # if (len(list(set_current)) != len(set_all)):
+    #    for prop in set_diff:
+     #       set_2_txt += "OPTIONAL {?s <" + prop + "> ?o" + str(idx) + ". }. "
+      #      idx += 1
+
+
+    query1 = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dcat: <http://www.w3.org/ns/dcat#> SELECT DISTINCT ?s FROM <" + ng + "> WHERE { " + set_1_txt + " " + set_2_txt + " } ORDER BY RAND() LIMIT "+str(size_sample)
+    sparql.method = 'POST'
+    sparql.setQuery(query1)
+    sparql.setReturnFormat(JSON)
+    qres = sparql.query().convert()
+    # print(qres)
+    subjects = [row["s"]["value"] for row in qres["results"]["bindings"]]
+    return subjects
+
+def get_ClassSignatureRandomSample_NG(target_class, type_prop_focus, all_type_prop, ng, sparql_ep,size_sample):
+    set_all = set(all_type_prop)
+    set_current = set(type_prop_focus)
+    set_diff = set_all.difference(set_current)
+
+    sparql = SPARQLWrapper(sparql_ep)
+    idx = 0
+    set_1_txt = ""
+    set_2_txt = ""
+    for prop in set_current:
+        set_1_txt += "?s <" + prop + "> ?o" + str(idx) + ". "
+        idx += 1
+    if (len(list(set_current)) != len(set_all)):
+        for prop in set_diff:
+            set_2_txt += "filter not exists {?s <" + prop + "> ?o" + str(idx) + ". }. "
+            idx += 1
+
+    if (len(list(set_current)) != len(set_all)):
+
+        for prop in set_diff:
+            set_2_txt += "filter not exists {?s <" + prop + "> ?o" + str(idx) + ". }. "
+            idx += 1
+
+    query1 = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dcat: <http://www.w3.org/ns/dcat#> SELECT DISTINCT ?s FROM <" + ng + "> WHERE { " + set_1_txt + " " + set_2_txt + " } ORDER BY RAND() LIMIT "+str(size_sample)
+    print(query1)
+    sparql.method = 'POST'
+    sparql.setQuery(query1)
+    sparql.setReturnFormat(JSON)
+    qres = sparql.query().convert()
+    # print(qres)
+    subjects = [row["s"]["value"] for row in qres["results"]["bindings"]]
+    return subjects
 def get_ClassSignatureNb_NG(target_class, type_prop_focus, all_type_prop, ng, sparql_ep):
    
     set_all=set(all_type_prop)
@@ -124,6 +193,7 @@ def get_ClassSignatureNb_NG(target_class, type_prop_focus, all_type_prop, ng, sp
             
     query1 = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dcat: <http://www.w3.org/ns/dcat#> SELECT (COUNT(DISTINCT ?s) as ?nb) FROM <"+ng+"> WHERE { "+set_1_txt+" "+set_2_txt+" } "
     print(query1)
+    sparql.method = 'POST'
     sparql.setQuery(query1)
     sparql.setReturnFormat(JSON)
     qres = sparql.query().convert()
@@ -169,7 +239,10 @@ def get_RandomSample_NG_EntAbs(sparql_ep, limit=10, offset=0):
     results=get_sparql_dataframe(sparql_ep, query)
 
     return results
-    
+
+
+
+
 def get_ClassSignatureSample_K(target_class, type_prop_focus, all_type_prop,sparql_ep, limit=10, offset=0):
     
     set_all=set(all_type_prop)
@@ -237,7 +310,18 @@ def get_sample_to_update(target_class, prop_all,sparql_ep, limit=10, offset=0):
     return results
 
 
-    
+def get_sampleNG_to_updateOnlyNew(ng, found_ng, sparql_ep, limit=10, offset=0):
+    # target_class=type_triples
+    # prop_all=prop_focus
+
+    #  sample=  cs.get_sampleNG_to_update(infered_data_ng,sparql_ep,limit, offset)
+    query = "PREFIX dbo: <http://dbpedia.org/ontology/>  PREFIX dcat: <http://www.w3.org/ns/dcat#> select ?s ?p ?o  FROM <" + ng + "> {  ?s ?p ?o. FILTER  EXISTS { GRAPH  <http://ns.inria.fr/kstor/wikinew_202004/> { ?s ?pi ?oi } }.     FILTER NOT EXISTS { GRAPH  <" + found_ng + "> { ?s ?p ?o }  } } ORDER BY ASC(?s) LIMIT """ + str(
+        limit) + " OFFSET " + str(offset)
+
+    results = get_sparql_dataframe(sparql_ep, query)
+    return results
+
+
 def get_sampleNG_to_update(ng,found_ng, sparql_ep, limit=10, offset=0):
     #target_class=type_triples
     #prop_all=prop_focus
@@ -251,13 +335,58 @@ def get_sampleNG_to_update(ng,found_ng, sparql_ep, limit=10, offset=0):
 def get_SampleEntUris(ng_sample,sparql_ep):
 
     query="Select DISTINCT ?s FROM <"+ng_sample+"> {  ?s ?p ?n. ?n rdf:value ?o. } "
-          
+
+    print(ng_sample)
     results=get_sparql_dataframe(sparql_ep, query)
+    print(results)
     return list(results["s"])
 
-def get_SampleEntScores(ng_sample, ent_uri, p,type_prop, val,sparql_ep):
+def get_SampleEntUrisProp(ng_sample,prop,sparql_ep):
 
-    query=" PREFIX ks: <http://ns.inria.fr/kstor/#>  Select ?tc ?xnli FROM <"+ng_sample+"> {  <"+ent_uri+"> <"+p+"> ?n. ?n rdf:value '"+val+"'^^"+type_prop+". ?n ks:xnli ?xnli. ?n ks:triplet_critic ?tc. } "
+    query="Select DISTINCT ?s FROM <"+ng_sample+"> {  ?s <"+prop+"> ?o. } "
+
+    print(ng_sample)
+    results=get_sparql_dataframe(sparql_ep, query)
+    print(results)
+    return list(results["s"])
+
+def get_SampleALLUriSynth(ng_sample,sparql_ep):
+
+    query="PREFIX prov: <http://www.w3.org/ns/prov#>  Select DISTINCT ?u0 ?u1 ?abs FROM <"+ng_sample+"> {  ?u0 prov:wasDerivedFrom  ?u1. ?u0 <http://www.w3.org/2000/01/rdf-schema#comment> ?abs.  } "
+
+    results=get_sparql_dataframe(sparql_ep, query)
+
+    return results
+
+def get_SampleENtUriSynth(ng_sample,sparql_ep):
+
+    query="PREFIX prov: <http://www.w3.org/ns/prov#>  Select DISTINCT ?u0 ?u1 FROM <"+ng_sample+"> {  ?u0 prov:wasDerivedFrom  ?u1 } "
+
+    results=get_sparql_dataframe(sparql_ep, query)
+
+    return results
+
+def get_SampleData(ent_uri,ng_sample,sparql_ep):
+
+    query="Select ?s ?p ?o  FROM <"+ng_sample+"> {  <"+ent_uri+"> ?p ?n. ?n rdf:value ?o. } "
+
+    results=get_sparql_dataframe(sparql_ep, query)
+
+    return results
+
+def get_SampleDataWC(ent_uri,ng_sample,sparql_ep):
+
+    query="Select ?s ?p ?o  FROM <"+ng_sample+"> {  <"+ent_uri+"> ?p  ?o. } "
+
+    results=get_sparql_dataframe(sparql_ep, query)
+
+    return results
+
+def get_SampleEntScores(ng_sample, ent_uri, p,type_prop, val,sparql_ep):
+    if "dbo:" in type_prop:
+        query=" PREFIX ks: <http://ns.inria.fr/kstor/#>  Select ?tc ?xnli FROM <"+ng_sample+"> {  <"+ent_uri+"> <"+p+"> ?n. ?n rdf:value <"+val+"'>. ?n ks:xnli ?xnli. ?n ks:triplet_critic ?tc. } "
+    else:
+        query=" PREFIX ks: <http://ns.inria.fr/kstor/#>  Select ?tc ?xnli FROM <"+ng_sample+"> {  <"+ent_uri+"> <"+p+"> ?n. ?n rdf:value '"+val+"'^^"+type_prop+". ?n ks:xnli ?xnli. ?n ks:triplet_critic ?tc. } "
     print(query)
     results=get_sparql_dataframe(sparql_ep, query)
     return results
@@ -284,6 +413,50 @@ def get_abstract(ent_uri,sparql_ep):
     results=get_sparql_dataframe(sparql_ep, query)
     return results
 
+
+def get_abstractMD(ent_uri, wiki_md_ng,sparql_ep):
+    # target_class=type_triples
+    # prop_all=prop_focus
+
+    #  sample=  cs.get_sampleNG_to_update(infered_data_ng,sparql_ep,limit, offset)
+
+    url = unquote(ent_uri)
+
+    query = "SELECT   ?abstract FROM  <"+wiki_md_ng+">  WHERE {  <" + url + "> <http://www.w3.org/2000/01/rdf-schema#comment> ?abstract. } "
+    # query="SELECT   ?p ?o FROM  <urn:x-arq:DefaultGraph>  WHERE {  <"+ent_uri+"> ?p ?o } "
+
+    results = get_sparql_dataframe(sparql_ep, query)
+    return results
+
+def get_abstract_ngSynth(ent_uri, uri_orig,ng, sparql_ep):
+    # target_class=type_triples
+    # prop_all=prop_focus
+
+    #  sample=  cs.get_sampleNG_to_update(infered_data_ng,sparql_ep,limit, offset)
+
+    url = unquote(ent_uri)
+    query ="PREFIX prov: <http://www.w3.org/ns/prov#>  Select  ?abstract  FROM <"+ng+"> {  <" + ent_uri + "> prov:wasDerivedFrom  <" + uri_orig + "> . <" + ent_uri + "> <http://www.w3.org/2000/01/rdf-schema#comment> ?abstract. } "
+
+    # query="SELECT   ?p ?o FROM  <urn:x-arq:DefaultGraph>  WHERE {  <"+ent_uri+"> ?p ?o } "
+
+    results = get_sparql_dataframe(sparql_ep, query)
+    return results
+
+def get_abstract_ng(ent_uri,ng, sparql_ep):
+    # target_class=type_triples
+    # prop_all=prop_focus
+
+    #  sample=  cs.get_sampleNG_to_update(infered_data_ng,sparql_ep,limit, offset)
+
+    url = unquote(ent_uri)
+
+    query = "SELECT   ?abstract FROM  <"+ng+">  WHERE {  <" + url + "> <http://www.w3.org/2000/01/rdf-schema#comment> ?abstract. } "
+    # query="SELECT   ?p ?o FROM  <urn:x-arq:DefaultGraph>  WHERE {  <"+ent_uri+"> ?p ?o } "
+
+    results = get_sparql_dataframe(sparql_ep, query)
+    return results
+
+
 def get_FoundNgData(ent_uri,found_ng,sparql_ep):
       query="SELECT ?s ?p ?o FROM <"+found_ng+"> {    <"+ent_uri+">  ?p ?o. } "
 
@@ -296,7 +469,7 @@ def getCorrectedNgData(ent_uri,annotation_ng,sparql_ep):
       results=get_sparql_dataframe(sparql_ep, query)
       return results
     
-def get_NamedGraphData(ent_uri,named_graph,target_class, prop_all,sparql_ep, limit=10, offset=0):
+def get_NamedGraphData(ent_uri,named_graph, prop_all,sparql_ep, limit=10, offset=0):
     #target_class=type_triples
     #prop_all=prop_focus
     set_all=set(prop_all)
@@ -312,9 +485,41 @@ def get_NamedGraphData(ent_uri,named_graph,target_class, prop_all,sparql_ep, lim
      
     query="PREFIX dbo: <http://dbpedia.org/ontology/>  select "+var_1_txt+" from <"+named_graph+"> where { OPTIONAL {?s <http://www.w3.org/2000/01/rdf-schema#comment> ?abstract.}. "+set_1_txt+"} "
     query=query.replace("?s","<"+ent_uri+">")
-    print("__________________________")
-    print(query)
+    #print("__________________________")
+    #print(query)
     results=get_sparql_dataframe(sparql_ep, query)
+    return results
+
+
+def get_NamedGraphDataRangeOk(ent_uri, named_graph, prop_all_typed, sparql_ep):
+    # target_class=type_triples
+    # prop_all=prop_focus
+    #set_all = set(prop_all)
+
+    idx = 0
+    set_1_txt = ""
+    var_1_txt = ""
+
+    for prop in prop_all_typed.keys():
+        simply = ts.getSimplifiedProp(prop)
+        if("dbo:" in prop_all_typed[prop]):
+            #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            set_1_txt += " OPTIONAL {$?s$ <" + prop + "> ?" + simply + ". ?" + simply + " a "+prop_all_typed[prop]+". }."
+            var_1_txt += " ?" + simply
+            idx += 1
+        else:
+            set_1_txt += " OPTIONAL {$?s$ <" + prop + "> ?" + simply + ". }."
+            var_1_txt += " ?" + simply
+            idx += 1
+    #print("========")
+    #print(var_1_txt)
+    #print(set_1_txt)
+    query = "PREFIX dbo: <http://dbpedia.org/ontology/>  select " + var_1_txt + " from <" + named_graph + "> where {  " + set_1_txt + " } "
+
+    query = query.replace("$?s$", "<" + ent_uri + ">")
+    #print(query)
+    results = get_sparql_dataframe(sparql_ep, query)
+
     return results
 
 def get_RandomSample_K(target_class, prop_all,sparql_ep, limit=10, offset=0):
@@ -401,4 +606,62 @@ def CreateUUIDClassEntities(target_class, sparql_ep):
         return "Done"
     else:
         return "Already Done"
-        
+
+
+def CreateUUIDClassEntities2(target_class,class_ns, sparql_ep,from_scratch=False):
+    sparql = SPARQLWrapper(sparql_ep)
+    if(from_scratch==True):
+        query_drop="DROP GRAPH  <" + class_ns + ">"
+        sparql.setMethod(POST)
+        sparql.setRequestMethod(POSTDIRECTLY)
+        sparql.setQuery(query_drop)
+        sparql.query()
+    q1 = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX dcat: <http://www.w3.org/ns/dcat#> select  (COUNT(DISTINCT ?s) as ?nb)  FROM  <urn:x-arq:DefaultGraph> where { ?s a <" + target_class + ">; <http://www.w3.org/2000/01/rdf-schema#comment> ?abstract. FILTER (lang(?abstract) = 'en'). FILTER NOT EXISTS {GRAPH <"+class_ns+"> { ?s dcat:resource_identifier ?u1. } } }"
+    print(q1)
+    sparql.setReturnFormat(JSON)
+    sparql.setQuery(q1)
+
+    qres = sparql.query().convert()
+
+    print(qres)
+    print("HEY")
+    nb_to_annotate = int(qres["results"]["bindings"][0]["nb"]["value"])
+
+    print("=============== WILL ANNOTATE :", nb_to_annotate)
+    #sys.exit()
+    offset = 0
+    limit = 10000
+    if (nb_to_annotate > 0):
+        nb_loop = 0
+
+        while offset < nb_to_annotate:
+            print(">>>>>>>>>>>>>>>>>>>>>LOOP :", nb_loop)
+
+            query = '''
+                PREFIX dbo: <http://dbpedia.org/ontology/>
+                PREFIX dcat: <http://www.w3.org/ns/dcat#>
+                INSERT
+                { GRAPH <'''+class_ns+'''> {
+                            ?s  dcat:resource_identifier ?random. 
+                    }
+                }
+                WHERE{
+
+                        select DISTINCT ?s ?random
+                        WHERE { 
+                            ?s a <''' + target_class + '''>;  <http://www.w3.org/2000/01/rdf-schema#comment> ?abstract. 
+                            filter not exists {GRAPH <'''+class_ns+'''> {?s dcat:resource_identifier ?u2.}  }.
+                            BIND(RAND() AS ?random). FILTER (lang(?abstract) = 'en') 
+                               } 
+                         GROUP BY ?s ORDER BY ?random LIMIT ''' + str(limit) + ''' OFFSET ''' + str(offset) + '''
+
+
+                }
+                '''
+            results = ct.sparql_service_update(sparql_ep, query)
+            offset = offset + limit
+            nb_loop += 1
+        return "Done"
+    else:
+        return "Already Done"
+

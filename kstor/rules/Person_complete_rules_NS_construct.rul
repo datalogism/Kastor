@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns     = "http://ns.inria.fr/corese/rule/">
+
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+
+CONSTRUCT { GRAPH $INFERENCE_NS$ { ?s dbo:birthYear ?year } }
+WHERE{ ?s a dbo:Person ;
+          dbo:birthDate ?bd .
+       BIND(year(?bd) as ?year) .
+       FILTER (NOT EXISTS{ GRAPH <urn:x-arq:DefaultGraph> {?s dbo:birthYear ?by } )
+}
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+
+CONSTRUCT { GRAPH $INFERENCE_NS$ { ?s dbo:deathYear ?year } }
+WHERE{ ?s a dbo:Person ;
+          dbo:deathDate ?bd .
+       BIND(year(?bd) as ?year) .
+       FILTER (NOT EXISTS{ GRAPH <urn:x-arq:DefaultGraph> {?s dbo:deathYear ?by } )
+}
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+
+CONSTRUCT { GRAPH $INFERENCE_NS$ { ?s dbo:birthPlace ?bpcountry } }
+WHERE{
+ ?s a dbo:Person.
+        ?s dbo:birthPlace ?place.
+        ?place a dbo:Place.
+        ?place dbo:country ?bpcountry.
+        filter not exists{GRAPH  <urn:x-arq:DefaultGraph>  {?s dbo:birthPlace ?bpcountry.}}
+}
+
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+
+CONSTRUCT { GRAPH $INFERENCE_NS$ { ?s dbo:deathPlace ?bpcountry } }
+WHERE{
+ ?s a dbo:Person.
+        ?s dbo:deathPlace ?place.
+        ?place a dbo:Place.
+        ?place dbo:country ?bpcountry.
+        filter not exists{GRAPH  <urn:x-arq:DefaultGraph>  {?s dbo:deathPlace ?bpcountry.}}
+}
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+
+CONSTRUCT { GRAPH $INFERENCE_NS$ { ?s  dbo:nationality ?bpcountry } }
+WHERE{
+        ?s a dbo:Person.
+        ?s dbo:nationality ?place.
+        ?place a dbo:Place.
+        ?place dbo:country ?bpcountry.
+        filter not exists{GRAPH  <urn:x-arq:DefaultGraph>  {?s dbo:nationality ?bpcountry.}}
+
+}
+]]>
+</body>
+</rule>
+</rdf:RDF>

@@ -7,10 +7,21 @@ import re
 import json
 from rdflib import Graph
 import urllib.parse
-
+def uncodeurl(URL):
+    if("%" in URL):
+        print("HEY")
+        return urllib.parse.unquote(URL)
+    else:
+        return URL
+def cleanURL(entity):
+    if("%" not in entity):
+        txt=urllib.parse.quote(entity.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")).replace(".","%2E").replace("'","%27")
+    else:
+        txt = entity.replace("http://dbpedia.org/resource/", "").replace("https://dbpedia.org/resource/", "")
+    return txt
 def cleanEntURL(entity):
     if("%" not in entity):
-        txt=urllib.parse.quote(entity.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")).replace(".","%2E")
+        txt=urllib.parse.quote(entity.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")).replace(".","%2E").replace("'","%27")
     else:
         txt = entity.replace("http://dbpedia.org/resource/", "").replace("https://dbpedia.org/resource/", "")
     return "http://dbpedia.org/resource/"+txt
@@ -130,6 +141,8 @@ def simplifyTutle(t,datatype=False, inLine=False, facto=True):
     if(inLine):
         new2= new2.replace("\n:",":").replace("\n<","").replace(".\n",".")
         new2=re.sub(r"[\n\t]*", "",new2).replace("   "," ").replace(" ;",";").strip()
+    if(new2[0]!=":"):
+        new2=":"+new2
     return new2.strip()
 
 def TurtleToList(t, facto=True):

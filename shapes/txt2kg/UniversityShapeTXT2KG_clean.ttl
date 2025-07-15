@@ -1,0 +1,47 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/UniversityShape> a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/numberOfPostgraduateStudents> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/president> ],
+        [ sh:path <http://dbpedia.org/ontology/outlookRanking> ],
+        [ sh:path <http://dbpedia.org/ontology/wasGivenTheTechnicalCampusStatusBy> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsNortheast> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/numberOfDoctoralStudents> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/officialSchoolColour> ],
+        [ sh:class <http://dbpedia.org/ontology/City> ;
+            sh:path <http://dbpedia.org/ontology/city> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsNorthwest> ],
+        [ sh:class <http://dbpedia.org/ontology/Organisation> ;
+            sh:path <http://dbpedia.org/ontology/affiliation> ],
+        [ sh:path <http://dbpedia.org/ontology/elevationAboveTheSeaLevel> ],
+        [ sh:path <http://dbpedia.org/ontology/isPartOf> ],
+        [ sh:path <http://dbpedia.org/ontology/hasToItsWest> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/director> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ],
+        [ sh:path <http://dbpedia.org/ontology/sportGoverningBody> ],
+        [ sh:path <http://dbpedia.org/ontology/campus> ],
+        [ sh:path <http://dbpedia.org/ontology/religion> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/dean> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/numberOfStudents> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/rector> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/state> ],
+        [ sh:path <http://dbpedia.org/ontology/nickname> ],
+        [ sh:path <http://dbpedia.org/ontology/sportsOffered> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/numberOfUndergraduateStudents> ],
+        [ sh:path <http://dbpedia.org/ontology/academicStaffSize> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/motto> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/University> .
+

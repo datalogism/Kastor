@@ -1,0 +1,48 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/ArtistShape> a sh:NodeShape ;
+    sh:property [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/polishFilmAward> ],
+        [ sh:path <http://dbpedia.org/ontology/field> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/goldenGlobeAward> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/gaudiAward> ],
+        [ sh:path <http://dbpedia.org/ontology/style> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/grammyAward> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/afiAward> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/artistFunction> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/tonyAward> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/dutchRKDCode> ],
+        [ sh:path <http://dbpedia.org/ontology/voiceType> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Artist> ;
+            sh:path <http://dbpedia.org/ontology/associatedAct> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/filmFareAward> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/academyAward> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/goyaAward> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/emmyAward> ],
+        [ sh:path <http://dbpedia.org/ontology/movement> ],
+        [ sh:datatype <http://dbpedia.org/ontology/EducationalInstitution> ;
+            sh:path <http://dbpedia.org/ontology/training> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Artist> ;
+            sh:path <http://dbpedia.org/ontology/mentor> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/cesarAward> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/baftaAward> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Artist> ;
+            sh:path <http://dbpedia.org/ontology/disciple> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Instrument> ;
+            sh:path <http://dbpedia.org/ontology/instrument> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Artist> .
+

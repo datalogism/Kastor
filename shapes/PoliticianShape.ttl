@@ -1,0 +1,226 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/PoliticianShape> a sh:NodeShape ;
+    sh:property [ sh:datatype <http://dbpedia.org/ontology/TimePeriod> ;
+            sh:path <http://dbpedia.org/ontology/termPeriod> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/eyeColor> ],
+        [ sh:class rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/birthName> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/signature> ],
+        [ sh:path <http://dbpedia.org/ontology/predecessor> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/plays> ],
+        [ sh:class xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/activeYearsEndYear> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/region> ],
+        [ sh:path <http://dbpedia.org/ontology/education> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/runningMate> ],
+        [ sh:datatype <http://dbpedia.org/ontology/MilitaryUnit> ;
+            sh:path <http://dbpedia.org/ontology/militaryBranch> ],
+        [ sh:class xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/birthYear> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/father> ],
+        [ sh:class rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/title> ],
+        [ sh:class xsd:date ;
+            sh:path <http://dbpedia.org/ontology/deathDate> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/draftRound> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/appointer> ],
+        [ sh:datatype <http://dbpedia.org/ontology/MilitaryConflict> ;
+            sh:path <http://dbpedia.org/ontology/battle> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/lccnId> ],
+        [ sh:datatype <http://dbpedia.org/ontology/SportsTeam> ;
+            sh:path <http://dbpedia.org/ontology/managerClub> ],
+        [ sh:datatype <http://dbpedia.org/ontology/CareerStation> ;
+            sh:path <http://dbpedia.org/ontology/careerStation> ],
+        [ sh:path <http://dbpedia.org/ontology/knownFor> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/individualisedGnd> ],
+        [ sh:path <http://dbpedia.org/ontology/militaryRank> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/draftPick> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/spouse> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/stateOfOrigin> ],
+        [ sh:path <http://dbpedia.org/ontology/profession> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/vicePresident> ],
+        [ sh:class xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/draftYear> ],
+        [ sh:class xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/serviceEndYear> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ],
+        [ sh:path <http://dbpedia.org/ontology/successor> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/bnfId> ],
+        [ sh:datatype <http://dbpedia.org/ontology/SportsTeam> ;
+            sh:path <http://dbpedia.org/ontology/formerTeam> ],
+        [ sh:class xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/electionMajority> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/doctoralAdvisor> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/portfolio> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/president> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/opponent> ],
+        [ sh:datatype <http://dbpedia.org/ontology/SportsTeam> ;
+            sh:path <http://dbpedia.org/ontology/team> ],
+        [ sh:datatype <http://dbpedia.org/ontology/PoliticalParty> ;
+            sh:path <http://dbpedia.org/ontology/otherParty> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Award> ;
+            sh:path <http://dbpedia.org/ontology/award> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/nationality> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/imdbId> ],
+        [ sh:path <http://dbpedia.org/ontology/timeZone> ],
+        [ sh:datatype <http://dbpedia.org/ontology/PoliticalParty> ;
+            sh:path <http://dbpedia.org/ontology/party> ],
+        [ sh:class xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/activeYearsStartYear> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/orderInOffice> ],
+        [ sh:datatype <http://dbpedia.org/ontology/MilitaryService> ;
+            sh:path <http://dbpedia.org/ontology/militaryService> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/militaryCommand> ],
+        [ sh:datatype <http://dbpedia.org/ontology/EducationalInstitution> ;
+            sh:path <http://dbpedia.org/ontology/college> ],
+        [ sh:datatype <http://dbpedia.org/ontology/PersonFunction> ;
+            sh:path <http://dbpedia.org/ontology/occupation> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/postalCode> ],
+        [ sh:path <http://dbpedia.org/ontology/honours> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/associate> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/primeMinister> ],
+        [ sh:path <http://dbpedia.org/ontology/religion> ],
+        [ sh:class xsd:double ;
+            sh:path <http://dbpedia.org/ontology/weight> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/office> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/lieutenant> ],
+        [ sh:class rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/originalName> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/parent> ],
+        [ sh:class xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/serviceStartYear> ],
+        [ sh:path <http://dbpedia.org/ontology/position> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Settlement> ;
+            sh:path <http://dbpedia.org/ontology/hometown> ],
+        [ sh:datatype <http://dbpedia.org/ontology/SportsTeam> ;
+            sh:path <http://dbpedia.org/ontology/draftTeam> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Organisation> ;
+            sh:path <http://dbpedia.org/ontology/institution> ],
+        [ sh:datatype <http://dbpedia.org/ontology/MilitaryUnit> ;
+            sh:path <http://dbpedia.org/ontology/militaryUnit> ],
+        [ sh:datatype <http://dbpedia.org/ontology/SportsLeague> ;
+            sh:path <http://dbpedia.org/ontology/league> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/partner> ],
+        [ sh:path <http://dbpedia.org/ontology/citizenship> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/residence> ],
+        [ sh:class xsd:date ;
+            sh:path <http://dbpedia.org/ontology/electionDate> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/governor> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/governorGeneral> ],
+        [ sh:class rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/name> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/viafId> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/chancellor> ],
+        [ sh:path <http://dbpedia.org/ontology/deathCause> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/seniority> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/deathPlace> ],
+        [ sh:class xsd:date ;
+            sh:path <http://dbpedia.org/ontology/activeYearsEndDate> ],
+        [ sh:class xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/number> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/child> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Genre> ;
+            sh:path <http://dbpedia.org/ontology/genre> ],
+        [ sh:path <http://dbpedia.org/ontology/subdivision> ],
+        [ sh:class xsd:date ;
+            sh:path <http://dbpedia.org/ontology/activeYearsStartDate> ],
+        [ sh:path <http://dbpedia.org/ontology/academicDiscipline> ],
+        [ sh:class xsd:double ;
+            sh:path <http://dbpedia.org/ontology/careerPrizeMoney> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/deputy> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Organisation> ;
+            sh:path <http://dbpedia.org/ontology/employer> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/shoots> ],
+        [ sh:datatype <http://dbpedia.org/ontology/PersonFunction> ;
+            sh:path <http://dbpedia.org/ontology/politicalLeader> ],
+        [ sh:class xsd:double ;
+            sh:path <http://dbpedia.org/ontology/height> ],
+        [ sh:class xsd:double ;
+            sh:path <http://dbpedia.org/ontology/elevation> ],
+        [ sh:class xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/deathYear> ],
+        [ sh:datatype <http://dbpedia.org/ontology/PersonFunction> ;
+            sh:path <http://dbpedia.org/ontology/personFunction> ],
+        [ sh:datatype <http://dbpedia.org/ontology/EducationalInstitution> ;
+            sh:path <http://dbpedia.org/ontology/almaMater> ],
+        [ sh:path <http://dbpedia.org/ontology/type> ],
+        [ sh:class xsd:date ;
+            sh:path <http://dbpedia.org/ontology/birthDate> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/mother> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/relative> ],
+        [ sh:class xsd:double ;
+            sh:path <http://dbpedia.org/ontology/networth> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Sound> ;
+            sh:path <http://dbpedia.org/ontology/soundRecording> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/committee> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/monarch> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/hairColor> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/incumbent> ],
+        [ sh:class xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/populationTotal> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Language> ;
+            sh:path <http://dbpedia.org/ontology/language> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/birthPlace> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/restingPlace> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/utcOffset> ],
+        [ sh:class rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/alias> ],
+        [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/relation> ],
+        [ sh:class xsd:string ;
+            sh:path <http://dbpedia.org/ontology/bbr> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Politician> .
+

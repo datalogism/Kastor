@@ -1,0 +1,7 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+<http://shaclshapes.org/PoliticianShape> a sh:NodeShape ;
+    sh:property [ sh:datatype <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/prefect> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Politician> .
+

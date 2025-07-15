@@ -4,11 +4,130 @@ import re
 from pyshacl import validate
 from rdflib import Graph, Literal, Namespace, URIRef
 import urllib.parse
+
 from unidecode import unidecode
 import datefinder
 from urllib.parse import unquote
 
+import urllib.parse
 
+#from alignscore import AlignScore
+#scorer = AlignScore(model='roberta-base', batch_size=32, device='cpu',
+#                    ckpt_path='https://huggingface.co/yzha/AlignScore/resolve/main/AlignScore-large.ckpt',
+#                   evaluation_mode="bin_sp")
+
+#from datetime import date
+def filterPredList(triples_list,abs_dict):
+    return None
+#    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>filterPredList")
+#    filtered=[]
+#    for triple in triples_list:
+#        rel = str(triple[1])
+#        if("label" not in rel):
+#            subj_pred = str(triple[0])
+#            subj_pred = subj_pred.replace("http://dbpedia.org/resource/", "")
+#            subj_clean_pred = uncodeurl(subj_pred.replace("dbr:", "").replace(":", "").strip())
+#            context=abs_dict[subj_clean_pred]
+
+#           val = str(triple[2]).strip()
+#           if ("date" in rel.lower()):
+#               val = date.fromisoformat(val).strftime("%d %B %Y")
+ #           else:
+#              val = uncodeurl(val).replace("_", " ").replace(":", "")
+#           claim=claim=subj_clean_pred +" "+rel+" "+ val
+#           score = scorer.score(contexts=[context], claims=[claim])
+#           if(score[0]>0.3):
+#               filtered.append(triple)
+
+ #       else:
+#          filtered.append(triple)
+
+#   return filtered
+def uncodeurl(URL):
+    if("%" in URL):
+        while("%" in URL):
+            URL=urllib.parse.unquote(URL)
+        return URL
+    else:
+        return URL
+def encodeTurtleS_obj(triples):
+    regex = r"\:(.*?)(\s|\;|\.)"
+    tempo = triples.replace(":", " :").replace("  :", " :")
+
+    matches = re.finditer(regex, tempo, re.MULTILINE)
+
+    for matchNum, match in enumerate(matches, start=1):
+        orig = str(match.group(1)).strip()
+        encoded = urllib.parse.quote(orig)
+        if ("%" in encoded):
+            tempo = tempo.replace(orig, encoded)
+    triples_after = tempo.replace("  :", " :").replace(" :", ":")
+    return triples_after
+
+def find_in_abstractWithObj(abstract,prop,value,type_prop):
+
+    if("gYear" in type_prop):
+        if(value in abstract):
+            return True
+        else:
+            return False
+        # matches = datefinder.find_dates(abstract)
+        # dates=[]
+        # try:
+        #     for match in matches:
+        #         if(match!=''):
+        #             dates.append(match.strftime('%Y'))
+        # except Exception as error:
+        #     print(error)
+        #     pass
+        # if(len(dates)>0):
+        #     if(value in dates):
+        #         return True
+        #     else:
+        #         return False
+    if("date" in type_prop):
+        matches = datefinder.find_dates(abstract)
+        dates=[]
+        try:
+            for match in matches:
+                if(match!=''):
+                    dates.append(match.strftime('%Y-%m-%d'))
+        except Exception as error:
+            print(error)
+            pass
+        if(len(dates)>0):
+            if(value in dates):
+                return True
+            else:
+                return False
+    elif("string" in type_prop):
+        if(prop=="label"):
+            ok=False
+            parts=value.split(" ")
+            for part in parts:
+                if(part.lower() in abstract.lower()):
+                    ok=True
+                else:
+                    ok=False
+            if(ok):
+                return True
+
+        elif(value.lower() in abstract.lower()):
+            return True
+        else :
+           if(unidecode(value.lower()) in unidecode(abstract.lower())):
+               return True
+    elif("dbo:" in type_prop):
+        val2=value.replace("_","\_")
+        val2=val2.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")
+
+        rgx = r'\[.*\]\(' + val2 + '\)'
+        if(":" not in val2):
+            prefix="\:"
+            rgx=r'\[.*\]\('+prefix+val2+'\)'
+        if(re.search(rgx,abstract)):
+            return True
+    return False
 
 def find_in_abstract(abstract,prop,value,type_prop):
     if("gYear" in type_prop):
@@ -110,7 +229,7 @@ def cleanDecoded2(labels):
     clean=clean.replace(' " ',' "')
     # can break uri
 
-    clean=clean.replace(". ",".").replace(" .",".")
+    clean=clean.replace(". ",".").replace(" .",".").replace("  a"," a")
     clean_last=cleanTxt(clean)
     return clean_last
 
@@ -142,7 +261,7 @@ def cleanDecoded(list_labels):
         clean=clean.replace("\\'", "\'")
         clean=clean.replace('\\\\"', '\"')
         clean=clean.replace('\\\"', '\"')
-        clean=clean.replace('\\"', '\"')
+        clean=clean.replace('\\"', '\"').replace("  a"," a")
         #clean=label.strip().replace("<s>","").replace("</s>","")
         decoded_labels_clean.append(clean)        
     return decoded_labels_clean
@@ -156,7 +275,7 @@ def cleanTxtAndPrefixes(txt,prefixes):
     return txt
 
 def cleanEnt(txt):
-    clean_t=cleanTxt(txt).replace("<","").replace(">","").replace(" ","_").replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")
+    clean_t=cleanTxt(txt).replace("<","").replace(">","").replace(" ","_").replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","").replace("dbr:","")
     if("%" not in clean_t):
         clean_t2=urllib.parse.quote(clean_t).replace(".","%2E")
     else:
@@ -214,9 +333,10 @@ def UL_TurtleToList(txt):
       
 def TurtleSToList(txt,facto=True):
     list_rel=[]
-    #print("TurtleSToList")
+    print("TurtleSToList")
 
     if facto == True:
+
         temp=txt.split(";")
         #print(temp)
         subj=re.findall("(?<=:).*?(?=\s)",temp[0])[0]
@@ -226,21 +346,63 @@ def TurtleSToList(txt,facto=True):
                 splitted=temp[0].split(" "+t+" ")
                 type_=splitted[1].replace(":","")
                 break
-        list_pattern = r"\"\s*,\s*\""
+
+        list_pattern = r"(\"\s*,\s*\")|(\s*\,\:*)"
         if (type_):
             list_rel.append([cleanEnt(subj), "type", cleanTxt(type_)])
+
         for i in range(1, len(temp)):
+
             multiples = re.findall(list_pattern, temp[i])
+
             if (len(multiples) > 0):
                 rel = re.findall("(?<=:).*?(?=\s)", temp[i])[0]
+                print(rel)
+                objs_=temp[i].replace(":"+rel,"")
+                objs=[x.strip() for x in objs_.split(",") if x.strip()!=""]
 
-                objs = re.findall("(?<=\")(.*)(?=\")", temp[i])[0]
-                obj_list = re.split(list_pattern, objs)
-                for obj in obj_list:
-                    list_rel.append([cleanEnt(subj), cleanTxt(rel), cleanTxt(obj)])
+                if('\"' in temp[i]):
+                    regx_spl=r'(.*?)"'
+                    obj_list = [x.strip() for x in re.findall(regx_spl, objs_) if x.strip()!="" and len(x.strip())>1]
+
+                    for obj in obj_list:
+                        list_rel.append([cleanEnt(subj), cleanTxt(rel), cleanTxt(obj)])
+                else:
+                    obj_list=[]
+
+                    for o in objs:
+                        clean=o.strip().replace(",","").replace(".","").replace(";","")
+                        obj_list.append(clean)
+                    for obj in obj_list:
+                        list_rel.append([cleanEnt(subj), cleanTxt(rel), cleanTxt(obj)])
+
             else:
+                print("not multiple")
                 rel = re.findall("(?<=:).*?(?=\s)", temp[i])[0]
-                obj = re.findall("(?<=\")(.*)(?=\")", temp[i])[0]
+                print(rel)
+                if('\"' in temp[i]):
+                    obj = re.findall("(?<=\")(.*)(?=\")", temp[i])[0]
+                else:
+                    #print("not multiple>",temp[i])
+
+                    list_ref=[x.strip() for x in temp[i].split(" :") if x.strip()!=""]
+                    #print(list_ref)
+                    obj="NULL"
+                    if("." in temp[i]):
+                        for ref in list_ref:
+                            if("." in ref):
+                                obj = ":"+ref.replace(".","")
+                                break
+                    elif (";" in temp[i]):
+                        for ref in list_ref:
+                            if ("." in ref):
+                                obj = ":" + ref.replace(";", "")
+                                break
+                    elif(len(list_ref)==2):
+                        obj=":"+list_ref[1]
+
+                    #print("YEAH")
+                    #print(obj)
                 list_rel.append([cleanEnt(subj), cleanTxt(rel), cleanTxt(obj)])
     else:
         temp=[t for t in txt.split(".") if len(t)>1]
@@ -312,145 +474,165 @@ def toListRel(txt,format_,facto=False,grammar=None):
     list_rel=[]
     txt=str(txt)
     txt=txt.replace("<s>","").replace("</s>","")
-
+    print(">>>>>>>",txt)
     # if("s>" in txt):
     #     print("HEY TRICK")
     #     txt=txt.replace("s>","")
     parsed_ok=False
     parsed=None
-    try: 
-        #print(format_)
-        #print(facto)
-        if(format_ in ["json-ld","turtle","xml","ntriples"]):
-            #print("json-ld","turtle","xml","ntriples")
-            if(format_=="json-ld"):
-                # if(txt[0:1]!="["):
-                #     txt="["+txt
-                if(txt[0:1]=="["):
-                    try:    
-                        parsed=json.loads(txt)
-                        parsed_ok=True
-                    except:
-                        parsed_ok=False
-
-                parsed=parsed[0]
-            else:
-                if(format_=="turtle"): 
-                    if(txt[0:1]=="@"):
-                        parsed_ok=True
-                if(format_=="xml"):
-                    if(txt[0:2]=="<?"):
-                        parsed_ok=True
-                if(format_=="ntriples"):
-                    if(txt[0:1]=="<"):
-                        parsed_ok=True
-            
-                parsed=txt
-            try:
-                g1 = Graph()
-                g1.parse(data=parsed, format=format_)
-                t=g1.serialize(format="turtle") 
-                list_rel=TurtleToList(t,False)
-                parsed_ok=True
-            except:
-                parsed_ok=False
-            #print(parsed_ok)
-        elif(format_ == "list"):
-            #print(">>>>>>>>>>>>>>>>>>>><<<list")
-            #if(txt[0:2]=="(("):
-            if(txt[0:2]=="[["):
-                if(facto==True):
-             #       print("factolist")
-                    try:
-                        #t=txt.replace("(","[").replace(")","]").replace("['",'["').replace("']",'"]').replace(",'",',"').replace("',",'",').replace(", '",',"')
-                        clean_t=cleanDecoded3(txt)
-                        t2=ast.literal_eval(clean_t)
-                        list_rel=FactorisedListTOList(t2)
-                        parsed_ok=True
-                    except:
-                        print("PB parsing list")
-                        parsed_ok=False
-                else:
-                    try:
-                        clean_t=cleanDecoded3(txt)
-                        list_rel=ast.literal_eval(clean_t)
-                        parsed_ok=True
-                    except:
-                        print("PB parsing list")
-                        parsed_ok=False
-
-                    # sub_list=txt.replace("')",")").replace("('","(").split('), (')
-                    # for i in range(len(sub_list)):
-                    #     new=sub_list[i].replace("(","").replace("\n","").replace(")","")
-                    #     new=new.replace("((","").replace("))","").split("', '")
-                    #     if(len(new) == 3):
-                    #       list_rel_temp.append(new)
-                    #     elif(len(new) != 3):
-                            # parsed_ok=False
-                    # if(parsed_ok):
-                    #     list_rel = list_rel_temp
-            #if(txt[0:2]!="((" and list_rel_temp[0:1]=="("):
-            #     txt="("+txt
-               
-        elif(format_ == "tags"):
-          #  print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>tags")
-            # if(txt[0:1]!="<"):
-            #     txt="<"+txt
-            if(txt[0:3]=="<su"):
-                #print(facto)
-                if(facto==True):
-                    #print("factotags")
-                    clean_t=cleanDecoded3(txt)
-                    list_rel=FactorisedTagTOList(clean_t)
-                else:
-                    parsed_ok=True
-                    list_rel_temp = []
-
-                    clean_t=cleanDecoded3(txt)
-                    temp=clean_t.replace("<subj>","").replace("<rel>",";").replace("<obj>",";").split("<et>")[:-1]
-                    for t in temp:
-                        new=t.split(";")
-                        if(len(new) == 3):
-                          list_rel_temp.append(new)
-                        elif(len(new) != 3):
+    if format_=="list_parsed":
+        return txt,True
+    else:
+        try:
+            #print(format_)
+            #print(facto)
+            if(format_ in ["json-ld","turtle","xml","ntriples"]):
+                #print("json-ld","turtle","xml","ntriples")
+                if(format_=="json-ld"):
+                    # if(txt[0:1]!="["):
+                    #     txt="["+txt
+                    if(txt[0:1]=="["):
+                        try:
+                            parsed=json.loads(txt)
+                            parsed_ok=True
+                        except:
                             parsed_ok=False
-                    if(parsed_ok):
-                        list_rel = list_rel_temp
-        elif(format_ == "turtleUL"):
-            print("turtleUL")
-            txt=cleanDecoded3(txt)
-            list_rel=UL_TurtleToList(txt)
-            print(list_rel)
-            print("-----------")
-        elif(format_ == "turtleS"):############## MUST BE ADAPTED FOR OBJECTS
-            triples=txt.replace("%2529","").replace("%2528","")
-            triples = triples.encode('ascii', 'ignore').decode("utf-8")
-            is_accepted = grammar._accept_prefix(triples)
-            if(is_accepted==False):
-                while ("%" in triples):
-                    triples = unquote(triples)
-                is_accepted = grammar._accept_prefix(triples)
-            # if(txt[0:1]!=":"):
-            #     txt=":"+txt
 
-            if(is_accepted):
-                #print('ACCEPTED!')
-                #print(triples)
-                parsed_ok = True
+                    parsed=parsed[0]
+                else:
+                    if(format_=="turtle"):
+                        if(txt[0:1]=="@"):
+                            parsed_ok=True
+                    if(format_=="xml"):
+                        if(txt[0:2]=="<?"):
+                            parsed_ok=True
+                    if(format_=="ntriples"):
+                        if(txt[0:1]=="<"):
+                            parsed_ok=True
+
+                    parsed=txt
+                try:
+                    g1 = Graph()
+                    g1.parse(data=parsed, format=format_)
+                    t=g1.serialize(format="turtle")
+                    list_rel=TurtleToList(t,False)
+                    parsed_ok=True
+                except:
+                    parsed_ok=False
+                #print(parsed_ok)
+            elif(format_ == "list"):
+                #print(">>>>>>>>>>>>>>>>>>>><<<list")
+                #if(txt[0:2]=="(("):
+                if(txt[0:2]=="[["):
+                    if(facto==True):
+                 #       print("factolist")
+                        try:
+                            #t=txt.replace("(","[").replace(")","]").replace("['",'["').replace("']",'"]').replace(",'",',"').replace("',",'",').replace(", '",',"')
+                            clean_t=cleanDecoded3(txt)
+                            t2=ast.literal_eval(clean_t)
+                            list_rel=FactorisedListTOList(t2)
+                            parsed_ok=True
+                        except:
+                            print("PB parsing list")
+                            parsed_ok=False
+                    else:
+                        try:
+                            clean_t=cleanDecoded3(txt)
+                            list_rel=ast.literal_eval(clean_t)
+                            parsed_ok=True
+                        except:
+                            print("PB parsing list")
+                            parsed_ok=False
+
+                        # sub_list=txt.replace("')",")").replace("('","(").split('), (')
+                        # for i in range(len(sub_list)):
+                        #     new=sub_list[i].replace("(","").replace("\n","").replace(")","")
+                        #     new=new.replace("((","").replace("))","").split("', '")
+                        #     if(len(new) == 3):
+                        #       list_rel_temp.append(new)
+                        #     elif(len(new) != 3):
+                                # parsed_ok=False
+                        # if(parsed_ok):
+                        #     list_rel = list_rel_temp
+                #if(txt[0:2]!="((" and list_rel_temp[0:1]=="("):
+                #     txt="("+txt
+
+            elif(format_ == "tags"):
+              #  print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>tags")
+                # if(txt[0:1]!="<"):
+                #     txt="<"+txt
+                if(txt[0:3]=="<su"):
+                    #print(facto)
+                    if(facto==True):
+                        #print("factotags")
+                        clean_t=cleanDecoded3(txt)
+                        list_rel=FactorisedTagTOList(clean_t)
+                    else:
+                        parsed_ok=True
+                        list_rel_temp = []
+
+                        clean_t=cleanDecoded3(txt)
+                        temp=clean_t.replace("<subj>","").replace("<rel>",";").replace("<obj>",";").split("<et>")[:-1]
+                        for t in temp:
+                            new=t.split(";")
+                            if(len(new) == 3):
+                              list_rel_temp.append(new)
+                            elif(len(new) != 3):
+                                parsed_ok=False
+                        if(parsed_ok):
+                            list_rel = list_rel_temp
+            elif(format_ == "turtleUL"):
+                print("turtleUL")
                 txt=cleanDecoded3(txt)
-                list_rel=TurtleSToList(txt,facto)
-            else:
-                print("NOT ACCEPTED>")
-                print(triples)
-                print("----")
+                list_rel=UL_TurtleToList(txt)
+                print(list_rel)
+                print("-----------")
+            elif(format_ == "turtleS"):############## MUST BE ADAPTED FOR OBJECTS
+                print("##################################""")
                 print(txt)
-                
-        
-    except:
-        print("ERROR DURING PARSING >",format_,facto," :")
-        print(txt)
-        print("-------------")
-        return list_rel, parsed_ok
+                triples=txt.replace("%2529","").replace("%2528","")
+                triples = triples.encode('ascii', 'ignore').decode("utf-8")
+                print("##################################""")
+                print(triples)
+                print("##################################""")
+                if(grammar):
+                    is_accepted = grammar._accept_prefix(triples)
+                    #print("HO")
+                    if(is_accepted==False):
+                        print("ERROR:",triples)
+                        n=0
+                        while ("%" in triples and n<2):
+                            triples = unquote(triples)
+                            n+=1
+                        is_accepted = grammar._accept_prefix(triples)
+                        #print("HEY")
+                    # if(txt[0:1]!=":"):
+                    #     txt=":"+txt
+
+                    if(is_accepted):
+                        print('ACCEPTED!')
+                        print(triples)
+                        parsed_ok = True
+                        txt=cleanDecoded3(txt)
+                        list_rel=TurtleSToList(txt,facto)
+                    else:
+                        print("NOT ACCEPTED>")
+                        print(triples)
+                        print("----")
+                        print(txt)
+                else:
+                    parsed_ok = True
+                    txt = cleanDecoded3(txt)
+                    if(txt[0:1]!=":"):
+                         txt=":"+txt
+                    list_rel = TurtleSToList(txt, facto)
+
+
+        except:
+            print("ERROR DURING PARSING >",format_,facto," :")
+            print(txt)
+            print("-------------")
+            return list_rel, parsed_ok
 
     if(len(list_rel)>0):
         parsed_ok=True
@@ -513,7 +695,7 @@ def TurtleToList(t, facto=True):
                             if(facto==True):
                                 temp2.append(cleanTxtAndPrefixes(prop_val,prefixes))
                             else:
-                                list_container.append([subj2,cleanTxtAndPrefixes(prop_name,prefixes),cleanTxtAndPrefixes(prop_val,prefixes)])
+                                list_container.append([uncodeurl(subj2),cleanTxtAndPrefixes(prop_name,prefixes),cleanTxtAndPrefixes(prop_val,prefixes)])
                         if(facto==True):
                              temp1.append([cleanTxtAndPrefixes(prop_name,prefixes),temp2])
                     else:
@@ -527,18 +709,19 @@ def TurtleToList(t, facto=True):
                     if(facto==True):
                         temp1.append([cleanTxtAndPrefixes(prop_name,prefixes),cleanTxtAndPrefixes(prop_val,prefixes)])
                     else:
-                        list_container.append([subj2,cleanTxtAndPrefixes(prop_name,prefixes),cleanTxtAndPrefixes(prop_val,prefixes)])
+                        list_container.append([uncodeurl(subj2),cleanTxtAndPrefixes(prop_name,prefixes),cleanTxtAndPrefixes(prop_val,prefixes)])
             
             if(facto==True):
                 
                 subj2=cleanTxtAndPrefixes(cleanEnt(subj),prefixes)
-                list_container.append([subj2,temp1])
+                list_container.append([uncodeurl(subj2),temp1])
 
             
     return list_container
 
 
 def list_ToRDF2(list_relations,relations_map,shacl_g):
+    #print(">list_ToRDF2")
     ent_k=list_relations[0][0]
     typ_ent=list_relations[0][2]
     names_spaces=shacl_g.namespaces()

@@ -1,0 +1,44 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/CelestialBodyShape> a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/averageSpeed> ],
+        [ sh:path <http://dbpedia.org/ontology/deathCause> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/absoluteMagnitude> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/mass> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/minimumTemperature> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/density> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/discovered> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/periapsis> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/meanTemperature> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/discoverer> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/maximumTemperature> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/rotationPeriod> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/temperature> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/escapeVelocity> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/surfaceArea> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/orbitalPeriod> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/apoapsis> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/formerName> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/epoch> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/CelestialBody> .
+

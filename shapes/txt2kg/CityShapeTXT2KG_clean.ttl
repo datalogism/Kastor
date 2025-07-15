@@ -1,0 +1,33 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/CityShape> a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/populationDensity> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/country> ],
+        [ sh:path <http://dbpedia.org/ontology/elevationAboveTheSeaLevel> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/utcOffset> ],
+        [ sh:path <http://dbpedia.org/ontology/isPartOf> ],
+        [ sh:path <http://dbpedia.org/ontology/type> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/leaderTitle> ],
+        [ sh:path <http://dbpedia.org/ontology/timeZone> ],
+        [ sh:path <http://dbpedia.org/ontology/areaOfLand> ],
+        [ sh:path <http://dbpedia.org/ontology/countySeat> ],
+        [ sh:datatype xsd:nonNegativeInteger ;
+            sh:path <http://dbpedia.org/ontology/populationMetro> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/areaCode> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/postalCode> ],
+        [ sh:class <http://dbpedia.org/ontology/GovernmentType> ;
+            sh:path <http://dbpedia.org/ontology/governmentType> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/demonym> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/areaTotal> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/City> .
+

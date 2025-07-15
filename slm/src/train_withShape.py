@@ -101,7 +101,6 @@ def train(conf: omegaconf.DictConfig) -> None:
             **tokenizer_kwargs
         )
     else:
-        
         tokenizer = AutoTokenizer.from_pretrained(
             conf.tokenizer_name if conf.tokenizer_name else conf.model_name_or_path,
             **tokenizer_kwargs

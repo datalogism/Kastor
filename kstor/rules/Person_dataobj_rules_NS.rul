@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<rdf:RDF 
+    xmlns:rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns     = "http://ns.inria.fr/corese/rule/">
+
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT {
+    GRAPH $INFERENCE_NS$ {
+        ?s  dbo:birthPlace ?bpcountry
+}
+                }
+
+                WHERE{
+
+                        select DISTINCT ?s ?bpcountry
+                        FROM  <urn:x-arq:DefaultGraph>
+                        WHERE {
+                            ?s a dbo:Person.
+                            ?s dbo:birthPlace ?place.
+                            ?place a dbo:Place.
+                            ?place dbo:country ?bpcountry.
+                            filter not exists{?s dbo:birthPlace ?bpcountry.}
+                        }
+                        GROUP BY ?s ORDER BY ?s
+
+
+                }
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT {
+    GRAPH $INFERENCE_NS$ {
+        ?s  dbo:deathPlace ?bpcountry
+}
+                }
+
+                WHERE{
+
+                        select DISTINCT ?s ?bpcountry
+                        FROM  <urn:x-arq:DefaultGraph>
+                        WHERE {
+                            ?s a dbo:Person.
+                            ?s dbo:deathPlace ?place.
+                            ?place a dbo:Place.
+                            ?place dbo:country ?bpcountry.
+                            filter not exists{?s dbo:deathPlace ?bpcountry.}
+                        }
+                        GROUP BY ?s ORDER BY ?s
+
+
+                }
+]]>
+</body>
+</rule>
+<rule>
+<body>
+<![CDATA[
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX ks: <http://ns.inria.fr/kstor/#>
+    CONSTRUCT {
+    GRAPH $INFERENCE_NS$ {
+        ?s  dbo:nationality ?bpcountry
+}
+                }
+
+                WHERE{
+
+                        select DISTINCT ?s ?bpcountry
+                        FROM  <urn:x-arq:DefaultGraph>
+                        WHERE {
+                            ?s a dbo:Person.
+                            ?s dbo:nationality ?place.
+                            ?place a dbo:Place.
+                            ?place dbo:country ?bpcountry.
+                            filter not exists{?s dbo:nationality ?bpcountry.}
+                        }
+                        GROUP BY ?s ORDER BY ?s
+
+
+                }
+]]>
+</body>
+</rule>
+
+
+</rdf:RDF>

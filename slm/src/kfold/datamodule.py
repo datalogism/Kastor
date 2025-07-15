@@ -5,7 +5,7 @@ import torch
 from lightning.pytorch import LightningDataModule
 from sklearn.model_selection import KFold, StratifiedKFold
 from torch.utils.data import DataLoader, Subset
-
+import sys
 
 class DataloaderToDataModule(LightningDataModule):
     """Converts a set of dataloaders into a lightning datamodule.
@@ -63,6 +63,7 @@ class KFoldDataModule(LightningDataModule):
         train_dataloader: Optional[DataLoader] = None,
         val_dataloaders: Optional[Union[DataLoader, Sequence[DataLoader]]] = None,
         datamodule: Optional[LightningDataModule] = None,
+       # strata_class: Optional[List] = None
     ):
         super().__init__()
         # Input validation
@@ -87,7 +88,6 @@ class KFoldDataModule(LightningDataModule):
         if not isinstance(stratified, bool):
             raise ValueError("Stratified must be a boolean value")
         self.stratified = stratified
-
         self.fold_index = 0
         self.splits = None
         self.dataloader_settings = None
@@ -99,8 +99,11 @@ class KFoldDataModule(LightningDataModule):
         
         if self.splits is None:
             labels = None
+            self.train_dataset = self.datamodule.train_dataloader().dataset
             if self.stratified:
-                labels = self.get_labels(self.datamodule.train_dataloader())
+
+                labels =self.train_dataset['idx']
+
                 if labels is None:
                     raise ValueError(
                         "Tried to extract labels for stratified K folds but failed."
@@ -111,8 +114,7 @@ class KFoldDataModule(LightningDataModule):
                 splitter = StratifiedKFold(self.num_folds, shuffle=self.shuffle)
             else:
                 splitter = KFold(self.num_folds, shuffle=self.shuffle)
-            
-            self.train_dataset = self.datamodule.train_dataloader().dataset
+
 
             self.splits = [split for split in splitter.split(range(len(self.train_dataset)), y=labels)]
 
@@ -145,7 +147,14 @@ class KFoldDataModule(LightningDataModule):
     def get_labels(self, dataloader: DataLoader) -> Optional[List]:
         """Try to extract the training labels (for classification problems) from the underlying training dataset."""
         # Try to extract labels from the dataset through labels attribute
-        if hasattr(dataloader.dataset, "labels"):
+
+        print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
+       # print(dataloader.dataset.features.class_label.tolist())
+        #if hasattr(dataloader.dataset.features, "class_label"):
+         #   return dataloader.dataset.features.class_label.tolist()
+        if hasattr(dataloader.dataset, "idx"):
+            return dataloader.dataset.idx.tolist()
+        elif hasattr(dataloader.dataset, "labels"):
             return dataloader.dataset.labels.tolist()
 
         # Else iterate and try to extract

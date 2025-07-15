@@ -5,12 +5,16 @@ Created on Mon Mar 27 10:51:04 2023
 """
 
 import itertools
+import re
 import datefinder
 from rdflib import Graph, URIRef, Literal, BNode,Namespace
 from rdflib.namespace import RDF
 from unidecode import unidecode
+import src.rdf_synthax_fct as rdf_f
 import random
 import urllib
+import urllib.parse
+
 
 def getShapeType(shacl_g):
     get_types = """
@@ -92,9 +96,149 @@ def find_in_abstract(abstract,prop,value,type_prop):
             return True
         else :
            if(unidecode(value.lower()) in unidecode(abstract.lower())):
-               return True 
+               return True
+
     return False
 
+def find_in_abstractWithObj(abstract,prop,value,type_prop):
+
+    if("Year" in type_prop):
+        print("YEARRR")
+        if(str(value) in abstract):
+            return True
+        else:
+            return False
+        # matches = datefinder.find_dates(abstract)
+        # dates=[]
+        # try:
+        #     for match in matches:
+        #         if(match!=''):
+        #             dates.append(match.strftime('%Y'))
+        # except Exception as error:
+        #     print(error)
+        #     pass
+        # if(len(dates)>0):
+        #     if(value in dates):
+        #         return True
+        #     else:
+        #         return False
+    if("date" in type_prop):
+        matches = datefinder.find_dates(abstract)
+        dates=[]
+        try:
+            for match in matches:
+                if(match!=''):
+                    dates.append(match.strftime('%Y-%m-%d'))
+        except Exception as error:
+            print(error)
+            pass
+        if(len(dates)>0):
+            if(value in dates):
+                return True
+            else:
+                return False
+    elif("string" in type_prop):
+        if(prop=="label"):
+            ok=False
+            parts=value.split(" ")
+            for part in parts:
+                if(part.lower() in abstract.lower()):
+                    ok=True
+                else:
+                    ok=False
+            if(ok):
+                return True
+
+        elif(value.lower() in abstract.lower()):
+            return True
+        else :
+           if(unidecode(value.lower()) in unidecode(abstract.lower())):
+               return True
+    elif("dbo:" in type_prop):
+        val2=value.replace("_","\_")
+        val2=val2.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")
+        prefix="\:"
+        rgx=r'\[.*\]\('+prefix+val2+'\)'
+        res=re.search(rgx,abstract)
+        if(res):
+            return True
+    return False
+
+def find_in_abstractAndPropTag(abstract,prop,value,type_prop):
+
+
+    if ("date" in type_prop):
+        matches = datefinder.find_dates(abstract,source=True)
+
+        for match, source in matches:
+            dat_f=match.strftime('%Y-%m-%d')
+            if(value==dat_f):
+                abstract=abstract.replace(source,"$"+prop+"$")
+
+    elif("string" in type_prop):
+        if(prop=="label"):
+            ok=False
+            parts=value.split(" ")
+            for part in parts:
+                abstract=abstract.replace(parts,"$"+prop+"$")
+
+        elif(value.lower() in abstract.lower()):
+            abstract=abstract.replace(value,"$"+prop+"$")
+
+    elif("dbo:" in type_prop):
+        val2=value.replace("_","\_")
+        val2=val2.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")
+        prefix="\:"
+        rgx=r'\[(.*?)\]\('+prefix+val2+'\)'
+
+        result=re.finditer(rgx,abstract)
+        list_context=[]
+        for match_obj in result:
+            print("################")
+            # print each re.Match object
+            # extract each matching number
+            list_context.append(match_obj.group(0))
+        for context in list_context:
+            abstract=abstract.replace(context,"$"+prop+"$")
+    return abstract
+
+def find_in_abstractAndMASK(abstract,prop,value,type_prop):
+
+    prop="MASK"
+    if ("date" in type_prop):
+        matches = datefinder.find_dates(abstract,source=True)
+
+        for match, source in matches:
+            dat_f=match.strftime('%Y-%m-%d')
+            if(value==dat_f):
+                abstract=abstract.replace(source,"$"+prop+"$")
+
+    elif("string" in type_prop):
+        if(prop=="label"):
+            ok=False
+            parts=value.split(" ")
+            for part in parts:
+                abstract=abstract.replace(parts,"$"+prop+"$")
+
+        elif(value.lower() in abstract.lower()):
+            abstract=abstract.replace(value,"$"+prop+"$")
+
+    elif("dbo:" in type_prop):
+        val2=value.replace("_","\_")
+        val2=val2.replace("http://dbpedia.org/resource/","").replace("https://dbpedia.org/resource/","")
+        prefix="\:"
+        rgx=r'\[(.*?)\]\('+prefix+val2+'\)'
+
+        result=re.finditer(rgx,abstract)
+        list_context=[]
+        for match_obj in result:
+            print("################")
+            # print each re.Match object
+            # extract each matching number
+            list_context.append(match_obj.group(0))
+        for context in list_context:
+            abstract=abstract.replace(context,"$"+prop+"$")
+    return abstract
 #def clean_abstract(abstract):
 #https://en.wikipedia.org/wiki/Category:Wikipedia_naming_conventions
 def label_contains_special(label):
@@ -147,7 +291,14 @@ def triplesWithShape(ent_k,list_relations,shacl_g):
     for rel in list_relations:       
         prop_uri=URIRef(rel["prop"])
         for v in rel["value"]:
-            obj_val=Literal(v, datatype=rel["type"].replace("xsd:","http://www.w3.org/2001/XMLSchema#"))
+            if("dbo:" in rel["type"]):
+
+                v2=rdf_f.cleanEntURL(v)
+
+                obj_val=URIRef(v2)
+            else:
+
+                obj_val=Literal(v, datatype=rel["type"].replace("xsd:","http://www.w3.org/2001/XMLSchema#"))
             g.add((current_entity,prop_uri,obj_val))
         
     return g

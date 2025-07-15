@@ -1,0 +1,91 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/FilmShape> a sh:NodeShape ;
+    sh:property [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/deathPlace> ],
+        [ sh:class <http://dbpedia.org/ontology/Broadcaster> ;
+            sh:path <http://dbpedia.org/ontology/sisterStation> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/runtime> ],
+        [ sh:class <http://dbpedia.org/ontology/MusicalArtist> ;
+            sh:path <http://dbpedia.org/ontology/musicComposer> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/gross> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/owner> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/budget> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/iso6392Code> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/editor> ],
+        [ sh:path <http://dbpedia.org/ontology/type> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/birthDate> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/deathYear> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/activeYearsStartYear> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/writer> ],
+        [ sh:class <http://dbpedia.org/ontology/Actor> ;
+            sh:path <http://dbpedia.org/ontology/starring> ],
+        [ sh:path <http://dbpedia.org/ontology/broadcastedBy> ],
+        [ sh:class <http://dbpedia.org/ontology/SportsTeam> ;
+            sh:path <http://dbpedia.org/ontology/club> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/imdbId> ],
+        [ sh:class <http://dbpedia.org/ontology/Language> ;
+            sh:path <http://dbpedia.org/ontology/language> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/spouse> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/formerName> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/child> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/cinematography> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/releaseDate> ],
+        [ sh:path <http://dbpedia.org/ontology/industry> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/background> ],
+        [ sh:class <http://dbpedia.org/ontology/Organisation> ;
+            sh:path <http://dbpedia.org/ontology/distributor> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/headquarter> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/iso6391Code> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/deathDate> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/timeshiftChannel> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/birthPlace> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/keyPerson> ],
+        [ sh:class <http://dbpedia.org/ontology/PopulatedPlace> ;
+            sh:path <http://dbpedia.org/ontology/spokenIn> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/director> ],
+        [ sh:class <http://dbpedia.org/ontology/PersonFunction> ;
+            sh:path <http://dbpedia.org/ontology/occupation> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/producer> ],
+        [ sh:path <http://dbpedia.org/ontology/service> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/birthYear> ],
+        [ sh:class <http://dbpedia.org/ontology/Agent> ;
+            sh:path <http://dbpedia.org/ontology/foundedBy> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/birthName> ],
+        [ sh:datatype xsd:gYear ;
+            sh:path <http://dbpedia.org/ontology/foundingYear> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/editing> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/location> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/Film> .
+

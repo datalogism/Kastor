@@ -1,0 +1,89 @@
+# @package _global_
+num_workers: 1
+syntax_name: "DS_turtleS_0datatype_1inLine_1facto_BART_BASE_test_corrected2"  # $SAMPLE_NAME$ and $MODEL_NAME$ must be adapted
+project: "GenLimit_TestAlias"  # $WDB_ProjectName$ to adapt
+dataset_name: '/home/cringwald/EXP_Obj/datasets/bart_dbpedia.py'
+text_column: 'context'
+target_column: 'triplets'
+### WCE
+#tkn_path: '/workspace/cringwald/XP_notfiltered/All_clean_old_WCE/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_StratWCEw1_bart-base_tokenizer'
+#ckpt_path: '/workspace/cringwald/XP_notfiltered/All_clean_old_WCE/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_StratWCEw1_bart-base/'
+## BASE
+tkn_path: '/workspace/cringwald/XP_notfiltered/ALL_Clean_old_0/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_bart-base_tokenizer'
+ckpt_path: '/workspace/cringwald/XP_notfiltered/ALL_Clean_old_0/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_bart-base/'
+## RARE
+#ckpt_path: '/workspace/cringwald/XP_notfiltered/RareRel/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_HardRelV2ALL_bart-base/'
+#tkn_path: '/workspace/cringwald/XP_notfiltered/RareRel/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_HardRelV2ALL_bart-base_tokenizer'
+## RARE STRAT
+#ckpt_path: '/workspace/cringwald/XP_notfiltered/All_clean_old_RareStrat/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_RareStart_bart-base/'
+#tkn_path: '/workspace/cringwald/XP_notfiltered/All_clean_old_RareStrat/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_RareStart_bart-base_tokenizer'
+## RARE STRAT WCE
+#ckpt_path: '/workspace/cringwald/XP_notfiltered/All_clean_old_RareStratWCE/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_RareStartWCE_bart-base/'
+#tkn_path: '/workspace/cringwald/XP_notfiltered/All_clean_old_RareStratWCE/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_RareStartWCE_bart-base_tokenizer'
+#### X2
+#ckpt_path: '/workspace/cringwald/LARGERDS/X2Clean/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_x2_bart-base/'
+#tkn_path: '/workspace/cringwald/LARGERDS/X2Clean/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_x2_bart-base_tokenizer/'
+##### X2Start
+#ckpt_path: '/workspace/cringwald/LARGERDS/5start_x2Clean/10-40-48/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_5X2strat_bart-base/'
+#tkn_path: '/workspace/cringwald/LARGERDS/5start_x2Clean/10-40-48/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_5X2strat_bart-base_tokenizer'
+#### X4 Strat
+#ckpt_path: '/workspace/cringwald/LARGERDS/5start_x10Clean/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_5X4strat_bart-base/'
+#tkn_path: '/workspace/cringwald/LARGERDS/5start_x4Clean/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_5X4strat_bart-base_tokenizer/'
+#### X10 Strat
+#ckpt_path: '/workspace/cringwald/LARGERDS/X10CleanStrat/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10strat_bart-base/'
+#tkn_path: '/workspace/cringwald/LARGERDS/X10CleanStrat/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10strat_bart-base_tokenizer/'
+#### X2 StratWCE
+#ckpt_path: '/workspace/cringwald/LARGERDS/X2CleanStratWCE/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X2StartWCE_bart-base/'
+#tkn_path: '/workspace/cringwald/LARGERDS/X2CleanStratWCE/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X2StartWCE_bart-base_tokenizer/'
+#### X4 StratWCE
+#ckpt_path: '/workspace/cringwald/LARGERDS/X10CleanStratWCE/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10StartWCE_bart-base/'
+#tkn_path: '/workspace/cringwald/LARGERDS/X10CleanStratWCE/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10StartWCE_bart-base_tokenizer/'
+## X4 BASE
+#ckpt_path: '/workspace/cringwald/LARGERDS/X4_initClean/15-33-55/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Oldx4_bart-base/'
+#tkn_path: '/workspace/cringwald/LARGERDS/X4_initClean/15-33-55/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Oldx4_bart-base_tokenizer/'
+## X10 BASE
+#ckpt_path: '/workspace/cringwald/LARGERDS/X10Clean/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10_bart-base/'
+#tkn_path: '/workspace/cringwald/LARGERDS/X10Clean/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10_bart-base_tokenizer/'
+## X10StratWCE BASE
+#ckpt_path: '/workspace/cringwald/LARGERDS/X10CleanStratWCE/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10StartWCE_bart-base/'
+#tkn_path: '/workspace/cringwald/LARGERDS/X10CleanStratWCE/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10StartWCE_bart-base_tokenizer/'
+## X10_alias_full
+#ckpt_path: '/workspace/cringwald/XP_alias/Xp10_all/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10_all_bart-base/'
+#tkn_path: '/workspace/cringwald/XP_alias/Xp10_all/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10_all_bart-base_tokenizer/'
+## X10_alias_KR0
+#ckpt_path: '/workspace/cringwald/XP_alias/X10aliasKR0/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10_KR0_bart-base/'
+#tkn_path: '/workspace/cringwald/XP_alias/X10aliasKR0/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_X10_KR0_bart-base_tokenizer/'
+train_file: '/workspace/cringwald/Obj_XP/NEW_CONFIG/FILTERED/PLAIN/op_and_dt_new/DS_turtleS_0datatype_1inLine_1facto_train.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
+validation_file: '/workspace/cringwald/Obj_XP/NEW_CONFIG/FILTERED/PLAIN/op_and_dt_new/DS_turtleS_0datatype_1inLine_1facto_val.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
+#test_file: '/workspace/cringwald/Obj_XP/NEW_CONFIG/CORRECTED/PLAIN/op_and_dt_new/DS_turtleS_0datatype_1inLine_1facto_test.json' # NEW
+test_file: "/workspace/cringwald/Obj_XP/NEW_CONFIG/FILTERED/PLAIN_test/op_and_dt/DS_turtleS_0datatype_1inLine_1facto_all_test_correctedNEW.json" # CORRECTED
+#test_file: "/workspace/cringwald/Obj_XP/NEW_CONFIG/FILTERED/PLAIN_test/op_and_dt/DS_turtleS_0datatype_1inLine_1facto_train.json" # RANDOM
+#test_file: '/workspace/cringwald/Obj_XP/NEW_CONFIG/CORRECTED/Plain_Easy/DS_turtleS_0datatype_1inLine_1facto_all_test.json' # EASY
+#test_file: '/workspace/cringwald/Obj_XP/NEW_CONFIG/HARDOnly/PLAIN_class1/op_and_dt_old/DS_turtleS_0datatype_1inLine_1facto_val.json' # HARD
+shape_file: '/workspace/cringwald/Obj_XP/PersonShape_op_and_dp.ttl'
+  #/workspace/cringwald/XP_notfiltered/All_clean_old_Strat/experiments/experiments/DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsClean_Old_Strat_bart-base_tokenizer'
+
+vocab_file: '/workspace/cringwald/Obj_XP/syntaxes_vocab.json'
+grammar_file: '/workspace/cringwald/Obj_XP/turtle_light_facto.ebnf'
+test_save_dir: '/home/cringwald/EXP_Obj/Test_DS/'  # MUST BE UPDATED s
+overwrite_cache: True
+preprocessing_num_workers:  
+model_used: "BART"
+model_size: "base"
+add_vocab: True
+inline_mode: True
+datatype: False
+facto: True
+max_source_length: 1024
+max_target_length: 1024
+val_max_target_length: 1024
+pad_to_max_length:  False
+max_train_samples: 1000  # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_val_samples: 100   # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_test_samples: 200   # MUST BE UPDATED DEPENDING SAMPLE SIZE
+nb_folds: 10   # MUST BE UPDATED DEPENDING FOLD NUMVER
+num_beams: 
+eval_beams: 3
+ignore_pad_token_for_loss: True
+source_prefix:
+relations_file:

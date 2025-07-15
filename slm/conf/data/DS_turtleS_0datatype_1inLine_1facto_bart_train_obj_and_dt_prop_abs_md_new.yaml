@@ -1,0 +1,34 @@
+# @package _global_
+num_workers: 1
+syntax_name: "DS_turtleS_0datatype_1inLine_1facto_BART_DTOP_AbsMD_New"  # $SAMPLE_NAME$ and $MODEL_NAME$ must be adapted
+project: "BigXP_DT&OP_CORRECTED" # $WDB_ProjectName$ to adapt
+dataset_name: '/home/cringwald/EXP_Obj/datasets/bart_dbpedia.py'
+text_column: 'context'
+target_column: 'triplets'
+train_file: '/workspace/cringwald/Obj_XP/NEW_CONFIG/ABSTRACT_MD/sample_op_and_dt_new/DS_turtleS_0datatype_1inLine_1facto_train.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
+validation_file: '/workspace/cringwald/Obj_XP/NEW_CONFIG/ABSTRACT_MD/sample_op_and_dt_new/DS_turtleS_0datatype_1inLine_1facto_val.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
+test_file: '/workspace/cringwald/Obj_XP/NEW_CONFIG/ABSTRACT_MD/sample_op_and_dt_new/DS_turtleS_0datatype_1inLine_1facto_test.json' # $SAMPLE_NAME$ and $SAMPLES_DIR$ must be adapted
+shape_file: '/workspace/cringwald/Obj_XP/PersonShape_op_and_dp.ttl'
+vocab_file: '/workspace/cringwald/Obj_XP/syntaxes_vocab.json'
+grammar_file: '/workspace/cringwald/Obj_XP/turtle_light_facto.ebnf'
+overwrite_cache: True
+preprocessing_num_workers:  
+model_used: "BART"
+model_size: "base"
+add_vocab: True
+inline_mode: True
+datatype: False
+facto: True
+max_source_length: 1024
+max_target_length: 1024
+val_max_target_length: 1024
+pad_to_max_length:  False
+max_train_samples: 1000  # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_val_samples: 100   # MUST BE UPDATED DEPENDING SAMPLE SIZE
+max_test_samples: 100   # MUST BE UPDATED DEPENDING SAMPLE SIZE
+nb_folds: 10   # MUST BE UPDATED DEPENDING FOLD NUMVER
+num_beams: 
+eval_beams: 3
+ignore_pad_token_for_loss: True
+source_prefix:
+relations_file:

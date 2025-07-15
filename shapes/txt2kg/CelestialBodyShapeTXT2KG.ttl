@@ -1,0 +1,60 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://shaclshapes.org/CelestialBodyShape> a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/averageSpeed> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/periapsis> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/deathDate> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/escapeVelocity> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/surfaceArea> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/orbitalPeriod> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/apoapsis> ],
+        [ sh:datatype rdf:langString ;
+            sh:path <http://dbpedia.org/ontology/formerName> ],
+        [ sh:datatype xsd:string ;
+            sh:path <http://dbpedia.org/ontology/epoch> ],
+        [ sh:class <http://dbpedia.org/ontology/EducationalInstitution> ;
+            sh:path <http://dbpedia.org/ontology/almaMater> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/birthDate> ],
+        [ sh:path <http://dbpedia.org/ontology/deathCause> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/absoluteMagnitude> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/stateOfOrigin> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/mass> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/minimumTemperature> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/density> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/doctoralStudent> ],
+        [ sh:datatype xsd:date ;
+            sh:path <http://dbpedia.org/ontology/discovered> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/birthPlace> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/meanTemperature> ],
+        [ sh:class <http://dbpedia.org/ontology/Person> ;
+            sh:path <http://dbpedia.org/ontology/discoverer> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/maximumTemperature> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/rotationPeriod> ],
+        [ sh:datatype xsd:double ;
+            sh:path <http://dbpedia.org/ontology/temperature> ],
+        [ sh:class <http://dbpedia.org/ontology/Country> ;
+            sh:path <http://dbpedia.org/ontology/nationality> ],
+        [ sh:class <http://dbpedia.org/ontology/Place> ;
+            sh:path <http://dbpedia.org/ontology/deathPlace> ] ;
+    sh:targetClass <http://dbpedia.org/ontology/CelestialBody> .
+
