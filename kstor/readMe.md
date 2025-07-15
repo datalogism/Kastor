@@ -25,6 +25,8 @@ $$dbo:deathDate \models dbo:deathYear$$ and  $$dbo:birthDate  \models dbo:birthY
 We can then count the number of triples infered [ with a SPARQL query](../corese/sparql_queries/get_inferences_nb.sparql)
 
 ### KD-STEP 3-  Wikicheck: 
+
+![kstor](../img/Wikicheck(2).png)
 This script check if the values of the datatype properties objects could be found in the Wikipedia abstracts, it creates $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$
 ```
  python KD3_WikicheckNamedGraph.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
