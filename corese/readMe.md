@@ -52,13 +52,19 @@ In the [Kastor datadump available on Zenodo](https://zenodo.org/records/14382674
   
 ### UPDATES and current structure
 
-The default graph remains the Jena default one :  <urn:x-arq:DefaultGraph> this is where the datadump are initially loaded in the KB <br>
+The default graph remains the Jena default one:  <urn:x-arq:DefaultGraph> this is where the datadump are initially loaded in the KB <br>
 http://ns.inria.fr/kstor/ <br>
-├── http://ns.inria.fr/kstor/shapes/$shape_name$ : contains the shapes loaded in Kastor as defined by their filename in the ~/shapes/ directory <br>
-├── http://ns.inria.fr/kstor/class_randoms_id/$dbo_class$ : contains random id associated to a class focused by a shape generated during the loading of a shape in Kastor, these data are used for random sampling <br>
-├── http://ns.inria.fr/kstor/inferences/$shape_name$ : contains the data infered by a rule that is associated to a given shape <br>
-├── http://ns.inria.fr/kstor/wiki_md/$shape_name$ : contains the Markdown version of the Wikipedia page retrieved during the process <br>
-└── http://ns.inria.fr/kstor/wikichecked/$shape_name$/abtract_md : contains the data Wikichecked based on the Markdown version of the Wikipedia page <br>
+├── http://ns.inria.fr/kstor/shapes/$shape_name$ : <br>
+&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contains the shapes loaded in Kastor as defined by their filename in the ~/shapes/ directory <br>
+├── http://ns.inria.fr/kstor/class_randoms_id/$dbo_class$ : <br>
+&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contains random id associated to a class focused by a shape generated during the loading of a shape in Kastor,<br>
+&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; these data are used for random sampling <br>
+├── http://ns.inria.fr/kstor/inferences/$shape_name$: <br>
+&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contains the data infered by a rule that is associated to a given shape <br>
+├── http://ns.inria.fr/kstor/wiki_md/$shape_name$ : <br>
+&nbsp;| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contains the Markdown version of the Wikipedia page retrieved during the process <br>
+└── http://ns.inria.fr/kstor/wikichecked/$shape_name$/abtract_md : <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; contains the data Wikichecked based on the Markdown version of the Wikipedia page <br>
 
 ## Querying the KB
 
