@@ -1,4 +1,4 @@
-# Pseudo-algo
+# Detailed Pseudo-algorithms
 
 ## A. Stratified Sampling 
 
