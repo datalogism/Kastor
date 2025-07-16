@@ -6,6 +6,11 @@ STEP 0- Initialize the Kastor KB: $\mathcal{K}$
 
 ## Knowledge distillation
 ![kstor](../img/knowledgedistill4.png)
+
+### KD-STEP 0 [OPTIONNAL] - Create a data partition for a specific purpose 
+
+In the case of our last work, we proposed to identify Wikipedia articles published after a given date, see [./KD0_create_wikidiff_NG.py](./KD0_create_wikidiff_NG.py) for details
+
 ### KD-STEP 1-  Tag the entities related to the shape class: 
 
 This step associates a random uuid to each entity related to dbo:class focused by the maximal shape chosen and having an abstract, it creates $\mathcal{K}_{\mathbb{P}(s^*)}$ . The dbo:Person shape is accessible here [PersonShape.ttl](../shapes/PersonShape.ttl)
@@ -19,19 +24,26 @@ This step is applying the rules defined by the user and create $\mathcal{G}^{\ma
 ```
  python KD2_inferencesRules.py -r RULES_PATH -m insert
 ```
-We applied in our case the following rules: 
+In [REF] we applied in our case the following rules: 
 $$dbo:deathDate \models dbo:deathYear$$ and  $$dbo:birthDate  \models dbo:birthYear$$ available in [./rules/Person_rules.rul](./rules/Person_rules.rul) file
 
 We can then count the number of triples infered [ with a SPARQL query](../corese/sparql_queries/get_inferences_nb.sparql)
 
-### KD-STEP 3-  Wikicheck: 
+We proposed in [REF] a new set of rules in [./rules/Person_dataobj_rules_NS.rul](./rules/Person_dataobj_rules_NS.rul)
 
-![kstor](../img/Wikicheck(2).png)
+### KD-STEP 3-  the Wikicheck: 
+
+#### 3-1: Based on the Plain abstracts and only effective for the datatypes properties
+
 This script check if the values of the datatype properties objects could be found in the Wikipedia abstracts, it creates $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$
 ```
- python KD3_WikicheckNamedGraph.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
+ python KD3-1_Wikicheck_plain_dt_only.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
 ```
 We can then count the number of entities in $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$ [ with a SPARQL query](../corese/sparql_queries/get_found_in_abstract_nb.sparql)
+
+#### 3-2: Based on the Markdown abstracts and effective for both object and datatypes properties
+
+To make possible the Wikicheck of Object Properties we propose to rely the verification on a simplified Markdown version of the  
 
 ### KD-STEP 4 - The exemples-specific patterns 
 This script is used to analyse the example-specific patterns set $\mathbb{P}_{\mathcal{K}}(s^*)$ 
