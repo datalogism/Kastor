@@ -1,3 +1,7 @@
+---
+header-includes:
+  - \usepackage{algorithm2e}
+---
 # Pseudo-algo
 
 ## A. Stratified Sampling 
