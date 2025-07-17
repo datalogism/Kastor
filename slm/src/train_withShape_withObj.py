@@ -1,100 +1,119 @@
+"""
+Train a sequence-to-sequence language model with SHACL shape constraints and object extraction.
+
+This script implements a training pipeline for fine-tuning language models (like T5, GPT, etc.)
+with the ability to generate structured outputs that conform to SHACL shapes. It includes
+support for k-fold cross-validation, grammar-constrained decoding, and carbon emission tracking.
+"""
+
+# Standard library imports
+import json
+import gc
+
+# Third-party imports
 import omegaconf
 import hydra
 import torch
-from transformers import AutoConfig, AutoModel, AutoModelForSeq2SeqLM, AutoTokenizer, T5Tokenizer, AddedToken, \
-    RobertaTokenizer, AutoModelForCausalLM
 import lightning.pytorch as pl
-import json
-from lightning.pytorch.utilities import rank_zero_info
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor
 from lightning.pytorch.loggers.wandb import WandbLogger
-from kfold.datamodule import KFoldDataModule
 from rdflib import Graph
 import wandb
+from codecarbon import OfflineEmissionsTracker
+
+# Hugging Face transformers imports
+from transformers import (
+    AutoConfig, AutoModel, AutoModelForSeq2SeqLM, AutoTokenizer,
+    T5Tokenizer, AddedToken, RobertaTokenizer, AutoModelForCausalLM
+)
+
+# Local imports
+from kfold.datamodule import KFoldDataModule
 from pl_data_modules import BasePLDataModule
 from pl_modules import BasePLModule
-from generate_samples import GenerateTextSamplesCallback
-
-from generate_samples import GenerateNotParsedCallback, GenerateNotValidCallback, GenerateWrongSubjCallback, \
-    GenerateToInspectCallback
+from generate_samples import (
+    GenerateTextSamplesCallback, GenerateNotParsedCallback,
+    GenerateNotValidCallback, GenerateWrongSubjCallback, GenerateToInspectCallback
+)
 from token_norm import TokenNormalizer
 from transformers_cfg.parser import parse_ebnf
 from transformers_cfg.recognizer import StringRecognizer
 
+# Uncomment to enable GPU memory cleanup
 # torch.cuda.empty_cache()
-import gc
 
-from codecarbon import OfflineEmissionsTracker
-
-
-# gc.collect()
 def report_gpu():
+    """Print GPU memory usage and clean up CUDA cache."""
     print(torch.cuda.list_gpu_processes())
     gc.collect()
     torch.cuda.empty_cache()
 
 
 def train(conf: omegaconf.DictConfig) -> None:
+    """
+    Main training function for the language model with shape constraints.
+    
+    Args:
+        conf: Configuration dictionary containing all training parameters
+    """
+    # Set random seed for reproducibility
     pl.seed_everything(conf.seed)
 
     print(">>>>>>>>>>>>>>>> EXTRACTION FROM SHAPE")
     print(conf.shape_file)
 
+    # Load SHACL shapes for validation
     shacl_g = Graph()
     shacl_g.parse(conf.shape_file)
 
-    if(conf.class_count_file and str(conf.class_count_file)!="None"):
+    # Load class counts if provided (for class balancing)
+    if conf.class_count_file and str(conf.class_count_file) != "None":
         with open(conf.class_count_file, 'r') as f:
             class_count = json.load(f)
     else:
-        class_count=None
+        class_count = None
 
-    print(">>>>>>>>>>>>>>>> CLASS COUNT FILE:")
-    print(class_count)
-
-    print(">>>>>>>>>>>>>>>> LOAD GRAMMAR")
-    print(conf.grammar_file)
-
+    print("Loading grammar from:", conf.grammar_file)
     with open(conf.grammar_file, "r") as file:
         grammar_str = file.read()
 
+    # Parse grammar for constrained decoding
     parsed_grammar = parse_ebnf(grammar_str)
-
     start_rule_id = parsed_grammar.symbol_table["root"]
     grammar_recognizer = StringRecognizer(parsed_grammar.grammar_encoding, start_rule_id)
 
-    print(">>>>>>>>>>>>>>>> LOAD VOCAB FILE")
-
+    # Load vocabulary file
+    print("Loading vocabulary from:", conf.vocab_file)
     with open(conf.vocab_file, 'r') as f:
         vocab_syntaxes = json.load(f)
 
-    print("--------")
-
+    # Select appropriate vocabulary based on input format
     all_vocab = []
-    if (conf.add_vocab == True):
-        if ("list" in conf.train_file):
+    if conf.add_vocab:
+        if "list" in conf.train_file:
             all_vocab = vocab_syntaxes["list"]
-        elif (
-                "turtleS" in conf.train_file or "turtleLight" in conf.train_file or "TurtleUtlraLight" in conf.train_file):
+        elif any(x in conf.train_file for x in ["turtleS", "turtleLight", "TurtleUtlraLight"]):
             all_vocab = vocab_syntaxes["turtleS"]
-        elif ("tags" in conf.train_file):
+        elif "tags" in conf.train_file:
             all_vocab = vocab_syntaxes["tags"]
-        elif ("json-ld" in conf.train_file):
+        elif "json-ld" in conf.train_file:
             all_vocab = vocab_syntaxes["json-ld"]
-        elif ("ntriples" in conf.train_file):
+        elif "ntriples" in conf.train_file:
             all_vocab = vocab_syntaxes["ntriples"]
-        elif ("turtle" in conf.train_file):
+        elif "turtle" in conf.train_file:
             all_vocab = vocab_syntaxes["turtle"]
-        elif ("xml" in conf.train_file):
+        elif "xml" in conf.train_file:
             all_vocab = vocab_syntaxes["xml"]
-        ########## MARKDOWN VOCAB
+
+        # Add markdown symbols to vocabulary
         markdown_symb = ["[", "]", "(", ")", "**"]
         for symb in markdown_symb:
-            if (symb not in all_vocab):
+            if symb not in all_vocab:
                 all_vocab.append(symb)
 
         all_vocab = list(set(all_vocab))
 
+    # Load model configuration
     config = AutoConfig.from_pretrained(
         conf.config_name if conf.config_name else conf.model_name_or_path,
         decoder_start_token_id=0,
@@ -102,21 +121,20 @@ def train(conf: omegaconf.DictConfig) -> None:
         dropout=conf.dropout,
         forced_bos_token_id=None,
         trust_remote_code=True
-
     )
 
-    print("USE FAST >>>>>>>>>>>>", conf.use_fast_tokenizer)
-    tokenizer_kwargs = {
-        "use_fast": conf.use_fast_tokenizer,
-    }
-    if ("codet5" in conf.model_name_or_path):
+    # Initialize tokenizer based on model type
+    print("Using fast tokenizer:", conf.use_fast_tokenizer)
+    tokenizer_kwargs = {"use_fast": conf.use_fast_tokenizer}
+    
+    if "codet5" in conf.model_name_or_path:
         tokenizer = RobertaTokenizer.from_pretrained(
             conf.tokenizer_name if conf.tokenizer_name else conf.model_name_or_path,
             trust_remote_code=True,
             **tokenizer_kwargs
         )
-    elif (
-            "t5" in conf.model_name_or_path and not "flan-t5" in conf.model_name_or_path and not "mt5" in conf.model_name_or_path and not "pile-t5" in conf.model_name_or_path):
+    elif ("t5" in conf.model_name_or_path and 
+          not any(x in conf.model_name_or_path for x in ["flan-t5", "mt5", "pile-t5"])):
         tokenizer = T5Tokenizer.from_pretrained(
             conf.tokenizer_name if conf.tokenizer_name else conf.model_name_or_path,
             **tokenizer_kwargs
@@ -127,20 +145,19 @@ def train(conf: omegaconf.DictConfig) -> None:
             **tokenizer_kwargs
         )
 
-    print("============+>", conf.train_file)
-
-    if ("gpt" in conf.model_name_or_path):
+    # Load the appropriate model type
+    if "gpt" in conf.model_name_or_path:
         model = AutoModelForCausalLM.from_pretrained(
             conf.model_name_or_path,
             config=config,
         )
-    elif ("codet5p-220m" in conf.model_name_or_path):
+    elif "codet5p-220m" in conf.model_name_or_path:
         model = AutoModel.from_pretrained(
             conf.model_name_or_path,
             low_cpu_mem_usage=True,
             trust_remote_code=True,
             config=config)
-    elif ("codet5" in conf.model_name_or_path):
+    elif "codet5" in conf.model_name_or_path:
         model = AutoModelForSeq2SeqLM.from_pretrained(
             conf.model_name_or_path,
             low_cpu_mem_usage=True,
@@ -152,89 +169,77 @@ def train(conf: omegaconf.DictConfig) -> None:
             config=config,
         )
 
-    # if not conf.finetune:
-    print("SIZE BEFORE >", len(tokenizer))
-    print("TOKEN NORMALIZER INIT")
+    # Initialize token normalizer and update tokenizer with special tokens
+    print("Tokenizer size before adding special tokens:", len(tokenizer))
     normalizer = TokenNormalizer(conf.model_name_or_path)
 
-    if ("t5" in conf.dataset_name and conf.add_vocab == True):
+    if "t5" in conf.dataset_name and conf.add_vocab:
+        # Clean up vocabulary for T5 models
+        for token in ["<s>", "[", "]", "\n"]:
+            if token in all_vocab:
+                all_vocab.remove(token)
 
-        if ("<s>" in all_vocab):
-            all_vocab.remove("<s>")
-        if ("[" in all_vocab):
-            all_vocab.remove("[")
-        if ("]" in all_vocab):
-            all_vocab.remove("]")
-        if ("\n" in all_vocab):
-            all_vocab.remove('\n')
-
-        tokenizer.add_tokens(AddedToken("[", normalized=False))
-        tokenizer.add_tokens(AddedToken("]", normalized=False))
-        tokenizer.add_tokens(AddedToken("\n", normalized=False))
-        tokenizer.add_tokens(AddedToken("<s>", normalized=False))
-        for voc in all_vocab:
-            tokenizer.add_tokens(AddedToken(voc, normalized=False))
-
+        # Add special tokens
+        for token in ["[", "]", "\n", "<s>"] + all_vocab:
+            tokenizer.add_tokens(AddedToken(token, normalized=False))
     else:
-        # https://stackoverflow.com/questions/72214408/why-does-huggingface-t5-tokenizer-ignore-some-of-the-whitespaces
-
-        if (normalizer.byte_encoder):
-            ##### BYTES ENCODE FOR POTENTIAL GRAMMAR CONSTRAINED DECODING
-            norm_vocab = []
-            for voc in all_vocab:
-                norm_vocab.append(normalizer.normalize(voc))
-            tokenizer.add_tokens(norm_vocab)
-
+        # Handle vocabulary normalization for other models
+        if normalizer.byte_encoder:
+            normalized_vocab = [normalizer.normalize(voc) for voc in all_vocab]
+            tokenizer.add_tokens(normalized_vocab)
         else:
             tokenizer.add_tokens(all_vocab)
-    ## ADDED FOR PILET5
-    if ("pile-t5" in conf.model_name_or_path.lower()):
+
+    # Special handling for Pile-T5 models
+    if "pile-t5" in conf.model_name_or_path.lower():
         tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 
-    ########### TEST IT
-
+    # Save tokenizer and update model embeddings
     model_name = conf.config_name.split("/")[-1]
     project = conf.project
-    group = conf.syntax_name + "_" + model_name
-
-    print("SAVE TOKENIZE VOCAB >")
+    group = f"{conf.syntax_name}_{model_name}"
+    
+    print("Saving tokenizer to:", f'experiments/experiments/{group}_tokenizer')
     tokenizer.save_pretrained(f'experiments/experiments/{group}_tokenizer')
-    print("SAVED TOKENIZE VOCAB !")
-
-    print("SIZE AFTER >", len(tokenizer))
+    
+    print("Tokenizer size after adding special tokens:", len(tokenizer))
     model.resize_token_embeddings(len(tokenizer))
 
-    ### ADDED FOR LOCAL
-    # model.to(torch.device('cpu'))
-    # data module declaration
-    print("TRAIN FILE")
-    print(conf.train_file)
-
+    # Initialize data module
+    print("Training file:", conf.train_file)
     pl_data_module = BasePLDataModule(conf, tokenizer, model)
-
-    # test_dataloader=pl_data_module.test_dataloader()
     train_dataloader = pl_data_module.train_dataloader()
     val_dataloader = pl_data_module.val_dataloader()
 
+    # Set up carbon emissions tracking
     tracker = OfflineEmissionsTracker(country_iso_code="FRA")
 
-    if (conf.nb_folds == 0):
-
-        print("===================> CREATE DIR")
-        test_save = {"test": "test"}
+    # Training without cross-validation
+    if conf.nb_folds == 0:
+        print("Starting training without cross-validation")
+        
+        # Create directory for saving results
         with open(group + 'test_save_nocv.json', "w") as outfile:
-            json.dump(test_save, outfile)
+            json.dump({"test": "test"}, outfile)
 
-        results, paths = [], []
         all_data_exp = {}
-
-        pl_module = BasePLModule(conf, config, tokenizer, model, shacl_g, grammar_recognizer, obj_ext=True, class_count=class_count)
+        pl_module = BasePLModule(
+            conf, config, tokenizer, model, 
+            shacl_g, grammar_recognizer, obj_ext=True, class_count=class_count
+        )
+        
+        # Initialize Weights & Biases logger
         wandblogger = WandbLogger(project=project, name=group, group=group)
 
-        callbacks_store = [GenerateToInspectCallback(conf.samples_interval),
-                           GenerateNotParsedCallback(conf.samples_interval),
-                           GenerateNotValidCallback(conf.samples_interval),
-                           GenerateWrongSubjCallback(conf.samples_interval)]
+        # Set up callbacks
+        callbacks_store = [
+            GenerateToInspectCallback(conf.samples_interval),
+            GenerateNotParsedCallback(conf.samples_interval),
+            GenerateNotValidCallback(conf.samples_interval),
+            GenerateWrongSubjCallback(conf.samples_interval)
+        ]
+
+        # Add early stopping if enabled
         if conf.apply_early_stopping:
             callbacks_store.append(
                 EarlyStopping(
@@ -244,9 +249,9 @@ def train(conf: omegaconf.DictConfig) -> None:
                 )
             )
 
+        # Configure model checkpointing
         checkpoint_callback = ModelCheckpoint(
             monitor=conf.monitor_var,
-            # monitor=None,
             dirpath='experiments/' + group + '/',
             filename=group + '-{epoch:02d}-{val_loss:.2f}',
             save_top_k=conf.save_top_k,
@@ -254,187 +259,164 @@ def train(conf: omegaconf.DictConfig) -> None:
             save_last=True,
             mode=conf.monitor_var_mode
         )
-        callbacks_store.append(checkpoint_callback)
+        callbacks_store.extend([
+            checkpoint_callback,
+            GenerateTextSamplesCallback(conf.samples_interval),
+            LearningRateMonitor(logging_interval='step')
+        ])
 
-        callbacks_store.append(GenerateTextSamplesCallback(conf.samples_interval))
-        callbacks_store.append(LearningRateMonitor(logging_interval='step'))
-
+        # Initialize trainer
         trainer = pl.Trainer(
-            # accelerator="cpu",#### ADDed
-            # accelerator="cpu",
-            # gpus=conf.gpus,
             devices=conf.gpus,
             accumulate_grad_batches=conf.gradient_acc_steps,
             gradient_clip_val=conf.gradient_clip_value,
             val_check_interval=conf.val_check_interval,
             callbacks=callbacks_store,
             max_steps=conf.max_steps,
-            # max_steps=total_steps,
             precision=conf.precision,
-            # amp_level=conf.amp_level,
             logger=wandblogger,
-            # ckpt_path=conf.checkpoint_path,
             limit_val_batches=conf.val_percent_check
         )
 
+        # Start training with carbon tracking
         tracker.start()
-        res = trainer.fit(pl_module, datamodule=pl_data_module)
+        train_result = trainer.fit(pl_module, datamodule=pl_data_module)
         tracker.stop()
 
-        all_data_exp["train_data"] = res
-        all_data_exp["carbon_data"] = {}
-
-        all_data_exp["carbon_data"]["train_emissions"] = tracker.final_emissions_data.emissions
-        all_data_exp["carbon_data"]["train_energy_consumed"] = tracker.final_emissions_data.energy_consumed
-
-        print("=====================BEST MODEL")
-
+        # Save training results and carbon data
+        all_data_exp["train_data"] = train_result
+        all_data_exp["carbon_data"] = {
+            "train_emissions": tracker.final_emissions_data.emissions,
+            "train_energy_consumed": tracker.final_emissions_data.energy_consumed
+        }
         all_data_exp["best_model_path"] = checkpoint_callback.best_model_path
 
-        print(">>>>>>>>>>>>>>>>>> TEST")
+        # Run testing
+        print("Running evaluation on test set")
         tracker.start()
-        res = trainer.test(model=pl_module, datamodule=pl_data_module, verbose=False)
+        test_result = trainer.test(model=pl_module, datamodule=pl_data_module, verbose=False)
         tracker.stop()
 
-        all_data_exp["test_data_last_step"] = res
-        all_data_exp["carbon_data"]["test_emissions"] = tracker.final_emissions_data.emissions
-        all_data_exp["carbon_data"]["test_energy_consumed"] = tracker.final_emissions_data.energy_consumed
+        # Save test results and carbon data
+        all_data_exp["test_data_last_step"] = test_result
+        all_data_exp["carbon_data"].update({
+            "test_emissions": tracker.final_emissions_data.emissions,
+            "test_energy_consumed": tracker.final_emissions_data.energy_consumed
+        })
 
+        # Finalize W&B run
         wandb.finish()
 
-        print("SAVE DATA")
-
+        # Save all experiment data
         with open(group + 'all_data.json', "w") as outfile:
-            json.dump(results, outfile)
+            json.dump(all_data_exp, outfile)
 
-    elif (conf.nb_folds > 0):
-
-        print("===================> CREATE DIR")
-        test_save = {"test": "test"}
+    # Training with k-fold cross-validation
+    else:
+        print(f"Starting {conf.nb_folds}-fold cross-validation")
+        
+        # Create directory for saving results
         with open(group + 'test_save.json', "w") as outfile:
-            json.dump(test_save, outfile)
+            json.dump({"test": "test"}, outfile)
 
+        # Initialize k-fold data module
         kfold_data_module = KFoldDataModule(
             num_folds=conf.nb_folds,
             shuffle=False,
             stratified=conf.stratified,
-           # strata_class=pl_data_module.class_label,
             train_dataloader=train_dataloader,
             val_dataloaders=val_dataloader
         )
 
-        models = [BasePLModule(conf, config, tokenizer, model, shacl_g, grammar_recognizer, obj_ext=True, class_count=class_count) for _ in
-                  range(conf.nb_folds)]
+        # Initialize models for each fold
+        models = [
+            BasePLModule(conf, config, tokenizer, model, shacl_g, grammar_recognizer, 
+                        obj_ext=True, class_count=class_count)
+            for _ in range(conf.nb_folds)
+        ]
 
-        results, paths = [], []
         all_data_exp = {}
+        start_fold = conf.get('start_fold', 0)
+        
+        print(f"Starting from fold: {start_fold}")
+        
+        # Train each fold
+        for i in range(start_fold, conf.nb_folds):
+            print(f"===== Starting fold {i + 1}/{conf.nb_folds} =====")
+            
+            wandblogger = WandbLogger(project=project, name=f"{group}_{i}", group=group)
+            all_data_exp[f"fold{i}"] = {}
+            
+            # Set up callbacks for this fold
+            callbacks_store = [
+                GenerateToInspectCallback(conf.samples_interval),
+                GenerateNotParsedCallback(conf.samples_interval),
+                GenerateNotValidCallback(conf.samples_interval),
+                GenerateWrongSubjCallback(conf.samples_interval)
+            ]
 
-        if "start_fold" in conf:
-            start_fold = conf.start_fold
-        else:
-            start_fold = 0
-        print(">>>>>>>>>>>>>>>>START FOLD> ", start_fold)
-        for i in range(conf.nb_folds):
-            if (i >= start_fold):
-                rank_zero_info(f"===== Starting fold {i + 1}/{conf.nb_folds} =====")
-
-                wandblogger = WandbLogger(project=project, name=group + "_" + str(i), group=group)
-                all_data_exp["fold" + str(i)] = {}
-                callbacks_store = [GenerateToInspectCallback(conf.samples_interval),
-                                   GenerateNotParsedCallback(conf.samples_interval),
-                                   GenerateNotValidCallback(conf.samples_interval),
-                                   GenerateWrongSubjCallback(conf.samples_interval)]
-
-                if conf.apply_early_stopping:
-                    callbacks_store.append(
-                        EarlyStopping(
-                            monitor=conf.monitor_var,
-                            mode=conf.monitor_var_mode,
-                            patience=conf.patience
-                        )
+            # Add early stopping if enabled
+            if conf.apply_early_stopping:
+                callbacks_store.append(
+                    EarlyStopping(
+                        monitor=conf.monitor_var,
+                        mode=conf.monitor_var_mode,
+                        patience=conf.patience
                     )
-
-                checkpoint_callback = ModelCheckpoint(
-                    monitor=conf.monitor_var,
-                    # monitor=None,
-                    dirpath='experiments/' + group + '/',
-                    # filename=group+"_"+str(i)+'-{epoch:02d}',
-                    # every_n_epochs=1,
-                    # save_top_k=1,
-                    # UNCOMMENT FOR BASIC CASE
-                    filename=group + "_" + str(i) + '-{epoch:02d}-{val_loss:.2f}',
-                    # save_top_k=conf.save_top_k,
-                    verbose=True,
-                    save_last=True,
-                    mode=conf.monitor_var_mode
                 )
-                callbacks_store.append(checkpoint_callback)
 
-                callbacks_store.append(GenerateTextSamplesCallback(conf.samples_interval))
-                callbacks_store.append(LearningRateMonitor(logging_interval='step'))
+            # Configure model checkpointing for this fold
+            checkpoint_callback = ModelCheckpoint(
+                monitor=conf.monitor_var,
+                dirpath='experiments/' + group + '/',
+                filename=f"{group}_{i}-{epoch:02d}-{val_loss:.2f}",
+                verbose=True,
+                save_last=True,
+                mode=conf.monitor_var_mode
+            )
+            callbacks_store.extend([
+                checkpoint_callback,
+                GenerateTextSamplesCallback(conf.samples_interval),
+                LearningRateMonitor(logging_interval='step')
+            ])
 
-                kfold_data_module.fold_index = i
-                trainer = pl.Trainer(
-                    # accelerator="cpu",#### ADDed
-                    # accelerator="cpu",
-                    # gpus=conf.gpus,
-                    devices=conf.gpus,
-                    accumulate_grad_batches=conf.gradient_acc_steps,
-                    gradient_clip_val=conf.gradient_clip_value,
-                    val_check_interval=conf.val_check_interval,
-                    callbacks=callbacks_store,
-                    max_steps=conf.max_steps,
-                    # max_steps=total_steps,
-                    precision=conf.precision,
-                    # amp_level=conf.amp_level,
-                    logger=wandblogger,
-                    # ckpt_path=conf.checkpoint_path,
-                    limit_val_batches=conf.val_percent_check
-                )
-                print(">>>>>>>>>>>>>>>>>> TRAIN")
-                # tracker.start()
-                res = trainer.fit(models[i], datamodule=kfold_data_module)
-                # tracker.stop()
-
-                all_data_exp["fold" + str(i)]["train_data"] = res
-                all_data_exp["fold" + str(i)]["carbon_data"] = {}
-                # if(tracker.final_emissions_data):
-                #   all_data_exp["fold"+str(i)]["carbon_data"]["train_emissions"] = tracker.final_emissions_data.emissions
-                #  all_data_exp["fold"+str(i)]["carbon_data"]["train_energy_consumed"] = tracker.final_emissions_data.energy_consumed
-
-                # trainer.save_checkpoint(fold_path)
-                # state=trainer.state
-
-                print("=====================BEST MODEL")
-
-                all_data_exp["fold" + str(i)]["best_model_path"] = checkpoint_callback.best_model_path
-
-                print(">>>>>>>>>>>>>>>>>> TEST")
-                # tracker.start()
-
-                res = trainer.test(models[i], datamodule=kfold_data_module)
-                # tracker.stop()
-                #    if (tracker.final_emissions_data):
-
-                all_data_exp["fold" + str(i)]["test_data_last_step"] = res
-                # all_data_exp["fold"+str(i)]["carbon_data"]["test_emissions"] = tracker.final_emissions_data.emissions
-                # all_data_exp["fold"+str(i)]["carbon_data"]["test_energy_consumed"] = tracker.final_emissions_data.energy_consumed
-
-                wandb.finish()
-
-        print("SAVE DATA")
-
-        with open(group + 'all_data.json', "w") as outfile:
-            json.dump(all_data_exp, outfile)
+            # Set current fold in data module
+            kfold_data_module.fold_index = i
+            
+            # Initialize trainer for this fold
+            trainer = pl.Trainer(
+                devices=conf.gpus,
+                accumulate_grad_batches=conf.gradient_acc_steps,
+                gradient_clip_val=conf.gradient_clip_value,
+                val_check_interval=conf.val_check_interval,
+                callbacks=callbacks_store,
+                max_steps=conf.max_steps,
+                precision=conf.precision,
+                logger=wandblogger,
+                limit_val_batches=conf.val_percent_check
+            )
+            
+            # Train the model for this fold
+            print(f"Training fold {i+1}")
+            train_result = trainer.fit(models[i], datamodule=kfold_data_module)
+            
+            # Save training results for this fold
+            all_data_exp[f"fold{i}"]["train_data"] = train_result
+            all_data_exp[f"fold{i}"]["carbon_data"] = {}
+            
+            # Clean up
+            wandb.finish()
 
 
-@hydra.main(config_path='../conf', config_name='root')
-def main(conf: omegaconf.DictConfig):
+def main(conf: omegaconf.DictConfig) -> None:
+    """Main entry point for the training script."""
     train(conf)
 
 
 if __name__ == '__main__':
+    # Uncomment to debug GPU memory issues
     # print(torch.cuda.list_gpu_processes())
     # gc.collect()
-    # torch.cuda.empty_cache()
-    main()
+    
+    # Initialize Hydra and start training
+    hydra.main(version_base=None, config_path="../../conf", config_name="config")(main)()

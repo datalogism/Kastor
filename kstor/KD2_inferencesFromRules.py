@@ -1,105 +1,129 @@
+"""
+KD2_inferencesFromRules.py
+
+This module handles the application of inference rules to RDF data stored in a SPARQL endpoint.
+It can insert or delete inferred triples based on rules defined in XML files.
+"""
+
 import re
-import src.corese_tools as ct
 import xml.etree.ElementTree as ET
 from argparse import ArgumentParser
 import logging
 
+# Import custom Corese tools for SPARQL operations
+import src.corese_tools as ct
 
 if __name__ == '__main__':
-    parser = ArgumentParser()
-    parser.add_argument("-s", "--shape_file_path", default=None)
-    parser.add_argument("-r", "--rules_file_path", default=None)
-    parser.add_argument("-m", "--mode", default="insert")
+    # Set up command line argument parsing
+    parser = ArgumentParser(description='Apply inference rules to RDF data in a SPARQL endpoint')
+    parser.add_argument("-s", "--shape_file_path", default=None,
+                       help="Path to the shape file being processed")
+    parser.add_argument("-r", "--rules_file_path", default=None,
+                       help="Path to the XML file containing inference rules")
+    parser.add_argument("-m", "--mode", default="insert",
+                       choices=["insert", "delete"],
+                       help="Operation mode: 'insert' to add inferences, 'delete' to remove them")
 
     args = parser.parse_args()
-    print(args.shape_file_path)
-
+    
+    # Initialize SPARQL endpoint
     sparql_ep = 'http://localhost:8080/sparql'
-    #query = 'SELECT DISTINCT ?g  {  GRAPH ?g {}}'
-    #results = ct.get_sparql_dataframe(sparql_ep, query)
-    #print(" NG>", )
-    #print(results)
-    #sys.exit()
-    if args.rules_file_path :
+    
+    # Check if rules file is provided
+    if args.rules_file_path and args.mode in ["insert", "delete"]:
+        # Initialize query string and parse the rules XML file
+        query = ""
+        
+        # Parse the XML rules file
+        tree = ET.parse(args.rules_file_path)
+        root = tree.getroot()
+        
+        # Find all rule elements in the XML
+        rules = root.findall("{http://ns.inria.fr/corese/rule/}rule/")
+        
+        # Pattern used for string replacement in queries
+        pattern_replace = "$INFERENCE_NS$"
+        named_graph_used = None
+        
+        print(f">>>>>> Number of rules to apply: {len(rules)}")
 
-        if( args.mode == "insert" or args.mode=="delete"):
-            query= ""
-
-            ##### PARSE RULES FILES
-            tree = ET.parse(args.rules_file_path)
-            root = tree.getroot()
-            rules=root.findall("{http://ns.inria.fr/corese/rule/}rule/")
-
-            pattern_replace = "$INFERENCE_NS$"
-            named_graph_used=None
-
-            print(">>>>>>NB RULES TO APPLY:",len(rules))
-
-            if args.mode == "delete":
-
-                if (args.shape_file_path):
+        # Handle delete mode
+        if args.mode == "delete":
+            if args.shape_file_path:
+                # Extract shape name from file path
+                shape_name = args.shape_file_path.split("/")[-1].replace(".ttl", "")
+                print(f"Deleting inferences for shape: {shape_name}")
+                
+                # Construct named graph URI for inferences
+                named_graph_used = f"<http://ns.inria.fr/kstor/inferences/{shape_name}>"
+                
+                # Drop the entire inference graph
+                query_delete = f"DROP GRAPH {named_graph_used}"
+                res = ct.sparql_service_update(sparql_ep, query_delete)
+        
+        # Handle insert mode (or continue with delete mode)
+        else:
+            for rule in rules:
+                if args.mode == "insert":
+                    # Convert CONSTRUCT query to INSERT for SPARQL update
+                    query = rule.text.replace("CONSTRUCT", "INSERT")
+                
+                print("############# Processing Rule Matches #############")
+                print(query)
+                
+                # Process shape file if provided
+                if args.shape_file_path:
                     shape_name = args.shape_file_path.split("/")[-1].replace(".ttl", "")
-
-                    print("DELETE>", shape_name)
-                    named_graph_used = "<http://ns.inria.fr/kstor/inferences/" + shape_name + ">"
-                    print("DELETE")
-                    query_delete="DROP GRAPH "+named_graph_used
-                    res = ct.sparql_service_update(sparql_ep, query_delete)
-            else:
-                for rule in rules:
-
-                    if args.mode == "insert":
-                        #print("========================INSERT RULE")
-                        query=rule.text.replace("CONSTRUCT", "INSERT")
-                        #print(query)
-
-
-                    print("############# MATCHES")
-                    print(query)
-                    if (args.shape_file_path):
-                        shape_name = args.shape_file_path.split("/")[-1].replace(".ttl", "")
-                        if (pattern_replace in query):
-                            named_graph_used = "<http://ns.inria.fr/kstor/inferences/" + shape_name + ">"
-
-                    if (pattern_replace in query):
-                        print('INSIDE')
-                        regex1 = r"GRAPH \$INFERENCE_NS\$"
+                    if pattern_replace in query:
+                        named_graph_used = f"<http://ns.inria.fr/kstor/inferences/{shape_name}>"
+                
+                # Determine the regex pattern based on whether we have a placeholder or direct graph name
+                if pattern_replace in query:
+                    print('Processing with inference namespace placeholder')
+                    regex1 = r"GRAPH \$INFERENCE_NS\$"
+                else:
+                    regex1 = r"GRAPH ks:[\w|\"_\"]+"
+                
+                # Find all graph patterns in the query
+                matches = re.findall(regex1, query, re.MULTILINE)
+                
+                if matches:
+                    # Use the first match as the named graph if not already set
+                    if named_graph_used is None:
+                        named_graph_used = matches[0].replace("GRAPH", "").strip()
+                    
+                    # Process the query based on whether it contains the placeholder
+                    if pattern_replace in query:
+                        # Extract the content inside the GRAPH clause
+                        regex2 = r" GRAPH \$INFERENCE_NS\$ {([^}]+)}"
+                        added_ = re.findall(regex2, query, re.MULTILINE)
+                        added = added_[0].strip()
+                        query = query.replace(pattern_replace, named_graph_used)
                     else:
-                        regex1 = r"GRAPH ks:[\w|\"_\"]+"
-                    matches = re.findall(regex1, query, re.MULTILINE)
-
-                    if(len(matches)>0):
-                        if(named_graph_used is None):
-                            named_graph_used = matches[0].replace("GRAPH", "").strip()
-
-                        if(pattern_replace in query):
-                            regex2 = r" GRAPH \$INFERENCE_NS\$ {([^}]+)}"
-                            added_ = re.findall(regex2, query, re.MULTILINE)
-                            added = added_[0].strip()
-                            query = query.replace(pattern_replace, named_graph_used)
-
-                        else:
-                            regex2 = r" GRAPH " + named_graph_used + " {([^}]+)}"
-                            added_ = re.findall(regex2, query, re.MULTILINE)
-                            added = added_[0].strip()
-
-
-
-                        count_query = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX ks: <http://ns.inria.fr/kstor/#> SELECT (COUNT(*) as ?Triples)  FROM " + named_graph_used + " { " + added + " } "
-                        print(count_query)
-                        res_count = ct.sparql_service_to_int(sparql_ep, count_query)
-
-                        print(">>>>>>>>>>>", res_count, " before "+args.mode)
-                        print(query)
-                        res = ct.sparql_service_update(sparql_ep, query)
-                        #splited = query.split("WHERE")
-                        #delete_query = splited[0] + "WHERE {" + added + "}"
-                        #print("DELTE")
-                        #print(delete_query)
-                        #res = ct.sparql_service_update(sparql_ep, delete_query)
-
-                        res_count = ct.sparql_service_to_int(sparql_ep, count_query)
-                        print(">>>>>>>>>>>", res_count, " after  "+args.mode)
+                        # Extract content from explicit graph name
+                        regex2 = r" GRAPH " + named_graph_used + " {([^}]+)}"
+                        added_ = re.findall(regex2, query, re.MULTILINE)
+                        added = added_[0].strip()
+                    
+                    # Count triples before operation for verification
+                    count_query = f"""
+                    PREFIX dbo: <http://dbpedia.org/ontology/>
+                    PREFIX ks: <http://ns.inria.fr/kstor/#>
+                    SELECT (COUNT(*) as ?Triples)
+                    FROM {named_graph_used}
+                    {{ {added} }}
+                    """
+                    
+                    print(f"Counting triples before {args.mode} operation...")
+                    res_count = ct.sparql_service_to_int(sparql_ep, count_query)
+                    print(f"Found {res_count} triples before {args.mode} operation")
+                    
+                    # Execute the update query
+                    print("Executing update query...")
+                    res = ct.sparql_service_update(sparql_ep, query)
+                    
+                    # Count triples after operation for verification
+                    res_count = ct.sparql_service_to_int(sparql_ep, count_query)
+                    print(f"Found {res_count} triples after {args.mode} operation")
     else:
-        logging.error("Rules file path not provided AND mode must be equals to 'insert' or 'delete'")
-
+        logging.error("Rules file path not provided or invalid mode. Mode must be 'insert' or 'delete'.")
