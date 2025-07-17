@@ -1,8 +1,12 @@
 # 👶 Augmentation strategies
 
+We detail in this document the algorithms implemented to reach a **sufficient exposure per property**
+
 ## 1. Template-based synthetic generation
 
 ### KR0 - same pattern level remplacement
+
+#### Pseudo-Algo
 **Input:** 
 * a set $Seed_{data}$ containing $n$ entities
 * a prefined the number $N$ of synthetic examples that must be generated
@@ -40,6 +44,7 @@
 ---
 ### KR1 - upper pattern level remplacement
 
+#### Pseudo-Algo
 **Input:** 
 * a set $Seed_{data}$ containing $n$ entities
 * a prefined the number $N$ of synthetic examples that must be generated
@@ -70,7 +75,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └──  Add $(e_i,e_j,\hat{g_i},\hat{w_i})$ in $Synth_{data}$ <br>
 --**End**<br>
 
-## 2. Sufficient Exposure Sampling 
+## 2. Optimal Sufficient Exposure sampling
+
+### Pseudo-Algo
 **Input:** 
 * a shape $s^*$ containing $p_n$ properties
 * a sufficient exposure threshold defined as $\lambda=1000$
