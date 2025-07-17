@@ -42,8 +42,18 @@ This script check if the values of the datatype properties objects could be foun
 We can then count the number of entities in $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$ [ with a SPARQL query](../corese/sparql_queries/get_found_in_abstract_nb.sparql)
 
 #### 3-2: Based on the Markdown abstracts and effective for both object and datatypes properties
+![kstor](../img/Wikicheck(2).png)
 
-To make possible the Wikicheck of Object Properties we propose to rely the verification on a simplified Markdown version of the  
+To make possible the Wikicheck of Object Properties we propose to rely the verification on a simplified Markdown version of the Wikipedia page.
+This process is depending of two steps :
+1. the retrieval of the Wikipedia Markdown version of the abstracts and the recording of them in the KG:
+```
+ python KD3-21_RetrieveWikiMD.py -s SHAPE_PATH
+```
+2. The wikicheck is then applied on the retrieved Markdown articles :
+```
+ python KD3-21_RetrieveWikiMD.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
+```
 
 ### KD-STEP 4 - The exemples-specific patterns 
 This script is used to analyse the example-specific patterns set $\mathbb{P}_{\mathcal{K}}(s^*)$ 
@@ -59,7 +69,7 @@ This script was used to create $DR^0$, $DR^1$, $DR^2$
 ```
 A sample can then be described with a [SPARQL query](./corese/sparql_queries/get_sample_nli_stats.sparql)
 
-## KD-STEP 6-  Export a TurtleLight dataset for training a SLM
+### KD-STEP 6-  Export a TurtleLight dataset for training a SLM
 Export a previously create sample in TurtleLight datasets splitted in train/test/eval  
 ```
  python KD6_createTurtleLightdatasetFromNG.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
@@ -69,6 +79,8 @@ examples of samples produced is given in [DS_turtleS_0datatype_1inLine_1facto_tr
 
 
 ## Light Active SLM learning
+
+> This part is specific to the work [REF]
 
 ![kstor](../img/ActiveLearningFinal.png)
 ### STEP LA0- Train a model
