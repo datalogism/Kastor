@@ -1,4 +1,4 @@
-# CORESE KB 
+# 🌔 CORESE KB Init.
 
 Our framework is based on [Corese](https://github.com/Wimmics/corese), a Software platform for the Semantic Web of Linked Data. 
 The software could be deployed locally via a  [JAR software](https://github.com/Wimmics/corese/releases/download/release-4.5.0/corese-server-4.5.0.jar) and the persistancy of the KB is allowed by the tdbloader of Jena (available in this directory).
@@ -34,7 +34,7 @@ And then run the CORESE datastore with
 ### First version 
 In the [Kastor datadump available on Zenodo](https://zenodo.org/records/14382674) the data were organised as follow :
 * The default named graph is the Jena default one :  <urn:x-arq:DefaultGraph>
-   -> $\mathcal{K}_{\mathbb{P}(s^*)}$ graphs are tagged with a uuid (see [related SPARQL query](./sparql_queries/get_sample_K_P_s_star.sparql))
+   -> $\mathcal{K}_{\mathbb{P}(s^*)}$ graphs are tagged with a uuid (see [related SPARQL query](./corese/sparql_queries/get_sample_K_P_s_star.sparql))
 * The graphs related to the distillation process are:
     * http://ns.inria.fr/kstor/#dates_inferenced > corresponding to $\mathcal{G}^{\mathcal{R}\models}_{\mathbb{P}(s^*)}$
     * http://ns.inria.fr/kstor/#found_in_abtract > corresponding to $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$
@@ -68,4 +68,4 @@ http://ns.inria.fr/kstor/ <br>
 
 ## Querying the KB
 
-A set of basics SPARQL queries are given in [sparql_queries](./sparql_queries/) dir
+A set of basics SPARQL queries are given in [sparql_queries](./corese/sparql_queries/) dir

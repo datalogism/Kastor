@@ -23,22 +23,24 @@ pip install -r requirements.txt
 Kastor/
 ├── corese/           # Corese RDF engine and knowledge base loader
 ├── kstor/            # Knowledge distillation and SHACL-based filtering
-├── slm/              # Training routines and model logic
-├── shapes/           # SHACL templates defining extraction targets
-├── data/             # Distilled datasets
-├── models/           # Saved model checkpoints
-├── notebooks/        # Evaluation and demo notebooks
+├── slm/              # Finetuning material
+├── shapes/           # SHACL templates used for extraction
+├── XP_results/       # Experimental outputs
+├── doc/              # Documentation
+├── img/              # Illustrations
 └── README.md         # This file
 ```
 
 ---
 
 ## 🧠 How It Works
-1.  **Knowledge Base init.** — Initialize your KB with DBpedia data [corese instructions](./corese/)
-2. **Shape Definition** — Describe your desired RDF structure in a SHACL shape file.
-3. **Knowledge Distillation** — Filter and align text and RDF from a knowledge base using the SHACL shape. [code directory](./kstor/)
-4. **SLM Training** — Train a language model on these examples to learn text-to-RDF mappings.
-5. **Testing & Inference** — Use the trained model to extract RDF triples from new text.
+1.  **Knowledge Base init.** — [Initialize your KB with DBpedia data](./doc/KB_init.md)
+2. **Shape Definition** — [Describe your desired RDF structure in a SHACL shape file.](./doc/ShapeDefinition.md)
+3. **Knowledge Distillation** — [Filter and align text and RDF from a knowledge base using the SHACL shape.](./doc/KnowledgeDistill.md)
+4. **Data Augmentation** — [Augment your knowledge base to ensure sufficient exposure of rare properties](./doc/AugStrategies.md)
+5. **SLM Training** — [Train a language model distilled and enrich models to learn text-to-RDF extractor](./doc/SLMFinetuning)
+4. **Light Active Learning** — [Use your models to create gold dataset](./doc/LightActiveLearning.md)
+5. **Testing & Inference** — [Use the trained model to extract RDF triples from new text](Test_models.ipynb)
 
 ---
 ## 🛠 Requirements
