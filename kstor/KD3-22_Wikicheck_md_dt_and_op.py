@@ -1,13 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Sep 27 10:35:40 2024
+KD3-22_Wikicheck_md_dt_and_op.py
 
+This module provides functions to analyze and process RDF named graphs, specifically focusing on
+entities that need processing based on their presence in different named graphs and their properties.
+
+Key functionalities:
+- Count entities that need processing
+- Retrieve subjects for processing
+- Get statistics about named graphs
+- Process person entities with specific properties
 """
 
 from rdflib import Graph
 from argparse import ArgumentParser
 
+# Import local modules
 import src.triple_shapes as ts
 import src.rdf_synthax_fct as rs
 import src.corese_tools as ct
@@ -16,9 +25,39 @@ import sys
 from SPARQLWrapper import JSON, POST, POSTDIRECTLY, SPARQLWrapper
 
 #### NEED TO BE MORE GENERAL HERE LIMITED TO INFERENCES
-def getNbEntToDO(sparql_ep,target_ng,found_ng,abstract_ng):
+def getNbEntToDO(sparql_ep, target_ng, found_ng, abstract_ng):
+    """
+    Counts the number of entities in the target named graph that need to be processed.
+    An entity needs processing if:
+    1. It exists in the target named graph but not in the 'found' named graph
+    2. It has a non-empty abstract in the abstract named graph
+    
+    Args:
+        sparql_ep (str): SPARQL endpoint URL
+        target_ng (str): Target named graph URI
+        found_ng (str): Named graph URI where already processed entities are stored
+        abstract_ng (str): Named graph URI containing entity abstracts
+        
+    Returns:
+        int: Number of entities that need to be processed
+    """
     sparql = SPARQLWrapper(sparql_ep)
-    query = "select  (COUNT(DISTINCT ?s) as ?nb)  FROM <"+target_ng+"> WHERE  {   ?s ?p ?o . FILTER NOT EXISTS { GRAPH  <"+found_ng+"> { ?s ?p ?o }  } . FILTER EXISTS { GRAPH  <"+abstract_ng+"> { ?s ?p2 ?o2. FILTER(?o2 != '' ). } }. }"
+    # Query to find entities in target graph that aren't in found graph but have abstracts
+    query = """
+    SELECT (COUNT(DISTINCT ?s) as ?nb) 
+    FROM <{target_ng}> 
+    WHERE {  
+        ?s ?p ?o .
+        FILTER NOT EXISTS { 
+            GRAPH <{found_ng}> { ?s ?p ?o } 
+        } . 
+        FILTER EXISTS { 
+            GRAPH <{abstract_ng}> { 
+                ?s ?p2 ?o2. 
+                FILTER(?o2 != '') 
+            } 
+        }
+    }""".format(target_ng=target_ng, found_ng=found_ng, abstract_ng=abstract_ng)
 
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)

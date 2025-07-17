@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
         size_sample=int(args.size_sample)
         existing_sample=None
-        existing_sample="http://ns.inria.fr/kstor/samples/PersonShape_op/abtract_md/sample_0"
+        #existing_sample="http://ns.inria.fr/kstor/samples/PersonShape_op/abtract_md/sample_0"
         ####################### REVOIR INTEGRATION NAMED GRAPH PRECEDANT
         other_samples=[]
         if(existing_sample==None):
