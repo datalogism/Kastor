@@ -187,7 +187,6 @@ if __name__ == '__main__':
                     else:
                         print("PRB WITH SUBJ")
                 nb_new = get_NBentInNG(sparql_ep, abstract_ng)
-                # print(">>>>>>>>>>>>>>> TODO ?",to_do)
                 print(">>>>>>>>>>>>>>> nb_new ?", nb_new)
                 offset += limit
                 nb_loop += 1
