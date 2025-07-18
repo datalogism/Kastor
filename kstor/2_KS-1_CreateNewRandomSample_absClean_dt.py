@@ -24,15 +24,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.shape_file_path and args.size_sample:
-        shape = Graph()
-        shape.parse(args.shape_file_path)
-
+        # Focused Named-graph
         sparql_ep = 'http://localhost:8080/sparql'
-        search_ng = args.searchspace_namedgraph
+        existing_sample = args.existing_sample
         found_ng = "http://ns.inria.fr/kstor/#found_in_abtract"
 
-
-        print(">> get usefull data")
+        # Extract usefull information from shape
+        shape = Graph()
+        shape.parse(args.shape_file_path)
         namespaces = shape.namespaces()
         prop_focus = ts.getShapeProp(shape)
         dict_simply_real={}
@@ -42,8 +41,8 @@ if __name__ == '__main__':
         type_triples = ts.getShapeType(shape)
 
         size_sample=int(args.size_sample)
-        existing_sample=None
-        ####################### REVOIR INTEGRATION NAMED GRAPH PRECEDANT
+
+        # Name new sample depending of conventions
         other_samples=[]
         if(existing_sample==None):
             ########## SAMPLE NAME
@@ -63,19 +62,11 @@ if __name__ == '__main__':
 
         print("================================ CURRENT SAMPLE :",sample_ng)
         print("other samples:",other_samples)
+        # exclude already used entities
         done_list=cs.get_Exlude_Ent_NG(other_samples,sparql_ep)
-        #
-        ## CLEAR SAMPLE
-        #sample_ng="http://ns.inria.fr/kstor/samples/sample_1"
-       # sample_ng="http://ns.inria.fr/kstor/samples/"
-       # query="SELECT * FROM <"+sample_ng+"> {?s ?p ?o} LIMIT 10"
-        #res=ct.get_sparql_dataframe(sparql_ep,query)
-        #query="PREFIX ks: <http://ns.inria.fr/kstor/#> DROP GRAPH <"+sample_ng+">"
-        #res=ct.sparql_service_update(sparql_ep,query)
 
         limit=size_sample
         offset=0
-
         query="SELECT (COUNT(DISTINCT ?s) as ?nb) FROM <"+sample_ng+"> WHERE {?s ?p ?n. ?n rdf:value ?o. }"
         SAMPLE_len=ct.sparql_service_to_int(sparql_ep, query)
         SAMPLE_len=int(SAMPLE_len["nb"])

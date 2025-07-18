@@ -1,11 +1,25 @@
 """
 1_KD-1_initializeKastorFromShape.py
 
-This module is responsible for initializing KaSTOR by loading and processing shape files into a SPARQL endpoint.
-It handles the creation of new shape namespaces and manages the storage of shape definitions.
+This script initializes the KASTOR (Knowledge Storage) system by processing SHACL shape files
+and loading them into a SPARQL endpoint. It serves as the foundation for defining and managing
+the data structure and constraints within the KASTOR knowledge graph.
+
+Key responsibilities:
+- Parses SHACL shape definitions from TTL files
+- Establishes shape namespaces and their relationships
+- Loads shapes into the target SPARQL endpoint
+- Sets up the necessary graph structure for KASTOR operations
+- Handles shape versioning and updates
+
+Usage Example:
+    python 1_KD-1_initializeKastorFromShape.py \
+        --shape_file_path /path/to/shapes/shapes.ttl
+
+Required Arguments:
+    --shape_file_path   Path to the SHACL shape file (.ttl)
 """
 
-import sys
 from argparse import ArgumentParser
 import logging
 

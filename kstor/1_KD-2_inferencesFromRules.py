@@ -1,8 +1,41 @@
 """
 1_KD-2_inferencesFromRules.py
 
-This module handles the application of inference rules to RDF data stored in a SPARQL endpoint.
-It can insert or delete inferred triples based on rules defined in XML files.
+This script applies rule-based inference to RDF data in a SPARQL endpoint, enabling the
+derivation of implicit knowledge from explicit data. It processes inference rules defined
+in XML format to either generate new triples or remove previously inferred statements.
+
+Key features:
+- Processes rule definitions from XML files following the Corese rule format
+- Supports both insert and delete operations for managing inferred triples
+- Integrates with SPARQL endpoints for efficient rule execution
+- Handles namespace management for consistent rule application
+
+Typical use cases include:
+- Materializing inferred properties for improved query performance
+- Cleaning up previously inferred data when source data changes
+- Applying domain-specific reasoning over RDF datasets
+
+Usage Examples:
+1. Apply inference rules to generate new triples:
+   python 1_KD-2_inferencesFromRules.py -r path/to/rules.xml -m insert
+
+2. Remove previously inferred triples:
+   python 1_KD-2_inferencesFromRules.py -r path/to/rules.xml -m delete
+
+3. Process rules for a specific shape file:
+   python 1_KD-2_inferencesFromRules.py -s path/to/shape.ttl -r path/to/rules.xml -m insert
+
+Rule XML Format:
+<rule>
+    <body>
+        ?x rdf:type ex:Person .
+        ?x ex:hasParent ?y .
+    </body>
+    <head>
+        ?y rdf:type ex:Parent .
+    </head>
+</rule>
 """
 
 import re

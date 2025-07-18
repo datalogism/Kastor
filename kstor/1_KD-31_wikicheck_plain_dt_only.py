@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 1_KD-31_wikicheck_plain_dt_only.py
 
@@ -7,7 +5,20 @@ This script processes RDF shape files and checks for property values in abstract
 It compares property values from a knowledge graph with values found in entity abstracts,
 and stores the results in a named graph for further analysis.
 
-Created on Fri Sep 27 10:35:40 2024
+Usage Example:
+    python 1_KD-31_wikicheck_plain_dt_only.py \
+        --shape_file_path "/path/to/shape_file.ttl" \
+        --searchspace_namedgraph "http://example.org/knowledge-graph"
+
+Arguments:
+    -s, --shape_file_path:       Path to the RDF shape file (.ttl) containing property definitions
+    -ng, --searchspace_namedgraph: Named graph URI to search for entities
+                               (default: "http://ns.inria.fr/kstor/#inferences")
+
+Dependencies:
+    - rdflib: For RDF graph processing
+    - Custom modules: triple_shapes, rdf_synthax_fct, corese_tools, class_signatures
+
 """
 
 from rdflib import Graph
@@ -19,14 +30,13 @@ import src.rdf_synthax_fct as rs
 import src.corese_tools as ct
 import src.class_signatures as cs
 
-import sys
 
 if __name__ == '__main__':
     # Set up command line argument parsing
     parser = ArgumentParser(description='Process RDF shapes and check property values in abstracts.')
     parser.add_argument("-s", "--shape_file_path", default=None,
                        help="Path to the RDF shape file containing property definitions")
-    parser.add_argument("-ng", "--searchspace_namedgraph", 
+    parser.add_argument("-ng", "--searchspace_namedgraph",
                        default="http://ns.inria.fr/kstor/#inferences",
                        help="Named graph URI to search for entities")
     args = parser.parse_args()
@@ -70,11 +80,11 @@ if __name__ == '__main__':
                        WHERE {{ ?s ?p ?o }}"""
             res = ct.get_sparql_dataframe(sparql_ep, query)
             print("BEFORE>", res)
-            
+
             # Clear the found_ng graph
             query = f"PREFIX ks: <http://ns.inria.fr/kstor/#> DROP GRAPH {found_ng}"
             res = ct.sparql_service_update(sparql_ep, query)
-            
+
             # Count entities after cleaning
             query = f"""PREFIX dbo: <http://dbpedia.org/ontology/> 
                        PREFIX ks: <http://ns.inria.fr/kstor/#> 
@@ -92,14 +102,14 @@ if __name__ == '__main__':
         offset = 0
         limit = 100  # Process entities in batches of 100
         done = []  # Track processed entities
-        
+
         # Get total number of entities that need processing
         to_do = cs.get_NbEntitiesNGToDo(search_ng, found_ng, sparql_ep)
 
         # Main processing loop
         while count_ent_checked != to_do:
             print(">>>>>>>>>>>>>>>>>>>>>LOOP :", nb_loop, ">", count_ent_checked, "/", to_do)
-            
+
             # Get a batch of entities to process
             sample = cs.get_sampleNG_to_update(search_ng, found_ng, sparql_ep, limit, offset)
 
@@ -107,15 +117,15 @@ if __name__ == '__main__':
             for index, row in sample.iterrows():
                 # Clean the entity URI
                 uri = rs.cleanEntURL(row["s"])
-                
+
                 # Track processed entities
                 if uri not in done:
                     count_ent_checked += 1
                     done.append(uri)
-                
+
                 # Get the abstract for the current entity
                 abs_ = cs.get_abstract(row["s"], sparql_ep)
-                
+
                 if len(abs_) > 0:
                     abstract = abs_["abstract"][0]
                     current_prop = row["p"]
@@ -124,12 +134,12 @@ if __name__ == '__main__':
                     # Clean the property value
                     if val not in ["nan", "NaN", ""]:
                         val = rs.cleanTxt(val)
-                    
+
                     # Check if the property value appears in the abstract
                     if val != "":
                         val = rs.cleanTxt(val)
                         found = ts.find_in_abstract(abstract, current_prop, val, type_prop[current_prop])
-                        
+
                         # If found, store the result in the found_ng graph
                         if found:
                             # Prepare the data for insertion
@@ -143,7 +153,7 @@ if __name__ == '__main__':
                             # Escape quotes in the value for SPARQL query
                             if '"' in val or "'" in val:
                                 val = val.translate(str.maketrans({"'": r"\'", '"': r'\"'}))
-                            
+
                             # Insert the found property value into the results graph
                             query = f"""PREFIX dbo: <http://dbpedia.org/ontology/> 
                                        PREFIX ks: <http://ns.inria.fr/kstor/#> 
@@ -153,10 +163,10 @@ if __name__ == '__main__':
                                            }}
                                        }}"""
                             res = ct.sparql_service_update(sparql_ep, query)
-            
+
             # Update the count of remaining entities to process
             to_do = cs.get_NbEntitiesNGToDo(search_ng, found_ng, sparql_ep)
             nb_loop += 1  # Increment loop counter
-            
+
             # Update offset for the next batch
             offset += limit

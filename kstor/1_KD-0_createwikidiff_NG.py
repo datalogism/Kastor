@@ -1,13 +1,36 @@
 """
 1_KD-0_createwikidiff_NG.py
 
-Script to tag new Wikipedia articles and insert them into a knowledge graph
->>>>>>>>>>>>>>>>>>>>>> IMPORTANT:
-Chose your turtle dump from https://databus.dbpedia.org/dbpedia :
-old_wiki_ttl_path
-new_wiki_ttl_path
-class_ttl_path
-And select the focus class (class_focus) you want to process from the DBpedia Ontology
+This script identifies new Wikipedia articles by comparing two DBpedia dumps and extracts
+them into a separate named graph. It's particularly useful for tracking new content
+in Wikipedia over time and processing it for knowledge graph applications.
+
+Prerequisites:
+- Download required dumps from DBpedia Databus (https://databus.dbpedia.org/)
+- The script requires a running SPARQL endpoint (default: http://localhost:8080/sparql)
+- Ensure the instance-types file matches the language of your Wikipedia dumps
+Key features:
+- Compares two Wikipedia dumps to find new articles
+- Filters articles by specified DBpedia ontology class (e.g., Person, Place)
+- Outputs new articles to a specified named graph
+- Uses DBpedia's instance-type mappings for accurate classification
+
+Usage Example:
+    python 1_KD-0_createwikidiff_NG.py \
+        --old_wiki_ttl_path "/path/to/old_wiki_dump.ttl" \
+        --new_wiki_ttl_path "/path/to/new_wiki_dump.ttl" \
+        --class_focus "Person" \
+        --class_ttl_path "/path/to/instance-types_lang=en_transitive.ttl" \
+        --new_articles_ng "http://example.org/kstor/wikinew/"
+
+Arguments:
+    -old/--old_wiki_ttl_path: Path to the older Wikipedia dump file (.ttl format)
+    -new/--new_wiki_ttl_path: Path to the newer Wikipedia dump file (.ttl format)
+    -cf/--class_focus: DBpedia ontology class to filter by (e.g., 'Person', 'Place', 'Organisation')
+    --class_ttl_path: Path to the DBpedia instance types file (usually instance-types_lang=en_transitive.ttl)
+    -ng/--new_articles_ng: Named graph URI where new articles will be stored
+
+
 """
 
 from argparse import ArgumentParser
