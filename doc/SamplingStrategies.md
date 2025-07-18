@@ -1,6 +1,8 @@
-# 📶 Stratified Sampling 
+# 📶 Sampling Strategies
 
-## PseudoAlgo
+## Stratified Sampling
+
+### PseudoAlgo
 **Input:** 
 * a optimal shape $s^*$
 * a predefined sample size $N$
