@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-1_KD-31_Wikicheck_plain_dt_only.py
+1_KD-31_wikicheck_plain_dt_only.py
 
 This script processes RDF shape files and checks for property values in abstracts of entities.
 It compares property values from a knowledge graph with values found in entity abstracts,
@@ -36,29 +36,27 @@ if __name__ == '__main__':
         # Parse the RDF shape file
         shape = Graph()
         shape.parse(args.shape_file_path)
-
         shape_name = args.shape_file_path.split("/")[-1].replace(".ttl", "")
-        # SPARQL endpoint configuration
-        sparql_ep = 'http://localhost:8080/sparql'
-        search_ng = args.searchspace_namedgraph
-        #found_ng = "http://ns.inria.fr/kstor/#found_in_abtract"
-
-        found_ng = "http://ns.inria.fr/kstor/wikichecked/" + shape_name + "/abtract_clean"
-
-        # Get property information from the shape file
-        print(">> get useful data")
         namespaces = shape.namespaces()
         prop_focus = ts.getShapeProp(shape)
-        
+
         # Create a mapping between simplified and full property names
         dict_simply_real = {}
         for p in prop_focus:
             dict_simply_real[ts.getSimplifiedProp(p)] = p
-            
+
         # Get property types and type triples from the shape
         type_prop = ts.getShapePropWithType(shape)
         type_triples = ts.getShapeType(shape)
-        
+
+
+        # SPARQL endpoint configuration
+        sparql_ep = 'http://localhost:8080/sparql'
+        # Define Named graph to use
+        search_ng = args.searchspace_namedgraph
+        found_ng = "http://ns.inria.fr/kstor/wikichecked/" + shape_name + "/abtract_clean"
+
+
         # Clean flag - if True, will clear the found_ng graph before processing
         clean = False
 

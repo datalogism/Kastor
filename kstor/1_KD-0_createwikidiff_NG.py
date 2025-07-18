@@ -1,11 +1,15 @@
-#!/usr/bin/env python3
-# Script to tag new Wikipedia articles and insert them into a knowledge graph
-# >>>>>>>>>>>>>>>>>>>>>> IMPORTANT:
-# Chose your turtle dump from https://databus.dbpedia.org/dbpedia :
-# old_wiki_ttl_path
-# new_wiki_ttl_path
-# class_ttl_path
-# And select the focus class (class_focus) you want to process from the DBpedia Ontology
+"""
+1_KD-0_createwikidiff_NG.py
+
+Script to tag new Wikipedia articles and insert them into a knowledge graph
+>>>>>>>>>>>>>>>>>>>>>> IMPORTANT:
+Chose your turtle dump from https://databus.dbpedia.org/dbpedia :
+old_wiki_ttl_path
+new_wiki_ttl_path
+class_ttl_path
+And select the focus class (class_focus) you want to process from the DBpedia Ontology
+"""
+
 from argparse import ArgumentParser
 import src.corese_tools as ct
 import re

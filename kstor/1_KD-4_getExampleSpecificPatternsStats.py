@@ -25,17 +25,15 @@ if __name__ == '__main__':
     parser.add_argument("-ng", "--named_graph_sample", default=None)
     args = parser.parse_args()
     if args.shape_file_path and args.output_dir:
+        dir_out=args.output_dir
         shape = Graph()
         shape.parse(args.shape_file_path)
         sparql_ep = 'http://localhost:8080/sparql'
 
-        dir_out=args.output_dir
         found_ng=args.named_graph_sample
-        #dir_root="/user/home/Desktop/"
-        #found_ng="http://ns.inria.fr/kstor/#found_in_abtract"
+
         default_ng="<urn:x-arq:DefaultGraph>"
-        # "uniform" / "inverse freq sampl"
-        print(">> get usefull data")
+
         namespaces = shape.namespaces()
         prop_focus = ts.getShapeProp(shape)
         prop_focus2=[]
@@ -44,10 +42,9 @@ if __name__ == '__main__':
             dict_simply_real[ts.getSimplifiedProp(p)]=p
         type_prop = ts.getShapePropWithType(shape)
         type_triples = ts.getShapeType(shape)
-
-
         shape_name = args.shape_file_path.split("/")[-1].replace(".ttl", "")
-        #found_ng = "http://ns.inria.fr/kstor/wikichecked/" + shape_name + "/abtract_md"
+
+
         query = "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX ks: <http://ns.inria.fr/kstor/#> SELECT  (COUNT(DISTINCT ?s) as ?nb) FROM <" + found_ng + "> WHERE { ?s ?p ?o }"
         res = ct.get_sparql_dataframe(sparql_ep, query)
         print("BEFORE>", res)
@@ -113,8 +110,4 @@ if __name__ == '__main__':
 
             print(dir_out+'RDF_stats_sample_')
 
-            class_real=[k for k in class_sign_freq.keys() if class_sign_freq[k]["nb_real"]>0]
-
-            #if(sampling_technic=="uniform"):
-            proba_classes=[1/len(class_real) for k in class_real if class_sign_freq[k]["nb_real"]>0]
 

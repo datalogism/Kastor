@@ -5,7 +5,7 @@
 
 This script retrieves Wikipedia markdown abstracts for entities in a knowledge graph.
 It connects to a SPARQL endpoint, finds entities without markdown abstracts, fetches
-the markdown from Wikipedia, and stores it back in the knowledge graph.
+the markdown from Wikipedia API, and stores it back in the knowledge graph.
 
 Created on Fri Sep 27 10:35:40 2024
 """

@@ -21,8 +21,6 @@ if __name__ == '__main__':
     parser.add_argument("-es", "--existing_sample", default=None)
     ## EXISTING SAMPLE MUST LOOK LIKE
     # "http://ns.inria.fr/kstor/samples/sample_0"
-    # TO DO CHOICE OF THE DISTRIBUTION
-    # "uniform" / "inverse freq sampl"
     args = parser.parse_args()
 
     if args.shape_file_path and args.size_sample:

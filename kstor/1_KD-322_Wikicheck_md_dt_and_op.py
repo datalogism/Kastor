@@ -10,7 +10,7 @@ Key functionalities:
 - Count entities that need processing
 - Retrieve subjects for processing
 - Get statistics about named graphs
-- Process person entities with specific properties
+- Wikicheck the data related to a given SHACL shape
 """
 
 from rdflib import Graph
@@ -21,7 +21,6 @@ import src.triple_shapes as ts
 import src.rdf_synthax_fct as rs
 import src.corese_tools as ct
 import src.class_signatures as cs
-import sys
 from SPARQLWrapper import JSON, POST, POSTDIRECTLY, SPARQLWrapper
 
 #### NEED TO BE MORE GENERAL HERE LIMITED TO INFERENCES
@@ -158,45 +157,38 @@ if __name__ == '__main__':
 
     # to_do=getNbEntToDO(sparql_ep,search_ng,current_ng)
     if args.shape_file_path and args.searchspace_namedgraph:
+        ## Get shape data
         shape = Graph()
         shape.parse(args.shape_file_path)
         sparql_ep = 'http://localhost:8080/sparql'
+
         search_ng=args.searchspace_namedgraph
         shape_name = args.shape_file_path.split("/")[-1].replace(".ttl", "")
-        default_graph="urn:x-arq:DefaultGraph"
-        inf_graph="http://ns.inria.fr/kstor/inferences/" + shape_name
-        #search_space=[default_graph ]
-        search_space = [inf_graph,default_graph]
-        #search_space = [default_graph]
-        shape_name = args.shape_file_path.split("/")[-1].replace(".ttl", "")
-        found_ng = "http://ns.inria.fr/kstor/wikichecked/" + shape_name + "/abtract_md"
-        #print("DELETE")
-        #query_delete = "DROP GRAPH <" + found_ng+">"
-        #res = ct.sparql_service_update(sparql_ep, query_delete)
-
         type_triples = ts.getShapeType(shape)
         type_triples_name = type_triples.replace("http://dbpedia.org/ontology/", "")
-        ns_class_ids = "http://ns.inria.fr/kstor/class_randoms_id/" + type_triples_name
-        abstract_ng = "http://ns.inria.fr/kstor/wiki_md/" + type_triples_name
-        #abstract_ng = "http://ns.inria.fr/kstor/wiki_md/Person"
-
-        # found_ng_0= "http://ns.inria.fr/kstor/#found_in_abtract"
-        # abstract_ng="http://ns.inria.fr/kstor/#wiki_md_corrected"
-        # "uniform" / "inverse freq sampl"
-        print(">> get usefull data")
         namespaces = shape.namespaces()
         prop_focus = ts.getShapeProp(shape)
         dict_simply_real = {}
         for p in prop_focus:
             dict_simply_real[ts.getSimplifiedProp(p)] = p
         type_prop = ts.getShapePropWithType(shape)
-        type_triples = ts.getShapeType(shape)
+
+        #### Named graph definition
+        default_graph="urn:x-arq:DefaultGraph"
+        inf_graph="http://ns.inria.fr/kstor/inferences/" + shape_name
+        found_ng = "http://ns.inria.fr/kstor/wikichecked/" + shape_name + "/abtract_md"
+        ns_class_ids = "http://ns.inria.fr/kstor/class_randoms_id/" + type_triples_name
+        abstract_ng = "http://ns.inria.fr/kstor/wiki_md/" + type_triples_name
+
+        search_space = [inf_graph, default_graph]
+
         clean = False
         nb_in_found_ng = get_NBentInNG(sparql_ep, found_ng)
         print(">>>>>>>>>>nb_in_found_ng:", nb_in_found_ng)
         nb_in_abstract_ng = get_NBentInNG(sparql_ep, abstract_ng)
         print(">>>>>>>>>>nb_in_abstract_ng:", nb_in_abstract_ng)
         print("INSERT IN >",found_ng)
+
         for search_ng in search_space:
 
             print("===============================CURRENT SEARCH NG>",search_ng)
@@ -225,31 +217,17 @@ if __name__ == '__main__':
                     done.append(uri)
                     count_ent_checked+=1
                     data_sbj=None
-################################ A DECOMM
-                  #  if("inference" in search_ng):
-                   #     print("ICI")
-                        #cs.get_NamedGraphData(row["s"], search_ng, type_triples, prop_focus, sparql_ep)
-                    #    data_sbj=cs.get_NamedGraphData(uri,search_ng,prop_focus,sparql_ep).to_dict('dict')
-                    #else:
-                    #if (search_ng == default_graph):
-                     #   print(uri)
-                      #  print("HEY")
                     data_sbj = cs.get_NamedGraphDataRangeOk(uri, search_ng, type_prop, sparql_ep).to_dict('dict')
                     print(data_sbj)
                     if(data_sbj):
                         abs_=cs.get_abstract_ng(uri,abstract_ng,sparql_ep)
                         if (len(abs_) > 0):
-                            #print(uri)
                             abstract = abs_["abstract"][0]
                             nb_found=0
                             for prop in data_sbj.keys():
                                 values=list(set(data_sbj[prop].values()))
-                                #print(values)
                                 for val in values:
                                     current_prop=dict_simply_real[prop]
-                                    #print(current_prop)
-                                    #if("Year" in prop):
-                                     #   val=str(val).split("-")[0]
                                     if ("Year" in prop and "-" in str(val)):
                                         print("DATE")
                                         val = str(val).split("-")[0][0:4]
@@ -262,12 +240,6 @@ if __name__ == '__main__':
 
                                             print(">>>>>>>>>>>>>>>>>>>>>>>>>FOUND")
                                             nb_found+=1
-                                            #print("====")
-                                            #print(abstract)
-                                            #print("====")
-                                            #print("-------------")
-                                            #print("val>", val)
-                                            #print(found)
                                             temp_new = {"ent_uri": uri, "type": type_prop[current_prop], "prop": current_prop,
                                                         "value": [val]}
                                             if ('"' in val or "'" in val):
@@ -283,10 +255,8 @@ if __name__ == '__main__':
                                             print(res)
                             if nb_found>0:
                                 print("-",uri,">",nb_found)
-                                #print(data_sbj)
                     else:
                         print("PRB WITH SUBJ")
-                #to_do = getNbEntToDO(sparql_ep, search_ng, found_ng, abstract_ng)
                 nb_new=get_NBentInNG(sparql_ep,abstract_ng)
                 #print(">>>>>>>>>>>>>>> TODO ?",to_do)
                 print(">>>>>>>>>>>>>>> nb_new ?",nb_new)
