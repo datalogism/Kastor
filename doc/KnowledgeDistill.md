@@ -3,7 +3,7 @@
 
 ## KD-STEP 0 [OPTIONNAL] - Create a data partition for a specific purpose 
 
-In the case of our last work, we proposed to identify Wikipedia articles published after a given date, see [./KD0_create_wikidiff_NG.py](./KD0_create_wikidiff_NG.py) for details
+In the case of our last work, we proposed to identify Wikipedia articles published after a given date, see [1_KD-0_createwikidiff_NG.py](../kstor/1_KD-0_createwikidiff_NG.py) for details
 
 ## KD-STEP 1-  Tag the entities related to the shape class: 
 
@@ -29,9 +29,9 @@ We proposed in [REF] a new set of rules in [./rules/Person_dataobj_rules_NS.rul]
 
 #### 3-1: Based on the Plain abstracts and only effective for the datatypes properties
 
-This script check if the values of the datatype properties objects could be found in the Wikipedia abstracts, it creates $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$
+The [1_KD-31_wikicheck_plain_dt_only](../kastor/1_KD-31_wikicheck_plain_dt_only.py) script check if the values of the datatype properties objects could be found in the Wikipedia abstracts, it creates $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$
 ```
- python KD3-1_Wikicheck_plain_dt_only.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
+ python 1_KD-31_wikicheck_plain_dt_only.py -s SHAPE_PATH -ng SEARCHSPACE_NAMEDGRAPH
 ```
 We can then count the number of entities in $\mathcal{K}^{\mathcal{WR}\models}_{\mathbb{P}(s^*)}$ [ with a SPARQL query](../corese/sparql_queries/get_found_in_abstract_nb.sparql)
 
@@ -40,9 +40,9 @@ We can then count the number of entities in $\mathcal{K}^{\mathcal{WR}\models}_{
 
 To make possible the Wikicheck of Object Properties we propose to rely the verification on a simplified Markdown version of the Wikipedia page.
 This process is depending of two steps :
-1. the retrieval of the Wikipedia Markdown version of the abstracts and the recording of them in the KG:
+1. the retrieval of the Wikipedia Markdown version of the abstracts and the recording of them in the KG via the [1_KD-321_RetrieveWikiMD](../kastor/1_KD-321_RetrieveWikiMD.py) script:
 ```
- python KD3-21_RetrieveWikiMD.py -s SHAPE_PATH
+ python 1_KD-321_RetrieveWikiMD.py -s SHAPE_PATH
 ```
 2. The wikicheck is then applied on the retrieved Markdown articles :
 ```
@@ -52,7 +52,7 @@ This process is depending of two steps :
 ## KD-STEP 4 - The exemples-specific patterns 
 This script is used to analyse the example-specific patterns set $\mathbb{P}_{\mathcal{K}}(s^*)$ 
 ```
- python KD4_getExampleSpecificPatternsStats.py -s SHAPE_PATH -output output_dir -ng named_graph_sample 
+ python 1_KD-321_RetrieveWikiMD -s SHAPE_PATH -output output_dir -ng named_graph_sample 
 ```
 Result will be saved in [a csv file](../XP_results/XP1/outputs/results_data/RDF_motif_foundNG_for_graph.csv); note that the given script could be also used on a sample level (see results on [DR0](../XP_results/XP1/outputs/results_data/RDF_motif_sample_0.csv),DR2,DR-..) 
 
