@@ -1,5 +1,5 @@
 """
-KD1_initializeKastorFromShape.py
+1_KD-1_initializeKastorFromShape.py
 
 This module is responsible for initializing KaSTOR by loading and processing shape files into a SPARQL endpoint.
 It handles the creation of new shape namespaces and manages the storage of shape definitions.

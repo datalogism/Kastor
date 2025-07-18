@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-KD3-21_RetrieveWikiMD.py
+1_KD-321_RetrieveWikiMD.py
 
 This script retrieves Wikipedia markdown abstracts for entities in a knowledge graph.
 It connects to a SPARQL endpoint, finds entities without markdown abstracts, fetches

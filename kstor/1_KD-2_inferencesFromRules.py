@@ -1,5 +1,5 @@
 """
-KD2_inferencesFromRules.py
+1_KD-2_inferencesFromRules.py
 
 This module handles the application of inference rules to RDF data stored in a SPARQL endpoint.
 It can insert or delete inferred triples based on rules defined in XML files.
@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 query_delete = f"DROP GRAPH {named_graph_used}"
                 res = ct.sparql_service_update(sparql_ep, query_delete)
         
-        # Handle insert mode (or continue with delete mode)
+        # Handle insert mode
         else:
             for rule in rules:
                 if args.mode == "insert":

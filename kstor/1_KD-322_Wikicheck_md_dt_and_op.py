@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-KD3-22_Wikicheck_md_dt_and_op.py
+1_KD-322_Wikicheck_md_dt_and_op.py
 
 This module provides functions to analyze and process RDF named graphs, specifically focusing on
 entities that need processing based on their presence in different named graphs and their properties.

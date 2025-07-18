@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-KD3-1_Wikicheck_plain_dt_only.py
+1_KD-31_Wikicheck_plain_dt_only.py
 
 This script processes RDF shape files and checks for property values in abstracts of entities.
 It compares property values from a knowledge graph with values found in entity abstracts,
