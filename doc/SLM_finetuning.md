@@ -1,4 +1,4 @@
-# SLM finetuning modules
+# ⚙️ SLM finetuning modules
 
 All the current code is extending [12ShadesOfRDFSyntax](https://github.com/datalogism/12ShadesOfRDFSyntax)
 
@@ -31,4 +31,7 @@ it will record the parsing errors, the FP/FN triples underlined during the proce
 ## Finetunings options
 
 - The KASTOR extractor could be obtained using different linearization technics, or models all theses detailed are available in our previous work : [12ShadesOfRDF](https://github.com/datalogism/12ShadesOfRDFSyntax)
-- We recently propose the usage of custom Loss function, all of them are available in 
+- We recently propose the usage of custom Loss function, all of them are available in [custom loss module](https://github.com/datalogism/Kastor/blob/main/slm/src/custom_loss.py), in this file we proposed:
+  - a WeightedLoss
+  - a FocalWeightedLoss
+  - an Anti-focalLoss 
