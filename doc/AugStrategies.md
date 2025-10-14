@@ -23,7 +23,7 @@ In both cases, multiple synthetic abstracts may be created for the same entity f
 To avoid overfitting and ensure uniqueness, we append a random sequence of 8 characters to each DBpedia URI referring to the subject. This modification is applied both in the input prompt and the linearized
 graph during training. 
 ### KR0 - same pattern level remplacement
-![kstor](../img/KR_sameLevel.png)
+![kstor](../img/KR_sameLevel2.png)
 #### Pseudo-Algo
 **Input:** 
 * a set $Seed_{data}$ containing $n$ entities
@@ -61,7 +61,7 @@ graph during training.
 
 ---
 ### KR1 - upper pattern level remplacement
-![kstor](../img/KR_upperLevel.png)
+![kstor](../img/KR_upperLevel2.png)
 
 #### Pseudo-Algo
 **Input:** 
