@@ -3,7 +3,7 @@
 We detail in this document the algorithms implemented to reach a **sufficient exposure per property**
 
 ## 1. Template-based synthetic generation
-  ![kstor](../img/KRmethods.png)
+  
 
 We propose two strategies to augment data related to rare properties. These two strategies rely on the articles in markdown and their associated distilled graph. 
 Both methods use a random set of entities to first construct a set of article templates WT, which are later filled with data from other entities to generate synthetic
@@ -23,7 +23,7 @@ In both cases, multiple synthetic abstracts may be created for the same entity f
 To avoid overfitting and ensure uniqueness, we append a random sequence of 8 characters to each DBpedia URI referring to the subject. This modification is applied both in the input prompt and the linearized
 graph during training. 
 ### KR0 - same pattern level remplacement
-
+![kstor](../img/KR_sameLevel.png)
 #### Pseudo-Algo
 **Input:** 
 * a set $Seed_{data}$ containing $n$ entities
@@ -61,6 +61,7 @@ graph during training.
 
 ---
 ### KR1 - upper pattern level remplacement
+![kstor](../img/KR_upperLevel.png)
 
 #### Pseudo-Algo
 **Input:** 
