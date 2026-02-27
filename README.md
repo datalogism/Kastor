@@ -3,6 +3,7 @@
 
 **Kastor** is a modular framework for extracting RDF triples from unstructured text using shape-aware SLMs (Small Language Models). By combining SHACL shape definitions, a distilled knowledge graph, and active fine-tuning, Kastor builds lightweight, task-specific extractors. It's ideal for applications in semantic web, knowledge graph construction, and structured data mining.
 
+
 ## 🚀 Quick Start
 
 ### 1. Clone and Setup

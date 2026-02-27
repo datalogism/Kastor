@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "timestamp": "2026-02-07T12:56:08.941020",
+    "endpoint": "http://localhost:8080/sparql",
+    "limit": 1,
+    "abstract_source": "wikipedia_md",
+    "entity_types": [
+      "Artist"
+    ]
+  },
+  "classes": {
+    "Artist": {
+      "entity_type": "Artist",
+      "class_uri": "http://dbpedia.org/ontology/Artist",
+      "model_repo": "Datartisan/KastorArtist",
+      "entities_found": 1,
+      "entities_processed": 1,
+      "aggregate": {
+        "count": 1,
+        "avg_graph_correct_expressiveness": 33.33,
+        "avg_extract_vs_init_prop_recall": 16.67,
+        "avg_extract_vs_init_prop_precision": 100.0,
+        "avg_extract_vs_init_prop_f1": 28.57,
+        "avg_extract_vs_init_val_recall": 16.67,
+        "avg_extract_vs_init_val_precision": 100.0,
+        "avg_extract_vs_init_val_f1": 28.57,
+        "avg_extract_vs_correct_prop_recall": 50.0,
+        "avg_extract_vs_correct_prop_precision": 100.0,
+        "avg_extract_vs_correct_prop_f1": 66.67,
+        "avg_extract_vs_correct_val_recall": 50.0,
+        "avg_extract_vs_correct_val_precision": 100.0,
+        "avg_extract_vs_correct_val_f1": 66.67,
+        "avg_coverage": 5.56,
+        "avg_precision": 100.0,
+        "avg_grounding": 100.0
+      },
+      "entity_results": [
+        {
+          "entity_uri": "http://dbpedia.org/resource/Stacey_Fox",
+          "entity_name": "Stacey_Fox",
+          "abstract_md_length": 283,
+          "abstract_clean_length": 223,
+          "raw_output": ":Stacey_Fox a:Artist;:birthDate \"1965-06-21\".",
+          "parsed": true,
+          "graph_init_triples": [
+            [
+              "Stacey_Fox",
+              "birthDate",
+              "1965-06-21"
+            ],
+            [
+              "Stacey_Fox",
+              "instrument",
+              ":Piano"
+            ],
+            [
+              "Stacey_Fox",
+              "background",
+              "non_vocal_instrumentalist"
+            ],
+            [
+              "Stacey_Fox",
+              "birthPlace",
+              ":Ithaca,_New_York"
+            ],
+            [
+              "Stacey_Fox",
+              "birthYear",
+              "1965"
+            ],
+            [
+              "Stacey_Fox",
+              "birthYear",
+              "1965"
+            ],
+            [
+              "Stacey_Fox",
+              "genre",
+              ":World_music"
+            ],
+            [
+              "Stacey_Fox",
+              "genre",
+              ":World_Music"
+            ]
+          ],
+          "graph_correct_triples": [
+            [
+              "Stacey_Fox",
+              "birthDate",
+              "1965-06-21"
+            ],
+            [
+              "Stacey_Fox",
+              "birthYear",
+              "1965"
+            ],
+            [
+              "Stacey_Fox",
+              "birthYear",
+              "1965"
+            ]
+          ],
+          "graph_extract_triples": [
+            [
+              "Stacey_Fox",
+              "type",
+              "Artist"
+            ],
+            [
+              "Stacey_Fox",
+              "birthDate",
+              "1965-06-21"
+            ]
+          ],
+          "comparison": {
+            "graph_init_property_count": 6,
+            "graph_correct_property_count": 2,
+            "graph_extract_property_count": 1,
+            "graph_init_triple_count": 8,
+            "graph_correct_triple_count": 3,
+            "graph_extract_triple_count": 1,
+            "graph_correct_expressiveness": 33.33,
+            "extract_vs_init": {
+              "property_recall": 16.67,
+              "property_precision": 100.0,
+              "property_f1": 28.57,
+              "value_recall": 16.67,
+              "value_precision": 100.0,
+              "value_f1": 28.57
+            },
+            "extract_vs_correct": {
+              "property_recall": 50.0,
+              "property_precision": 100.0,
+              "property_f1": 66.67,
+              "value_recall": 50.0,
+              "value_precision": 100.0,
+              "value_f1": 66.67
+            }
+          },
+          "shacl_valid": true,
+          "statistics": {
+            "coverage": 5.56,
+            "precision": 100.0,
+            "matched_properties": 1,
+            "shape_properties": 18
+          },
+          "grounding": {
+            "grounding_rate": 100.0,
+            "found_count": 1,
+            "total_count": 1
+          }
+        }
+      ],
+      "status": "success"
+    }
+  },
+  "summary": {
+    "classes_evaluated": 1,
+    "total_entities": 1,
+    "avg_graph_correct_expressiveness": 33.33,
+    "avg_extract_vs_init_prop_recall": 16.67,
+    "avg_extract_vs_init_prop_precision": 100.0,
+    "avg_extract_vs_init_prop_f1": 28.57,
+    "avg_extract_vs_init_val_recall": 16.67,
+    "avg_extract_vs_init_val_precision": 100.0,
+    "avg_extract_vs_init_val_f1": 28.57,
+    "avg_extract_vs_correct_prop_recall": 50.0,
+    "avg_extract_vs_correct_prop_precision": 100.0,
+    "avg_extract_vs_correct_prop_f1": 66.67,
+    "avg_extract_vs_correct_val_recall": 50.0,
+    "avg_extract_vs_correct_val_precision": 100.0,
+    "avg_extract_vs_correct_val_f1": 66.67,
+    "avg_coverage": 5.56,
+    "avg_precision": 100.0,
+    "avg_grounding": 100.0
+  }
+}

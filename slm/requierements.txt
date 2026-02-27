@@ -1,8 +1,8 @@
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: linux-64
-_libgcc_mutex=0.1=main
-_openmp_mutex=5.1=1_gnu
+# _libgcc_mutex=0.1=main
+# _openmp_mutex=5.1=1_gnu
 absl-py=2.0.0=pypi_0
 accelerate=0.26.1=pypi_0
 aiohttp=3.8.5=pypi_0
@@ -108,8 +108,8 @@ jupyter-server=2.12.5=pypi_0
 jupyter-server-terminals=0.5.1=pypi_0
 jupyterlab=4.0.10=pypi_0
 jupyterlab-pygments=0.3.0=pypi_0
-jupyterlab-server=2.25.2=pypi_0
-lame=3.100=h7b6447c_0
+# jupyterlab-server=2.25.2=pypi_0
+# lame=3.100=h7b6447c_0
 lcms2=2.12=h3be6417_0
 ld_impl_linux-64=2.38=h1181459_1
 lerc=3.0=h295c915_0
