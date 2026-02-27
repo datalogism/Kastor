@@ -38,6 +38,48 @@ Kastor/
 
 ---
 
+## 🧪 Experimental Results on `dbo:Person`
+
+Both published papers use `dbo:Person` as their main case study, progressively extending the shape from **datatype-only** to **datatype + object properties**.
+
+### Shape configurations
+
+| Shape file | Properties | Type |
+|---|---|---|
+| [`PersonShape_dp.ttl`](./shapes/PersonShape_dp.ttl) | `rdfs:label`, `dbo:birthDate`/`birthYear`, `dbo:deathDate`/`deathYear`, `dbo:alias`, `dbo:birthName` | Datatype only (6 props) |
+| [`PersonShape_op_and_dp.ttl`](./shapes/PersonShape_op_and_dp.ttl) | All above + `dbo:birthPlace`, `dbo:deathPlace`, `dbo:nationality` | Datatype + Object (9 props) |
+
+### Paper 1 — ESWC 2025 (datatype properties only)
+
+Evaluated on 10-fold cross-validation with three model variants. Results averaged over all folds and test samples:
+
+| Model | F1 macro | F1 micro | Accuracy |
+|---|---|---|---|
+| M⁰ (standard sampling) | 78.5% | 94.0% | 94.6% |
+| M^DR0 (no rare-prop augmentation) | 72.3% | 92.0% | 93.3% |
+| M^DR1+ (DR-augmented) | 76.5% | 93.2% | 94.0% |
+
+Key finding: data augmentation strategies targeting rare properties (M^DR1+) improve recall over the baseline (M^DR0) but standard balanced sampling (M⁰) remains competitive.
+
+### Paper 2 — K-CAP 2025 (datatype + object properties)
+
+Extends the shape with object properties (entity links). Results for the best model on the combined DP+OP task:
+
+| Metric | Value |
+|---|---|
+| F1 macro | 69.7% |
+| F1 micro | 88.8% |
+| Accuracy | 89.3% |
+| SHACL validity | 99.7% |
+| RDF triple validity (object props) | 42.8% |
+| Recall (property depth) | 80.0% |
+
+Key finding: adding object properties significantly increases extraction difficulty — the 42.8% RDF validity for object properties reflects the challenge of generating correct entity URIs. Stratified sampling above a property-occurrence threshold was identified as the best training strategy.
+
+Full results are available in [`XP_results/XP1/outputs/results_data/`](./XP_results/XP1/outputs/results_data/).
+
+---
+
 ## 🤗 Using Pre-trained Kastor Models
 
 Pre-trained Kastor models for 16 entity types are available on HuggingFace under the `Datartisan` organization (e.g. `Datartisan/KastorArtist`). They can be used out-of-the-box to extract RDF triples from plain text without any training.
