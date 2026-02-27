@@ -3,6 +3,8 @@
 [![Python](https://img.shields.io/badge/Python-%E2%89%A53.10-blue?logo=python)](https://www.python.org/)
 [![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Datartisan-yellow)](https://huggingface.co/Datartisan)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17699572.svg)](https://doi.org/10.5281/zenodo.17699572)
+[![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/annotation/text-fabric/)](https://archive.softwareheritage.org/swh:1:dir:0d4af3badc1417da39a9958d883194ca39aabba3;origin=https://github.com/datalogism/Kastor;visit=swh:1:snp:88c7b57e590b77f7b4a144db896dac1dfc1c3ce4;anchor=swh:1:rev:d79f62d3714998dfa04ff3cc7008d2cd0f258d26)
+
 
 ![kstor](img/intro_kastor.png)
 
