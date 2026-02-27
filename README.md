@@ -150,12 +150,33 @@ If you use the code or cite our work, please reference this one as follows :
 The resulting extractor could be tested using [this notebook](./Test_models.ipynb)
 
 
-### 2- Overcoming the Generalization Limits of SLM Finetuning for Shape-Based Extraction of Datatype and Object Properties [UNDER-REVIEW]
+### 2- Overcoming the Generalization Limits of SLM Finetuning for Shape-Based Extraction of Datatype and Object Properties [PUBLISHED]
+:tada: Published at [K-CAP 2025](https://doi.org/10.1145/3731443.3771342)
 
-* [Datasets produced](https://zenodo.org/records/15917325) 
-* [WanDB Project - Part 1](https://wandb.ai/celian-ringwald/GenLimits_Part1) 
-* [WanDB Project - Part 2 - trained models](https://wandb.ai/celian-ringwald/GenLimitsPart2_train) 
-* [WanDB Project - Part 2 - cross-evaluation](https://wandb.ai/celian-ringwald/GenLimitsPart2_crossEval) 
-* [WanDB Project - Part 3 - trained models](https://wandb.ai/celian-ringwald/GenLimitsPart3_train) 
-* [WanDB Project - Part 3 - cross-evaluation](https://wandb.ai/celian-ringwald/GenLimitsPart3_crossEval) 
+If you use the code or cite our work, please reference this one as follows:
+```
+@inproceedings{10.1145/3731443.3771342,
+  author    = {Ringwald, C\'{e}lian and Gandon, Fabien and Faron, Catherine and Michel, Franck and Abi Akl, Hanna},
+  title     = {Overcoming the Generalization Limits of SLM Finetuning for Shape-Based Extraction of Datatype and Object Properties},
+  year      = {2025},
+  isbn      = {9798400718670},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/3731443.3771342},
+  doi       = {10.1145/3731443.3771342},
+  booktitle = {Proceedings of the 13th Knowledge Capture Conference 2025},
+  pages     = {9--17},
+  numpages  = {9},
+  keywords  = {Relation extraction, Small language models, Structured output},
+  series    = {K-CAP '25}
+}
+```
+### Associated material:
+
+* [Datasets produced](https://zenodo.org/records/15917325)
+* [WanDB Project - Part 1](https://wandb.ai/celian-ringwald/GenLimits_Part1)
+* [WanDB Project - Part 2 - trained models](https://wandb.ai/celian-ringwald/GenLimitsPart2_train)
+* [WanDB Project - Part 2 - cross-evaluation](https://wandb.ai/celian-ringwald/GenLimitsPart2_crossEval)
+* [WanDB Project - Part 3 - trained models](https://wandb.ai/celian-ringwald/GenLimitsPart3_train)
+* [WanDB Project - Part 3 - cross-evaluation](https://wandb.ai/celian-ringwald/GenLimitsPart3_crossEval)
 
