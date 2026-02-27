@@ -34,6 +34,28 @@ Kastor/
 
 ---
 
+## 🤗 Using Pre-trained Kastor Models
+
+Pre-trained Kastor models for 16 entity types are available on HuggingFace under the `Datartisan` organization (e.g. `Datartisan/KastorArtist`). They can be used out-of-the-box to extract RDF triples from plain text without any training.
+
+👉 See **[`doc/UseKastorsModelsInTheWild.md`](./doc/UseKastorsModelsInTheWild.md)** for the full usage guide (pipeline scripts, programmatic API, input/output format, evaluation).
+
+### Sample evaluation result
+
+A preliminary evaluation on the Artist class (1 entity, Wikipedia markdown abstract, DBpedia ground-truth) gives the following results:
+
+| Metric | Value |
+|---|---|
+| Extract vs. correct — property precision | **100%** |
+| Extract vs. correct — property recall | 50% |
+| Extract vs. correct — property F1 | 66.67% |
+| Grounding rate | **100%** |
+| Shape coverage | 5.56% |
+
+All extracted triples were correct and grounded in the source text. The low coverage reflects that only 1 property was extracted from a very short abstract (283 chars) out of 18 properties defined in the shape. See [`test_all_results.json`](./hugging_face_models/test_all_results.json) for the full output.
+
+---
+
 ## 🧠 How It Works
 1.  **Knowledge Base init.** — [Initialize your KB with DBpedia data](./doc/KB_init.md)
 2. **Shape Definition** — [Describe your desired RDF structure in a SHACL shape file.](./doc/ShapeDefinition.md)

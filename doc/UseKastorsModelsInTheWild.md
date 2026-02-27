@@ -213,3 +213,37 @@ Models output **Turtle Light** (factorized, 1-line format):
 ```
 
 The `kastor_pipeline.py` script parses this into structured triples and converts them to standard RDF Turtle.
+
+---
+
+## Sample Results (`test_all_results.json`)
+
+The file `test_all_results.json` contains a preliminary evaluation run on **1 Artist entity** (`Stacey_Fox`, abstract source: `wikipedia_md`, limit=1) against a local DBpedia SPARQL endpoint.
+
+**Raw model output:**
+```
+:Stacey_Fox a:Artist;:birthDate "1965-06-21".
+```
+
+**Aggregate metrics:**
+
+| Metric | Value |
+|---|---|
+| Graph correct expressiveness | 33.33% |
+| Extract vs. init — property recall | 16.67% |
+| Extract vs. init — property precision | 100.0% |
+| Extract vs. init — property F1 | 28.57% |
+| Extract vs. correct — property recall | 50.0% |
+| Extract vs. correct — property precision | 100.0% |
+| Extract vs. correct — property F1 | 66.67% |
+| Shape coverage | 5.56% |
+| Precision | 100.0% |
+| Grounding rate | 100.0% |
+
+**Interpretation:**
+- The model extracted 1 property (`birthDate`) out of 18 defined in the Artist shape, giving a low **coverage** (5.56%).
+- However, all extracted values were correct and grounded in the abstract text (**precision** and **grounding** both at 100%).
+- The **graph correct expressiveness** of 33.33% reflects that only 1 out of 3 abstract-verifiable ground-truth triples was actually present in the Wikipedia abstract in a form the model could extract.
+- The relatively low recall vs. correct (50%) is expected given that the abstract is short (283 chars) and not all properties are explicitly stated.
+
+> **Note:** This is a sample run on a single entity. A full evaluation over 100+ entities per class would give more statistically meaningful estimates of recall and coverage.
