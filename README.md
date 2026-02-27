@@ -1,9 +1,11 @@
 # Kastor - Shape-based relation extraction framework
-  ![kstor](img/intro_kastor.png)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-%E2%89%A53.10-blue?logo=python)](https://www.python.org/)
 [![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Datartisan-yellow)](https://huggingface.co/Datartisan)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17699572.svg)](https://doi.org/10.5281/zenodo.17699572)
+
+![kstor](img/intro_kastor.png)
+
 
 **Kastor** is a modular framework for extracting RDF triples from unstructured text using shape-aware SLMs (Small Language Models). By combining SHACL shape definitions, a distilled knowledge graph, and active fine-tuning, Kastor builds lightweight, task-specific extractors. It's ideal for applications in semantic web, knowledge graph construction, and structured data mining.
 
